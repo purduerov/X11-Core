@@ -1,5 +1,8 @@
 
 def WindDown(errorname){
+
+        SendToPi("docker stop rov")
+        SendToPi("docker rm rov")
         msg = """
 Pull Request #${PULLNUM}, on branch ${PULLBRANCH} Failed!
 Find the logs here: http://aberdeen.purdueieee.org:1944/
@@ -7,9 +10,6 @@ Find the logs here: http://aberdeen.purdueieee.org:1944/
         slackSend(color: "#FF0000",message: msg)
 
         sendStatus("failure","http://aberdeen.purdueieee.org:1944/",errorname,"continuous-integration/aberdeen")
-        SendToPi("docker stop rov")
-        SendToPi("docker rm rov")
-
         error(errorname)
 }
 
