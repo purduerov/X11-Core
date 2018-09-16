@@ -95,7 +95,7 @@ node {
                 // Lint Python
                 withPythonEnv('/usr/bin/python'){
                         try{
-                                pysh(returnStdout:true, script: 'pylint --rcfile=pylintrc.conf rov/ > pylint.log').trim()
+                                pysh(returnStdout:true, script: 'pylint --rcfile=pylintrc.conf surface/pakfront/CV/ > pylint.log').trim()
                                 pysh(returnStdout:true, script: 'pylint --rcfile=pylintrc.conf rov/ >> pylint.log').trim()
                         }catch(error){
                                 linterrmsg +="Linting Python Files on PR#${PULLNUM} Failed!\n" 
