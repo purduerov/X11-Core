@@ -184,17 +184,18 @@ def install(args):
     else:
         print_color("\nInstalling components for dev system")
 
-    # Check if we have root access
-    if os.geteuid() != 0:
-        print_color("\nYou don't have permissions to install items. Exiting", color="red")
+    # Reject if we have root access
+    # Need to let scotty assume root only when necessary so some calls can be made as user.
+    if os.geteuid() == 0:
+        print_color("\nDo not assume root when calling scotty. Exiting", color="red")
         sys.exit()
 
     install_items = []
 
     # update and --fix-missing package manager
     update_command = [
-        "apt-get update",
-        "apt-get update --fix-missing"
+        "sudo apt-get update",
+        "sudo apt-get update --fix-missing"
     ]
     run_commands(update_command)
 
@@ -207,7 +208,7 @@ def install(args):
         install_items.extend(Config.get("aptget-hw"))
 
     install_command = [
-        "apt-get install -y " + " ".join(install_items),
+        "sudo apt-get install -y " + " ".join(install_items),
         "pip install --upgrade pip",
         "pip install --upgrade virtualenv"
     ]
@@ -241,11 +242,10 @@ def install(args):
 
     run_commands(platform_specific_installs)
 
-    if os.environ['SUDO_USER'] and not is_ras_pi:
-        print_color("\nRunning with sudo, so chown the virtual env dir to the sudo user.")
-        command = "chown -R {user}:{user} {dir}".format(user=os.environ['SUDO_USER'],
-                                                        dir=get_file_path(Config.get("venv")))
-        run_commands([command])
+    #if not is_ras_pi:
+        #print_color("\nRunning with sudo, so chown the virtual env dir to the sudo user.")
+    #    command = "sudo chown -R {user}:{user} {dir}".format(user=, dir=get_file_path(Config.get("venv")))
+    #    run_commands([command])
 
     # install modules
     if is_ras_pi:
@@ -261,18 +261,18 @@ def install(args):
             print_color("\nmjpg-streamer folder already exists! Not installing.")
         else:
             install_cam = [
-                "apt-get install -y " + " ".join(Config.get("aptget-cam")),
+                "sudo apt-get install -y " + " ".join(Config.get("aptget-cam")),
                 "ln -sf /usr/include/linux/videodev2.h /usr/include/linux/videodev.h",
                 "git clone https://github.com/jacksonliam/mjpg-streamer.git install/mjpg-streamer",
                 "make -C %s" % get_file_path("install/mjpg-streamer/mjpg-streamer-experimental"),
                 "make install -C %s" % get_file_path("install/mjpg-streamer/mjpg-streamer-experimental"),
-                "chmod 777 /usr/local/lib/mjpg-streamer -R"
+                "sudo chmod 777 /usr/local/lib/mjpg-streamer -R"
             ]
 
             run_commands(install_cam)
 
     if is_ras_pi:
-        i2c_enabled = os.system("i2cdetect -y 1 > /dev/null 2>&1")
+        i2c_enabled = os.system("sudo i2cdetect -y 1 > /dev/null 2>&1")
         raspicam_enabled = os.system("raspistill -o")
         if i2c_enabled != 0:
             print_color("\ni2c is not enabled. Will run raspi-config to enable the device.")
@@ -285,7 +285,7 @@ def install(args):
             print_color("\nEnter Y/y to continue and launch raspi-config or any other key to skip [y/N]:")
 
             if raw_input().lower() == 'y':
-                run_commands(["raspi-config"])
+                run_commands(["sudo raspi-config"])
                 print_color("\nYou may have to reboot to fully enable i2c or the camera")
     updatepacket()
     print_color("\nFinished Install!\n", color="green")
