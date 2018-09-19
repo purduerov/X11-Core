@@ -242,11 +242,6 @@ def install(args):
 
     run_commands(platform_specific_installs)
 
-    #if not is_ras_pi:
-        #print_color("\nRunning with sudo, so chown the virtual env dir to the sudo user.")
-    #    command = "sudo chown -R {user}:{user} {dir}".format(user=, dir=get_file_path(Config.get("venv")))
-    #    run_commands([command])
-
     # install modules
     if is_ras_pi:
         with open("/etc/modules","r") as fh:
