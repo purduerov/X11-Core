@@ -270,6 +270,10 @@ def install(args):
             ]
 
             run_commands(install_cam)
+            run_commands([os.path.join(CORE_DIR, "install/raspi_cam")])
+            run_commands([os.path.join(CORE_DIR, "install/raspi_ssh")])
+            run_commands([os.path.join(CORE_DIR, "install/raspi_i2c")])
+            run_commands([os.path.join(CORE_DIR, "install/raspi_rgpio")])
 
     if is_ras_pi:
         i2c_enabled = os.system("i2cdetect -y 1 > /dev/null 2>&1")

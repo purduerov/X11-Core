@@ -1,0 +1,43 @@
+#!/bin/sh
+
+get_rgpio() {
+  if test -e /etc/systemd/system/pigpiod.service.d/public.conf; then
+    echo 0
+  else
+    echo 1
+  fi
+}
+
+do_rgpio() {
+  DEFAULT=--defaultno
+  if [ $(get_rgpio) -eq 0 ]; then
+    DEFAULT=
+  fi
+  if [ "$INTERACTIVE" = True ]; then
+    whiptail --yesno "Would you like the GPIO server to be accessible over the network?" $DEFAULT 20 60 2
+    RET=$?
+  else
+    RET=$1
+  fi
+  if [ $RET -eq 0 ]; then
+    mkdir -p /etc/systemd/system/pigpiod.service.d/
+    cat > /etc/systemd/system/pigpiod.service.d/public.conf << EOF
+[Service]
+ExecStart=
+ExecStart=/usr/bin/pigpiod
+EOF
+    STATUS=enabled
+  elif [ $RET -eq 1 ]; then
+    rm -f /etc/systemd/system/pigpiod.service.d/public.conf
+    STATUS=disabled
+  else
+    return $RET
+  fi
+  systemctl daemon-reload
+  if systemctl -q is-enabled pigpiod ; then
+    systemctl restart pigpiod
+  fi
+  if [ "$INTERACTIVE" = True ]; then
+    whiptail --msgbox "Remote access to the GPIO server is $STATUS" 20 60 1
+  fi
+}
