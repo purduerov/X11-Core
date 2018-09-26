@@ -11,33 +11,33 @@ from UndistortFisheye import *
 signal(SIGPIPE, SIG_DFL)
 
 
-def calcDistances(imgColor):
+def calcDistances(img_color):
     # undistort image using calibration
-    imgColor = undistortFisheye(imgColor)
+    img_color = undistortFisheye(img_color)
     # convert to HSV
-    img = cv2.cvtColor(imgColor, cv2.COLOR_BGR2HSV)
+    img = cv2.cvtColor(img_color, cv2.COLOR_BGR2HSV)
     # thresholds (H: 0->180 (2* degree in normal HSV),
     # S: 0->255 (scaled up from 0-100),
     # V:0->255 (scaled up from 0-100))
-    # These thresholds may need to change when we change 
+    # These thresholds may need to change when we change
     # locations, found to work well with test data
-    redThresh = ((52,0,0),(180, 255, 158))
-    yellowThresh = ((24,69,154),(79,255,255))
+    redThresh = ((52, 0, 0), (180, 255, 158))
+    yellowThresh = ((24, 69, 154),(79, 255, 255))
     #blueThresh =((21,53,76), (44,255,255))
     #greenThresh = ((40,40,25), (90, 255, 255))
     threshes = (redThresh, yellowThresh)#, blueThresh, greenThresh)
 
 
     # kernel for dilate and erode
-    kern = np.ones((5,5))*5
+    kern = np.ones((5, 5))*5
     img2 = None
-    # apply thresholds and blur to get binary image holding 
+    # apply thresholds and blur to get binary image holding
     # brightly colored parts (the square and marks)
     for thresh in threshes:
         temp = cv2.inRange(img, *thresh)
         temp = cv2.dilate(temp, kern)
         temp = cv2.erode(temp, kern)
-        temp = cv2.GaussianBlur(temp, (5,5),0)
+        temp = cv2.GaussianBlur(temp, (5, 5), 0)
         if img2 is not None:
             img2 += temp
         else:
@@ -45,13 +45,13 @@ def calcDistances(imgColor):
 
 
     # get contours
-    _,contours,_ = cv2.findContours(img2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours, _ = cv2.findContours(img2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # Locate the largest countor that is square-sized
     #  - should be the square
     # if all 4 sides are visible in undistorted image
     maxArea = 0
-    square  = []
+    square = []
     for c in contours:
         area = cv2.contourArea(c)
         if (area > maxArea) and (area < 200 * 200):
@@ -60,17 +60,17 @@ def calcDistances(imgColor):
 
     # if no contour is found meeting the criteria, return
     if square == []:
-        return imgColor, {"start" : [], "points": [], "sideLength": None}
-    
+        return img_color, {"start": [], "points": [], "sideLength": None}
+
     # reduce the found contour to a square
     square = cv2.approxPolyDP(square, 30, True) # Well that was easy
-    
+
     # check for 4 points here
     if len(square) != 4:
-        return imgColor, {"start" : [], "points": [], "sideLength": None}
+        return img_color, {"start": [], "points": [], "sideLength": None}
 
     # overlay the square on the image
-    cv2.drawContours(imgColor, [np.array(square)], 0, (255,0,0), 5)
+    cv2.drawContours(img_color, [np.array(square)], 0, (255, 0, 0), 5)
 
     # find the colored marks on the PVC
 
@@ -83,23 +83,23 @@ def calcDistances(imgColor):
         # and greater than minSize (here 30)
         if area < maxArea/10 and area > 30:
             # calculate and save the centroid of each contour
-            # cv2.drawContours(imgColor,[c],0,(0,255,0), 5)
-            sumx = np.sum(c[:,:,0])
-            sumy = np.sum(c[:,:,1])
-            coloredMarks.append((int(sumx/len(c)),int(sumy/len(c))))        
+            # cv2.drawContours(img_color,[c],0,(0,255,0), 5)
+            sumx = np.sum(c[:, :, 0])
+            sumy = np.sum(c[:, :, 1])
+            coloredMarks.append((int(sumx/len(c)), int(sumy/len(c))))
 
     # function to determine if 3 points are collinear
     # 3000 determined to indicate "collinear enough"
-    def collinear(p0,p1,p2):
-        x1,y1 = p1[0] - p0[0], p1[1] - p0[1]
-        x2,y2 = p2[0] - p0[0], p2[1] - p0[1]
+    def collinear(p0, p1, p2):
+        x1, y1 = p1[0] - p0[0], p1[1] - p0[1]
+        x2, y2 = p2[0] - p0[0], p2[1] - p0[1]
         collineararity = x1 * y2 - x2 * y1
         return abs(collineararity) < 3000
 
     # find the side of the square that is collinear
-    # with the most colored marks 
-    # only save the points that are in the largest 
-    # set of collinear points 
+    # with the most colored marks
+    # only save the points that are in the largest
+    # set of collinear points
 
     finalMarks = []
     maxCnt = 0
@@ -111,7 +111,7 @@ def calcDistances(imgColor):
         collinearCnt = 0
         goodPoints = []
         for mark in coloredMarks:
-            if collinear(corner1,corner2,mark):
+            if collinear(corner1, corner2, mark):
                 collinearCnt += 1
                 goodPoints.append(mark)
         if collinearCnt > maxCnt:
@@ -124,7 +124,7 @@ def calcDistances(imgColor):
     # to send out
     distanceData = {"start": start, "points": finalMarks, "sideLength": sideLength}
 
-    return imgColor, distanceData
+    return img_color, distanceData
 
 # TEST MEASUREMENTS
 # yellow 27 cm (67 cm) 49
@@ -133,33 +133,33 @@ def calcDistances(imgColor):
 # green 86.06 (126 cm)
 
 # function converts pixel distances to cm distances
-def pix2cm(pixDist, sideLength=None):
+def pix2cm(pix_dist, sideLength=None):
     if sideLength:
-        return pixDist * (40/sideLength)
+        return pix_dist * (40/sideLength)
     else:
-        return pixDist * (40/200) * (1.43)
+        return pix_dist * (40/200) * (1.43)
 
 # calculate the eculidean distance between 2 points
-def l2Norm(p1,p2):
+def l2Norm(p1, p2):
     return np.linalg.norm((p2[0] - p1[0], p2[1] - p1[1]))
 
 #  Draw the distances of the found points
-def drawDists(start, filteredPoints, imgColor, sideLength=None):
+def drawDists(start, filteredPoints, img_color, sideLength=None):
     # calculate distances in cm, display on image
     distanceList = []
     if start:
         font = cv2.FONT_HERSHEY_SIMPLEX
         offset = 8 # offset from edge of square to measurement point
-        cv2.putText(imgColor,str(0.0), tuple(start), font, 0.75,(0,0,255),2,cv2.LINE_AA)
+        cv2.putText(img_color, str(0.0), tuple(start), font, 0.75, (0, 0, 255), 2, cv2.LINE_AA)
         for point in filteredPoints:
-            d = pix2cm(l2Norm(start, point),sideLength)
+            d = pix2cm(l2Norm(start, point), sideLength)
             distanceList.append(d)
-            cv2.putText(imgColor,str(round(d,1) + offset), point, font, 0.75,(0,0,255),2,cv2.LINE_AA)
-    return imgColor, distanceList
+            cv2.putText(img_color, str(round(d, 1) + offset), point, font, 0.75, (0, 0, 255), 2, cv2.LINE_AA)
+    return img_color, distanceList
 
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
 # Load in RGB image, find distances
 
     i = 0
@@ -175,9 +175,9 @@ if __name__ == '__main__':
         # read video stream
         frame = get_image(0) # may need to change this to correct camera
         # do the distance caclulation
-        imgColor, data = calcDistances(frame)
+        img_color, data = calcDistances(frame)
         # decay points not found
-        for x,cnt in filteredPoints.items():
+        for x, cnt in filteredPoints.items():
             if cnt > 0:
                 filteredPoints[x] -= 1
         # compare new points to existing
@@ -187,8 +187,8 @@ if __name__ == '__main__':
         #  add to list with value 0
         for p in data["points"]:
             done = 0
-            for x,cnt in filteredPoints.items():
-                if l2Norm(x,p) < thresh and not done:
+            for x, cnt in filteredPoints.items():
+                if l2Norm(x, p) < thresh and not done:
                     if cnt < maxCnt:
                         filteredPoints[x] += 2
                     else:
@@ -199,15 +199,15 @@ if __name__ == '__main__':
                 filteredPoints[p] = 0
 
         # filter out under a certain count
-        drawPoints = [x for x,cnt in filteredPoints.items() if cnt > minCnt]
+        drawPoints = [x for x, cnt in filteredPoints.items() if cnt > minCnt]
         # Draw the filtered points
-        imgColor, retData = drawDists(data["start"], drawPoints, imgColor, data["sideLength"])
+        img_color, retData = drawDists(data["start"], drawPoints, img_color, data["sideLength"])
         # return image and data
-        
+
         retData.sort()
         # retdata is simply a dictionary with one element:
         # 'Distances', which is an array containing the distances in cm
         # of the colored marks, sorted in acending order
         retData = {"Distances" : retData}
-        pushframe(imgColor, 3) # May need to change these ID's
-        pushdata(retData, 3) 
+        pushframe(img_color, 3) # May need to change these ID's
+        pushdata(retData, 3)
