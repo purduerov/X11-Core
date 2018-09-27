@@ -7,13 +7,13 @@ var BUILD_DIR = path.resolve(__dirname, 'frontend/src/elec_finals/');
 var APP_DIR = __dirname;
 
 var config = {
-    entry: APP_DIR + '/frontend/index.jsx',
+    entry: `${APP_DIR}/frontend/index.jsx`,
     output: {
         path: BUILD_DIR,
-        filename: '.build.js'
+        filename: '.build.js',
     },
     plugins: [
-        new ExtractTextPlugin(BUILD_DIR + '.styles.css'),
+        new ExtractTextPlugin(`${BUILD_DIR}.styles.css`),
     ],
     module: {
         loaders: [{
@@ -23,21 +23,21 @@ var config = {
             exclude: /node_modules/,
             query:
               {
-                presets:['react']
-              }
+                  presets: ['react'],
+              },
         }, {
             test: /\.css$/,
             loader: combineLoaders([{
-                loader: 'style-loader'
+                loader: 'style-loader',
             }, {
                 loader: 'css-loader',
                 query: {
                     modules: true,
-                    localIdentName: '[name]__[local]___[hash:base64:5]'
-                }
-            }])
+                    localIdentName: '[name]__[local]___[hash:base64:5]',
+                },
+            }]),
         }],
-    }
+    },
 };
 
 module.exports = config;
