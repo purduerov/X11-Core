@@ -1,5 +1,5 @@
-// name = sh(returnStdout:true, script: 'curl https://api.github.com/users/${PULLNUM} | egrep "name" | awk \'{print $2, $3 }\'')
-name = sh """curl https://api.github.com/users/${PULLNUM} | egrep "name" | awk '{print $2, $3 }'"""
+name = sh(returnStdout:true, script: 'curl https://api.github.com/users/${PULLNUM} | egrep "name" | awk \'{print $2, $3 }\'')
+// name = sh 'curl https://api.github.com/users/${PULLNUM} | egrep "name" | awk \'{print $2, $3 }\''
 // returns "First Last",
 // remove " and ",
 name = name.substring(1, name.length() - 2)
