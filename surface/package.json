@@ -10,9 +10,12 @@
     "start": "webpack -d && electron .",
     "proxy": "./pakfront/proxyinstall.sh",
     "proxyup": "./pakfront/proxyrun.sh",
-    "dev": "webpack -d",
+    "dev": "webpack -d && electron-rebuild",
     "watch": "webpack -d --watch",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "package-mac": "electron-rebuild && electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true",
+    "package-win": "electron-rebuild && electron-packager . --overwrite --platform=win32  --arch=x64 --prune=true",
+    "package-linux": "electron-rebuild && electron-packager . --overwrite --platform=linux  --arch=x64 --prune=true"
   },
   "author": "Purdue ROV Software Team",
   "license": "ISC",
@@ -34,6 +37,7 @@
   },
   "devDependencies": {
     "electron": "^1.8.8",
-    "electron-packager": "^12.1.2"
+    "electron-packager": "^12.1.2",
+    "electron-rebuild": "^1.8.2"
   }
 }

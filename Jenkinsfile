@@ -14,18 +14,19 @@ Find the logs here: http://aberdeen.purdueieee.org:1944/
 }
 
 def SendToPi(cmd){
-	try{
-		sh """ssh pi@128.46.156.193 \'${cmd}\'"""
-	}catch(error){
-		WindDown("Sending command to pi did not work, asshole")
-	}
+    try{
+        sh """ssh pi@128.46.156.193 \'${cmd}\'"""
+    }catch(error){
+        WindDown("Sending command to pi did not work, asshole")
+    }
 }
+
 def SaveLog(filename){
-	try{
-		sh "mv ${filename} ${env.logsite}/PR#${PULLNUM}"
-	}catch(error){
-		WindDown("Could Not find log")
-	}
+    try{
+        sh "mv ${filename} ${env.logsite}/PR#${PULLNUM}"
+    }catch(error){
+        WindDown("Could Not find log")
+    }
 }
 
 def sendStatus(state,target_url,description,context){
@@ -70,7 +71,7 @@ node {
                         WindDown("BUILD FAILED")
                 }
                 try{    
-			sh "cd surface/ && npm install"
+            sh "cd surface/ && npm install"
                 }catch(error){
                         msg = "Hum, we failed building frontend. IAAAAAAAANNANAN" 
                         slackSend(color: "#FF0000",message: msg)
@@ -111,7 +112,7 @@ node {
 
                 //Lint Go
                 try{
-			golint = sh(returnStdout:true, script: 'find . -iname "*.go" | xargs gofmt -d > golint.log').trim()
+            golint = sh(returnStdout:true, script: 'find . -iname "*.go" | xargs gofmt -d > golint.log').trim()
                 }catch(error){
                         linterrmsg +="Linting go Files on PR#${PULLNUM} Failed!\n" 
                 }
