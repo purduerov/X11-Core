@@ -1,5 +1,6 @@
 {
   "name": "frontend",
+  "productName": "rovfe",
   "version": "1.0.0",
   "description": "ROV 2018-19 package.json for our nodejs based framework",
   "main": "electron-setup.js",
@@ -21,7 +22,6 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^1.0.0",
-    "electron": "^1.8.8",
     "electron-context-menu": "^0.9.1",
     "extract-text-webpack-plugin": "^3.0.2",
     "jquery": "^3.3.1",
@@ -31,5 +31,9 @@
     "style-loader": "^0.23.0",
     "webpack": "^3.12.0",
     "webpack-combine-loaders": "^2.0.4"
+  },
+  "devDependencies": {
+    "electron": "^1.8.8",
+    "electron-packager": "^12.1.2"
   }
 }
