@@ -1,3 +1,8 @@
+// name = sh(returnStdout:true, script: 'curl https://api.github.com/users/${PULLNUM} | egrep "name" | awk \'{print $2, $3 }\'')
+name = sh """curl https://api.github.com/users/${PULLNUM} | egrep "name" | awk '{print $2, $3 }'"""
+// returns "First Last",
+// remove " and ",
+name = name.substring(1, name.length() - 2)
 
 def WindDown(errorname){
 
@@ -7,7 +12,7 @@ def WindDown(errorname){
 Pull Request #${PULLNUM}, on branch ${PULLBRANCH} Failed!
 Find the logs here: http://aberdeen.purdueieee.org:1944/
         """
-        slackSend(color: "#FF0000",message: msg)
+        // slackSend(color: "#FF0000",message: msg)
 
         sendStatus("failure","http://aberdeen.purdueieee.org:1944/",errorname,"continuous-integration/aberdeen")
         error(errorname)
@@ -59,21 +64,21 @@ node {
                         sh 'git pull'
                 }catch(error){
                         msg = "Hum, we failed checking out the repo. Idk man" 
-                        slackSend(color: "#FF0000",message: msg)
+                        // slackSend(color: "#FF0000",message: msg)
                         WindDown("SOURCE FAILED")
                 }
                 try{
                         app = docker.build("anotheroctopus/rovimage")
                 }catch(error){
                         msg = "So the docker image didn't build, so its either Scotty's fault or the Dockerfile"
-                        slackSend(color: "#FF0000",message: msg)
+                        // slackSend(color: "#FF0000",message: msg)
                         WindDown("BUILD FAILED")
                 }
                 try{    
 			sh "cd surface/ && npm install"
                 }catch(error){
                         msg = "Hum, we failed building frontend. IAAAAAAAANNANAN" 
-                        slackSend(color: "#FF0000",message: msg)
+                        // slackSend(color: "#FF0000",message: msg)
                         WindDown("Frontend  FAILED")
                 }
         }
@@ -85,7 +90,7 @@ node {
                         SendToPi("docker  run -d --name=\"rov\" anotheroctopus/rovimage:'${PULLBRANCH}'")
                 }catch(error){
                         msg = "Launching the ROV failed. Probably some networking nonesense"
-                        slackSend(color: "#FF0000",message: msg)
+                        // slackSend(color: "#FF0000",message: msg)
                         WindDown("ROV FAILED TO LAUNCH")
                 }
         }
@@ -121,7 +126,7 @@ node {
                 SaveLog("golint.log")
 
                 if(linterrmsg != ""){
-                        slackSend(color: "#FF0000",message: linterrmsg)
+                        // slackSend(color: "#FF0000",message: linterrmsg)
                         WindDown("LINTERROR")
                 }
         }
@@ -137,7 +142,7 @@ Pull Request #${PULLNUM}, on branch ${PULLBRANCH} Passed all Tests!\n
 Check out the logs here http://aberdeen.purdueieee.org:1944/
 Hey ${PULLMAKER}, you should bug ${REVIEWERS} to approve your pull
 """
-                slackSend(color: "#00FF00",message:  msg)
+                // slackSend(color: "#00FF00",message:  msg)
 
                 sendStatus("success","http://aberdeen.purdueieee.org:1944/","Everything Passed!","continuous-integration/aberdeen")
 
