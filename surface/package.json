@@ -13,7 +13,8 @@
     "watch": "webpack -d --watch",
     "build": "webpack -p",
     "lintFront": "eslint ./**/*.{js,jsx} -c ../eslintrc.js > lintFront.txt | echo 'Linting frontend folder...'",
-    "linit": "eslint --init"
+    "linit": "eslint --init",
+    "lintfix": "eslint ./**/*.{js,jsx} -c ../eslintrc.js --fix > lintFront.txt | echo 'Linting frontend folder...'"
   },
   "author": "Purdue ROV Software Team",
   "license": "ISC",
