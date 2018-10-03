@@ -1,12 +1,12 @@
 #!/usr/bin/env  python
 import subprocess
 import io
+import time
 import cv2
 import numpy as np
 from signal import signal, SIGPIPE, SIG_DFL
 from CVhandles import get_image, pushframe, pushdata
 from multiprocessing import Process, Pool
-import time
 from UndistortFisheye import *
 signal(SIGPIPE, SIG_DFL)
 
@@ -45,7 +45,7 @@ def calcDistances(img_color):
 
 
     # get contours
-    _, contours, _ = cv2.findContours(img2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    _,contours,_ = cv2.findContours(img2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # Locate the largest countor that is square-sized
     #  - should be the square
@@ -143,15 +143,15 @@ def pix2cm(pix_dist, sideLength=None):
 def l2Norm(p1, p2):
     return np.linalg.norm((p2[0] - p1[0], p2[1] - p1[1]))
 
-#  Draw the distances of the found points
-def drawDists(start, filteredPoints, img_color, sideLength=None):
+# draw the distances of the found points
+def drawDists(start, filtered_points, img_color, sideLength=None):
     # calculate distances in cm, display on image
     distanceList = []
     if start:
         font = cv2.FONT_HERSHEY_SIMPLEX
         offset = 8 # offset from edge of square to measurement point
         cv2.putText(img_color, str(0.0), tuple(start), font, 0.75, (0, 0, 255), 2, cv2.LINE_AA)
-        for point in filteredPoints:
+        for point in filtered_points:
             d = pix2cm(l2Norm(start, point), sideLength)
             distanceList.append(d)
             cv2.putText(img_color, str(round(d, 1) + offset), point, font, 0.75, (0, 0, 255), 2, cv2.LINE_AA)
@@ -163,7 +163,7 @@ if __name__ == '__main__':
 # Load in RGB image, find distances
 
     i = 0
-    filteredPoints = {}
+    filtered_points = {}
     # the following parameters have been found to work
     # with test camera data, may have to change with a
     # new camera or pool
@@ -177,9 +177,9 @@ if __name__ == '__main__':
         # do the distance caclulation
         img_color, data = calcDistances(frame)
         # decay points not found
-        for x, cnt in filteredPoints.items():
+        for x, cnt in filtered_points.items():
             if cnt > 0:
-                filteredPoints[x] -= 1
+                filtered_points[x] -= 1
         # compare new points to existing
         # if within thresh
         #  increment value for existing point
@@ -187,19 +187,19 @@ if __name__ == '__main__':
         #  add to list with value 0
         for p in data["points"]:
             done = 0
-            for x, cnt in filteredPoints.items():
+            for x, cnt in filtered_points.items():
                 if l2Norm(x, p) < thresh and not done:
                     if cnt < maxCnt:
-                        filteredPoints[x] += 2
+                        filtered_points[x] += 2
                     else:
-                        filteredPoints[x] += 1
+                        filtered_points[x] += 1
                     done = 1
                     break
             if not done:
-                filteredPoints[p] = 0
+                filtered_points[p] = 0
 
         # filter out under a certain count
-        drawPoints = [x for x, cnt in filteredPoints.items() if cnt > minCnt]
+        drawPoints = [x for x, cnt in filtered_points.items() if cnt > minCnt]
         # Draw the filtered points
         img_color, retData = drawDists(data["start"], drawPoints, img_color, data["sideLength"])
         # return image and data
