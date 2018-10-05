@@ -5,7 +5,7 @@ var packets = require(srcdir + 'packets.js')
 
 var pak = {"dearflask": packets.dearflask,
 	   "dearclient":packets.dearclient};
- var jsonObj = JSON.stringify(pak);
+ var jsonObj = JSON.stringify(pak,null,4);
    
  fs.writeFile(outdir + "packets.json", jsonObj, 'utf8', function (err) {
  if (err) {
