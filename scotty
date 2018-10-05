@@ -421,7 +421,7 @@ def test(args):
         print_color("\nPassed all tests!", color="green")
 
 def updatepacket(args=None):
-    subprocess.call(["node", CORE_DIR + "/rov/JSToJSON.js", CORE_DIR + "/surface/frontend/src/", CORE_DIR + "/rov/"])
+    subprocess.call(["cp", os.path.join(CORE_DIR,"surface/frontend/src/packets.json"),os.path.join(CORE_DIR,"rov/"])
 
 
 def usage(args=None):
