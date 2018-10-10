@@ -1,12 +1,10 @@
 import React from 'react';
 import {render} from 'react-dom';
 import styles from './index.css';
-import packet from './src/packets.js';
 
 
 import Titlebar from './src/components/Titlebar/Titlebar.jsx';
 
-//var packets = require("./src/packets.js");
 let socketHost = `ws://localhost:5001`;
 
 let socket = io.connect(socketHost, {transports: ['websocket']});
@@ -16,7 +14,7 @@ let {shell, app, ipcRenderer} = window.require('electron');
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = require("./src/packets.js"); //= $.extend(true, {}, packets);
+    this.state = require("./src/packets.json");
 
     this.state.config = {
             thrust_scales: {

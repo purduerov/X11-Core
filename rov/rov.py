@@ -52,11 +52,6 @@ class ROV(object):
 
         self._running = True
 
-        #with open("rov/packets.json","r") as fh:
-        #    temp = load(fh)
-        #    self.dearclient = temp['dearclient']
-        #    self.dearflask = temp['dearflask']
-
         self.debug = (os.environ.get("ROV_DEBUG") == "1")
 
         self.init_hw()
