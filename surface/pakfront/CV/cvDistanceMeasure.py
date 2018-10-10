@@ -7,15 +7,15 @@ import numpy as np
 from signal import signal, SIGPIPE, SIG_DFL
 from CVhandles import get_image, pushframe, pushdata
 from multiprocessing import Process, Pool
-from UndistortFisheye import *
+from CV.UndistortFisheye import *
 signal(SIGPIPE, SIG_DFL)
 
 
-def calcDistances(img_color):
+def calcDistances(img):
     # undistort image using calibration
-    img_color = undistortFisheye(img_color)
+    img = undistortFisheye(img)
     # convert to HSV
-    img = cv2.cvtColor(img_color, cv2.COLOR_BGR2HSV)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # thresholds (H: 0->180 (2* degree in normal HSV),
     # S: 0->255 (scaled up from 0-100),
     # V:0->255 (scaled up from 0-100))
@@ -45,7 +45,7 @@ def calcDistances(img_color):
 
 
     # get contours
-    _,contours,_ = cv2.findContours(img2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours, _ = cv2.findContours(img2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # Locate the largest countor that is square-sized
     #  - should be the square
@@ -60,17 +60,17 @@ def calcDistances(img_color):
 
     # if no contour is found meeting the criteria, return
     if square == []:
-        return img_color, {"start": [], "points": [], "sideLength": None}
+        return img, {"start": [], "points": [], "sideLength": None}
 
     # reduce the found contour to a square
     square = cv2.approxPolyDP(square, 30, True) # Well that was easy
 
     # check for 4 points here
     if len(square) != 4:
-        return img_color, {"start": [], "points": [], "sideLength": None}
+        return img, {"start": [], "points": [], "sideLength": None}
 
     # overlay the square on the image
-    cv2.drawContours(img_color, [np.array(square)], 0, (255, 0, 0), 5)
+    cv2.drawContours(img, [np.array(square)], 0, (255, 0, 0), 5)
 
     # find the colored marks on the PVC
 
@@ -83,7 +83,7 @@ def calcDistances(img_color):
         # and greater than minSize (here 30)
         if area < maxArea/10 and area > 30:
             # calculate and save the centroid of each contour
-            # cv2.drawContours(img_color,[c],0,(0,255,0), 5)
+            # cv2.drawContours(img,[c],0,(0,255,0), 5)
             sumx = np.sum(c[:, :, 0])
             sumy = np.sum(c[:, :, 1])
             coloredMarks.append((int(sumx/len(c)), int(sumy/len(c))))
@@ -124,7 +124,7 @@ def calcDistances(img_color):
     # to send out
     distanceData = {"start": start, "points": finalMarks, "sideLength": sideLength}
 
-    return img_color, distanceData
+    return img, distanceData
 
 # TEST MEASUREMENTS
 # yellow 27 cm (67 cm) 49

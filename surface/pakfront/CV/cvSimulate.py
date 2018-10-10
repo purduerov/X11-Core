@@ -17,5 +17,5 @@ if __name__ == "__main__":
         data = {"Foo":"https://i.pinimg.com/originals/00/21/52/002152ecac89b72d602059193ebdc161.jpg"}
         time.sleep(0.1)
         # CV stuff goes here
-        pushframe(curimage,1)
-        pushdata(data,1)
+        pushframe(curimage, 1)
+        pushdata(data, 1)
