@@ -1,13 +1,16 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
-const spawn = require('child_process').spawn;
+const spawn = require('child_process');
+spawn = spawn.spawn;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 const cvbin = './pakfront/bin/';
-var cvspawns = {};
-var cvref = {};
+
+/* These variables aren't used */
+// var cvspawns = {};
+// var cvref = {};
 
 let win;
 
