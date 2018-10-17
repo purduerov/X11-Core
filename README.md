@@ -1,2 +1,2 @@
-# XX-Core
-Purdue IEEE ROV X10 Software repository for the 2017-2018 season.
+# X11-Core
+Purdue IEEE ROV X11 Software repository for the 2018-2019 season.
