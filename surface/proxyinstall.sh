@@ -1,6 +1,7 @@
 #!/bin/bash
 pxydir="pakfront"
 outname="panzerkanone"
+
 sudo apt-get install -y golang 
 go get github.com/graarh/golang-socketio
 go get github.com/googollee/go-socket.io
