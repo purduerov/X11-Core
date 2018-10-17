@@ -1,4 +1,5 @@
-require('./betterlayouts.js');
+// not used
+// require('./betterlayouts.js');
 var bind = require('./bindfunc.js');
 
 var gp = {
