@@ -24,14 +24,14 @@ axes template:
         // a:{
         //   value: {
         //     func: function() {
-        //       react.flaskcpy.thrusters.desired_thrust = gp.buttons.a.curVal
+        //       react.flaskcpy.thrusters.desiredThrust = gp.buttons.a.curVal
         //     }
         //   },
         // },
         // up: {
         //   pressed: {
         //     func: function() {
-        //       react.flaskcpy.thrusters.desired_thrust =
+        //       react.flaskcpy.thrusters.desiredThrust =
         //     }
         //
         //   },
@@ -47,16 +47,16 @@ var bind = {
         lb: { // roll counterclockwise
             pressed: {
                 func() {
-                    var stuff = react.state.config.thrust_scales;
-                    var inv = react.state.config.thrust_invert;
-                    react.flaskcpy.thrusters.desired_thrust[3] = inv.master * inv.roll * -react.gp.buttons.lb.curVal * stuff.master * stuff.roll / 10000;
+                    var stuff = react.state.config.thrustScales;
+                    var inv = react.state.config.thrustInvert;
+                    react.flaskcpy.thrusters.desiredThrust[3] = inv.master * inv.roll * -react.gp.buttons.lb.curVal * stuff.master * stuff.roll / 10000;
                 },
             },
             released: {
                 func() {
-                    var inv = react.state.config.thrust_invert;
-                    if (react.flaskcpy.thrusters.desired_thrust[3] * inv.master * inv.roll < 0) {
-                        react.flaskcpy.thrusters.desired_thrust[3] = 0;
+                    var inv = react.state.config.thrustInvert;
+                    if (react.flaskcpy.thrusters.desiredThrust[3] * inv.master * inv.roll < 0) {
+                        react.flaskcpy.thrusters.desiredThrust[3] = 0;
                     }
                 },
             },
@@ -64,16 +64,16 @@ var bind = {
         rb: { // roll clockwise
             pressed: {
                 func() {
-                    var stuff = react.state.config.thrust_scales;
-                    var inv = react.state.config.thrust_invert;
-                    react.flaskcpy.thrusters.desired_thrust[3] = inv.master * inv.roll * react.gp.buttons.rb.curVal * stuff.master * stuff.roll / 10000;
+                    var stuff = react.state.config.thrustScales;
+                    var inv = react.state.config.thrustInvert;
+                    react.flaskcpy.thrusters.desiredThrust[3] = inv.master * inv.roll * react.gp.buttons.rb.curVal * stuff.master * stuff.roll / 10000;
                 },
             },
             released: {
                 func() {
-                    var inv = react.state.config.thrust_invert;
-                    if (react.flaskcpy.thrusters.desired_thrust[3] * inv.master * inv.roll > 0) {
-                        react.flaskcpy.thrusters.desired_thrust[3] = 0;
+                    var inv = react.state.config.thrustInvert;
+                    if (react.flaskcpy.thrusters.desiredThrust[3] * inv.master * inv.roll > 0) {
+                        react.flaskcpy.thrusters.desiredThrust[3] = 0;
                     }
                 },
             },
@@ -81,13 +81,13 @@ var bind = {
         a: { // open manipulator
             pressed: {
                 func() {
-                    var stuff = react.state.config.tool_scales.manipulator;
+                    var stuff = react.state.config.toolScales.manipulator;
                     react.flaskcpy.manipulator.power = react.gp.buttons.a.curVal * stuff.master * stuff.open * stuff.invert;
                 },
             },
             released: {
                 func() {
-                    var stuff = react.state.config.tool_scales.manipulator;
+                    var stuff = react.state.config.toolScales.manipulator;
                     if (react.flaskcpy.manipulator.power * stuff.invert > 0) {
                         react.flaskcpy.manipulator.power = 0;
                     }
@@ -97,7 +97,7 @@ var bind = {
         b: { // close manipulator
             pressed: {
                 func() {
-                    var stuff = react.state.config.tool_scales.manipulator;
+                    var stuff = react.state.config.toolScales.manipulator;
                     // console.log(-react.gp.buttons.lb.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
                     // console.log(react.flaskcpy.manipulator.power)
                     react.flaskcpy.manipulator.power = -react.gp.buttons.b.curVal * stuff.master * stuff.close * stuff.invert;
@@ -105,7 +105,7 @@ var bind = {
             },
             released: {
                 func() {
-                    var stuff = react.state.config.tool_scales.manipulator;
+                    var stuff = react.state.config.toolScales.manipulator;
                     if (react.flaskcpy.manipulator.power * stuff.invert < 0) {
                         react.flaskcpy.manipulator.power = 0;
                     }
@@ -115,11 +115,11 @@ var bind = {
         right: { // obs leveler power right increment
             pressed: {
                 func() {
-                    var stuff = react.state.config.tool_scales.obs_tool;
-                    if (react.flaskcpy.obs_tool.power * stuff.invert < 0.0) {
-                        react.flaskcpy.obs_tool.power = 0.0;
+                    var stuff = react.state.config.toolScales.obsTool;
+                    if (react.flaskcpy.obsTool.power * stuff.invert < 0.0) {
+                        react.flaskcpy.obsTool.power = 0.0;
                     } else {
-                        react.flaskcpy.obs_tool.power += 0.02 * stuff.invert;
+                        react.flaskcpy.obsTool.power += 0.02 * stuff.invert;
                     }
                 },
             },
@@ -127,11 +127,11 @@ var bind = {
         left: { // obs leveler power left increment
             pressed: {
                 func() {
-                    var stuff = react.state.config.tool_scales.obs_tool;
-                    if (react.flaskcpy.obs_tool.power * stuff.invert > 0.0) {
-                        react.flaskcpy.obs_tool.power = 0.0;
+                    var stuff = react.state.config.toolScales.obsTool;
+                    if (react.flaskcpy.obsTool.power * stuff.invert > 0.0) {
+                        react.flaskcpy.obsTool.power = 0.0;
                     } else {
-                        react.flaskcpy.obs_tool.power -= 0.02 * stuff.invert;
+                        react.flaskcpy.obsTool.power -= 0.02 * stuff.invert;
                     }
                 },
             },
@@ -139,14 +139,14 @@ var bind = {
         up: { // rotate main camera up
             pressed: {
                 func() {
-                    react.flaskcpy.maincam_angle += 2.5;
+                    react.flaskcpy.maincamAngle += 2.5;
                 },
             },
         },
         down: { // rotate main camera down
             pressed: {
                 func() {
-                    react.flaskcpy.maincam_angle -= 2.5;
+                    react.flaskcpy.maincamAngle -= 2.5;
                 },
             },
         },
@@ -167,7 +167,7 @@ var bind = {
         lpress: {
             pressed: {
                 func() {
-                    react.confcpy.thrust_scales.master = 60;
+                    react.confcpy.thrustScales.master = 60;
 
                     react.setState({
                         config: react.confcpy,
@@ -178,7 +178,7 @@ var bind = {
         rpress: {
             pressed: {
                 func() {
-                    react.confcpy.thrust_scales.master = 35;
+                    react.confcpy.thrustScales.master = 35;
 
                     react.setState({
                         config: react.confcpy,
@@ -193,36 +193,36 @@ var bind = {
         LstickXaxis: {
             curVal: {
                 func() {
-                    var stuff = react.state.config.thrust_scales;
-                    var inv = react.state.config.thrust_invert;
-                    react.flaskcpy.thrusters.desired_thrust[1] = inv.master * inv.velY * react.gp.axes.LstickXaxis.curVal * stuff.master * stuff.velY / 10000;
+                    var stuff = react.state.config.thrustScales;
+                    var inv = react.state.config.thrustInvert;
+                    react.flaskcpy.thrusters.desiredThrust[1] = inv.master * inv.velY * react.gp.axes.LstickXaxis.curVal * stuff.master * stuff.velY / 10000;
                 },
             },
         },
         LstickYaxis: {
             curVal: {
                 func() {
-                    var stuff = react.state.config.thrust_scales;
-                    var inv = react.state.config.thrust_invert;
-                    react.flaskcpy.thrusters.desired_thrust[0] = inv.master * inv.velX * -react.gp.axes.LstickYaxis.curVal * stuff.master * stuff.velX / 10000;
+                    var stuff = react.state.config.thrustScales;
+                    var inv = react.state.config.thrustInvert;
+                    react.flaskcpy.thrusters.desiredThrust[0] = inv.master * inv.velX * -react.gp.axes.LstickYaxis.curVal * stuff.master * stuff.velX / 10000;
                 },
             },
         },
         RstickXaxis: {
             curVal: {
                 func() {
-                    var stuff = react.state.config.thrust_scales;
-                    var inv = react.state.config.thrust_invert;
-                    react.flaskcpy.thrusters.desired_thrust[5] = inv.master * inv.yaw * react.gp.axes.RstickXaxis.curVal * stuff.master * stuff.yaw / 10000;
+                    var stuff = react.state.config.thrustScales;
+                    var inv = react.state.config.thrustInvert;
+                    react.flaskcpy.thrusters.desiredThrust[5] = inv.master * inv.yaw * react.gp.axes.RstickXaxis.curVal * stuff.master * stuff.yaw / 10000;
                 },
             },
         },
         RstickYaxis: {
             curVal: {
                 func() {
-                    var stuff = react.state.config.thrust_scales;
-                    var inv = react.state.config.thrust_invert;
-                    react.flaskcpy.thrusters.desired_thrust[4] = inv.master * inv.pitch * -react.gp.axes.RstickYaxis.curVal * stuff.master * stuff.pitch / 10000;
+                    var stuff = react.state.config.thrustScales;
+                    var inv = react.state.config.thrustInvert;
+                    react.flaskcpy.thrusters.desiredThrust[4] = inv.master * inv.pitch * -react.gp.axes.RstickYaxis.curVal * stuff.master * stuff.pitch / 10000;
                 },
             },
         },
@@ -238,19 +238,19 @@ var bind = {
         Ltrigger: { // descend
             curVal: {
                 func() {
-                    var stuff = react.state.config.thrust_scales;
-                    var inv = react.state.config.thrust_invert;
+                    var stuff = react.state.config.thrustScales;
+                    var inv = react.state.config.thrustInvert;
                     if (react.gp.axes.Ltrigger.curVal != 0) {
                         if (react.gp.up < 2) {
                             // console.log("Ltrigger: "+react.gp.axes.Ltrigger.curVal+" "+stuff.master+" "+stuff.velZ);
-                            react.flaskcpy.thrusters.desired_thrust[2] = inv.master * inv.velZ * -react.gp.axes.Ltrigger.curVal * stuff.master * stuff.velZ / 10000;
+                            react.flaskcpy.thrusters.desiredThrust[2] = inv.master * inv.velZ * -react.gp.axes.Ltrigger.curVal * stuff.master * stuff.velZ / 10000;
                             react.gp.down = 1 + react.gp.up;
                         }
                     } else {
                         react.gp.down = 0;
                     }
                     if (react.gp.down == react.gp.up) {
-                        react.flaskcpy.thrusters.desired_thrust[2] = 0;
+                        react.flaskcpy.thrusters.desiredThrust[2] = 0;
                     }
                 },
             },
@@ -258,18 +258,18 @@ var bind = {
         Rtrigger: { // ascend
             curVal: {
                 func() {
-                    var stuff = react.state.config.thrust_scales;
-                    var inv = react.state.config.thrust_invert;
+                    var stuff = react.state.config.thrustScales;
+                    var inv = react.state.config.thrustInvert;
                     if (react.gp.axes.Rtrigger.curVal != 0) {
                         if (react.gp.down < 2) {
-                            react.flaskcpy.thrusters.desired_thrust[2] = inv.master * inv.velZ * react.gp.axes.Rtrigger.curVal * stuff.master * stuff.velZ / 10000;
+                            react.flaskcpy.thrusters.desiredThrust[2] = inv.master * inv.velZ * react.gp.axes.Rtrigger.curVal * stuff.master * stuff.velZ / 10000;
                             react.gp.up = 1 + react.gp.down;
                         }
                     } else {
                         react.gp.up = 0;
                     }
                     if (react.gp.down == react.gp.up) {
-                        react.flaskcpy.thrusters.desired_thrust[2] = 0;
+                        react.flaskcpy.thrusters.desiredThrust[2] = 0;
                     }
                 },
             },
@@ -278,12 +278,12 @@ var bind = {
 
     activate(gp) {
         // console.log(gp)
-        Object.keys(bind).forEach((btn_ax, i) => { // goes through btn or ax
-            if (btn_ax != 'activate') {
-                Object.keys(bind[btn_ax]).forEach((piece, j) => { // goes through buttons or left and right axes
-                    Object.keys(bind[btn_ax][piece]).forEach((which, k) => { // goes through the individual functions
-                        // console.log(btn_ax+"_bind: "+piece+", "+which);
-                        gp[`${btn_ax}_bind`](piece, which, bind[btn_ax][piece][which].func);
+        Object.keys(bind).forEach((btnAx, i) => { // goes through btn or ax
+            if (btnAx != 'activate') {
+                Object.keys(bind[btnAx]).forEach((piece, j) => { // goes through buttons or left and right axes
+                    Object.keys(bind[btnAx][piece]).forEach((which, k) => { // goes through the individual functions
+                        // console.log(btnAx+"Bind: "+piece+", "+which);
+                        gp[`${btnAx}Bind`](piece, which, bind[btnAx][piece][which].func);
                     });
                 });
             }

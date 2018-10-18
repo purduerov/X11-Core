@@ -1,4 +1,4 @@
-var active_div = function () {
+var activeDiv = function () {
     var div = $('#moving');
     var info = $('#info');
     var txt = '';
@@ -42,18 +42,18 @@ var active_div = function () {
     div.css({ left: `+=${parseInt(10 * gp.axes.LstickXaxis.curVal)}px` });
 
 
-    Object.keys(gp.buttons).forEach((key_b, i) => {
-        if (key_b != 'length') {
-            txt = `${txt}</br>${key_b}: ${gp.buttons[key_b].curVal}`;
-            // console.log("Buttons: "+gp.buttons[key_b].curVal+" "+key_b);
+    Object.keys(gp.buttons).forEach((keyB, i) => {
+        if (keyB != 'length') {
+            txt = `${txt}</br>${keyB}: ${gp.buttons[keyB].curVal}`;
+            // console.log("Buttons: "+gp.buttons[keyB].curVal+" "+keyB);
         }
     });
-    Object.keys(gp.axes).forEach((key_a, i) => {
-        if (key_a != 'length') {
-            txt = `${txt}</br>${key_a}</br><p>${gp.axes[key_a].curVal}</p>`;
-            // console.log("Axes: "+gp.axes[key_a]+" "+key_a);
-            /*        if(key_a == "right") {
-          txt = txt + "</br></br> x - x-off: " + (navigator.getGamepads()[gp.i_use].axes[layouts[gp.layout].axes[key_a].x])
+    Object.keys(gp.axes).forEach((keyA, i) => {
+        if (keyA != 'length') {
+            txt = `${txt}</br>${keyA}</br><p>${gp.axes[keyA].curVal}</p>`;
+            // console.log("Axes: "+gp.axes[keyA]+" "+keyA);
+            /*        if(keyA == "right") {
+          txt = txt + "</br></br> x - x-off: " + (navigator.getGamepads()[gp.iUse].axes[layouts[gp.layout].axes[keyA].x])
                     + "</br> 1 - x-off: " + (1 - gp.getDisplace().right.x);
 
         }
@@ -71,9 +71,9 @@ var run = function (abt) {
         window.clearInterval(go1);
         go1 = -1;
         go2 = window.setInterval(() => {
-            gp.update(); // used to be get_current
+            gp.update(); // used to be getCurrent
             if (gp.ready) {
-                active_div();
+                activeDiv();
             } else {
                 $('#reset').click();
             }
