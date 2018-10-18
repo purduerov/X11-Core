@@ -1,30 +1,35 @@
 
 def WindDown(errorname){
 
-        SendToPi("docker stop rov")
-        SendToPi("docker rm rov")
-        msg = """
-Pull Request #${PULLNUM}, on branch ${PULLBRANCH} Failed!
-Find the logs here: http://aberdeen.purdueieee.org:1944/
-        """
-        slackSend(color: "#FF0000",message: msg)
+        
+	try{
+                sendStatus("failure","http://aberdeen.purdueieee.org:1944/",errorname,"continuous-integration/aberdeen")
+                SendToPi("docker stop rov")
+                SendToPi("docker rm rov")
+                msg = """
+        Pull Request #${PULLNUM}, on branch ${PULLBRANCH} Failed!
+        Find the logs here: http://aberdeen.purdueieee.org:1944/
+                """
+                slackSend(color: "#FF0000",message: msg)
 
-        sendStatus("failure","http://aberdeen.purdueieee.org:1944/",errorname,"continuous-integration/aberdeen")
-        error(errorname)
+                error(errorname)
+	}catch(error){
+                error(error)
+	}
 }
 
 def SendToPi(cmd){
 	try{
 		sh """ssh pi@128.46.156.193 \'${cmd}\'"""
 	}catch(error){
-		WindDown("Sending command to pi did not work, asshole")
+		error("Sending command to pi did not work, asshole")
 	}
 }
 def SaveLog(filename){
 	try{
 		sh "mv ${filename} ${env.logsite}/PR#${PULLNUM}"
 	}catch(error){
-		WindDown("Could Not find log")
+		error("Could Not find log")
 	}
 }
 
