@@ -1,3 +1,5 @@
+/* global react */
+
 /*
 button template:
   btn: {
