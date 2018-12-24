@@ -7,10 +7,10 @@ var BUILD_DIR = path.resolve(__dirname, 'frontend/src/elec_finals/');
 var APP_DIR = __dirname;
 
 var config = {
-    entry: `${APP_DIR}/frontend/index.jsx`,
+    entry: `${APP_DIR}/frontend/Window1/index1.jsx`,
     output: {
         path: BUILD_DIR,
-        filename: '.build.js',
+        filename: '.build1.js',
     },
     plugins: [
         new ExtractTextPlugin(`${BUILD_DIR}.styles.css`),
@@ -21,10 +21,9 @@ var config = {
             include: APP_DIR,
             loader: 'babel-loader',
             exclude: /node_modules/,
-            query:
-              {
-                  presets: ['react'],
-              },
+            query: {
+                presets: ['react'],
+            },
         }, {
             test: /\.css$/,
             loader: combineLoaders([{
