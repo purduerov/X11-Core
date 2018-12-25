@@ -45,14 +45,14 @@ function createWindow() {
 
     // Create the browser window.
 
-    for (i = 0; i < files; i++) {
+    for (i = 0; i < files.length; i++) {
         // Curious if a macOS works better this way with multi-windows...
         if (windows[i] == null) {
             windows[i] = new BrowserWindow({ width: 1600, height: 1200 });
 
             // and load the index.html of the app.
             windows[i].loadURL(url.format({
-                pathname: path.join(__dirname, 'frontend/main.html'),
+                pathname: path.join(__dirname, files[i]),
                 protocol: 'file:',
                 slashes: true,
             }));

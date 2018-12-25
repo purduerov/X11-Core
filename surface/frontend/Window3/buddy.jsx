@@ -1,12 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
-import styles from './index.css';
+import styles from './buddy.css';
 import packet from '../src/packets.js';
 
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
-
-const socketHost = 'ws://localhost:5001';
 
 /* These should be done in a component, or the js file for this window
 
@@ -56,23 +54,23 @@ class App extends React.Component {
         };
 
 
-        this.flaskcpy = this.state.dearflask;
-        this.clientcpy = this.state.dearclient;
-        this.confcpy = this.state.config;
+        this.flaskcpy = $.extend(true, {}, this.state.dearflask);
+        this.clientcpy = $.extend(true, {}, this.state.dearclient);
+        this.confcpy = $.extend(true, {}, this.state.config);
     }
 
     componentDidMount() {
-        var signals = require('./main.js');
+        var signals = require('./buddy.js');
         window.react = this;
 
-        signals(this, socketHost);
+        signals(this);
     }
 
     render() {
         return (
             <div className="main">
                 <div className="titlebar">
-                    <Titlebar title="Purdue ROV Primary Screen" />
+                    <Titlebar title="Purdue ROV's Buddy Screen" />
                 </div>
                 <div className="main-container">
                     <div className="camera-width full-height center" />

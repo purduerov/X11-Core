@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import styles from './index.css';
+import styles from './secondary.css';
 import packet from '../src/packets.js';
 
 import Card from '../src/components/Card/Card.jsx';
