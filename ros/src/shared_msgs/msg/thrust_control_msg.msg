@@ -1,4 +1,4 @@
-uint8 hfl;
+uint8 hfl
 uint8 hfr
 uint8 hbl
 uint8 hbr
