@@ -1,6 +1,7 @@
 # ROV Specific Ignores
 mjpg-streamer/
 lint*.txt
+elec_finals/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
