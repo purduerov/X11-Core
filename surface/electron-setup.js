@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const spawn = require('child_process').spawn;
@@ -84,6 +84,20 @@ app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     createWindow();
+});
+
+/*
+ipcMain.on('button-clicked', (event, file) => {
+    console.log('Received button-clicked')
+    event.sender.send('button-clicked-response', 'This is some data from button clicked response')
+});
+*/
+
+ipcMain.on('button-clicked', (event, message) => {
+    console.log(windows);
+    console.log(message);
+    windows[1].webContents.send('second-window-message', 'Second window is sending a message');
+    console.log('Second window is sending a message')
 });
 
 /*

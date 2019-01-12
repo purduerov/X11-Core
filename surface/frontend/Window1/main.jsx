@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import styles from './main.css';
 import packet from '../src/packets.js';
+const { shell, app, ipcRenderer } = window.require('electron');
 
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
@@ -68,6 +69,10 @@ class App extends React.Component {
         window.react = this;
 
         signals(this, socketHost);
+
+        ipcRenderer.on('second-window-message', (event, message) => {
+          console.log('Received message from second window');
+        });
     }
 
     render() {

@@ -10,13 +10,14 @@ export default class IPCtest extends Component {
     }
 
     testIPC() {
-        console.log("Testing IPC...");
-        ipcRenderer.send('calc-crash', "Test");
+        console.log("Button clicked in window");
+        ipcRenderer.send('button-clicked', "Test");
     }
 
     componentDidMount() {
-        ipcRenderer.on('crash-found', (event, data) => {
-            console.log("Test response came through");
+        ipcRenderer.on('button-clicked-response', (event, data) => {
+            console.log("Here's the response to the button click");
+            console.log(data)
         });
     }
 
