@@ -62,6 +62,20 @@ function createWindow() {
 
             // Emitted when the window is closed.
             windows[i].on('closed', closeWin(i));
+            if (i == 2) {
+              webContents.sendInputEvent({
+    type: 'keydown',
+    keyCode: key,
+});
+webContents.sendInputEvent({
+    type: 'keyup',
+    keyCode: key,
+});
+webContents.sendInputEvent({
+    type: 'char',
+    keyCode: key,
+});
+            }
         }
     }
 }
