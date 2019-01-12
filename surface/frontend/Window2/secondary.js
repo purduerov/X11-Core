@@ -8,5 +8,9 @@ module.exports = (where, socketHost) => {
     /*
         IPC Connection Section
     */
+    ipcRenderer.on('second-window-message', (event, data) => {
+        console.log("Here's the response to the button click");
+        console.log(data);
+    });
 
 };

@@ -94,10 +94,8 @@ ipcMain.on('button-clicked', (event, file) => {
 */
 
 ipcMain.on('button-clicked', (event, message) => {
-    console.log(windows);
-    console.log(message);
     windows[1].webContents.send('second-window-message', 'Second window is sending a message');
-    console.log('Second window is sending a message')
+    console.log('One of the windows is sending a message: ' + message);
 });
 
 /*
