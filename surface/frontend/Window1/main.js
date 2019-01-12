@@ -1,11 +1,11 @@
-var packets = require('./src/packets.js');
-
-const socketHost = 'ws://raspberrypi.local:5000';
-const socket = io.connect(socketHost, { transports: ['websocket'] });
 const { shell, app, ipcRenderer } = window.require('electron');
 
+module.exports = (where, socketHost) => {
+    /*
+        Socket Connection Section
+    */
+    const socket = io.connect(socketHost, { transports: ['websocket'] });
 
-module.exports = (where) => {
     // upon new data, save it locally
     socket.on('dearclient', (data) => { // Updates the data sent back from the server
         this.clientcpy = data;
@@ -24,4 +24,9 @@ module.exports = (where) => {
     setInterval(() => { // Sends a message down to the server with updated surface info
         socket.emit('dearflask', where.state.dearflask);
     }, 50);
+
+
+    /*
+        IPC Connection Section
+    */
 };

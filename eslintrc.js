@@ -6,5 +6,6 @@ module.exports = {
         "react/jsx-indent": ["error", 4],
         "no-var": 0,     // We lean on global-scoped variables for some files (electron-setup.js), fix later
         "object-curly-newline": 0,
+        "no-plusplus": 0,
     }
 };

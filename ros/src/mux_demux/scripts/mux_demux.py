@@ -1,6 +1,6 @@
 #! /usr/bin/python
 import rospy
-from shared_msgs.msg import can_msg, auto_command_msg, thrust_control_msg, thrust_status_msg, thrust_command_msg, esc_single_msg
+from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg
 from sensor_msgs.msg import Imu, Temperature
 from std_msgs.msg import Float32
 
