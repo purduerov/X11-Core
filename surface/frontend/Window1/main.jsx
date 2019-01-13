@@ -1,12 +1,26 @@
 import React from 'react';
 import { render } from 'react-dom';
-import styles from './main.css';
+import 'font-awesome/css/font-awesome.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'mdbreact/dist/css/mdb.css';
+import CVview from '../src/components/CVview/CVview.jsx';
+
+// import styles from './main.css';
 import packet from '../src/packets.js';
 
-import Card from '../src/components/Card/Card.jsx';
-import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
+// import Card from '../src/components/Card/Card.jsx';
+// import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
+import { MDBContainer, Row, Col, Navbar, NavbarBrand, Card, CardBody, CardImage, CardTitle, CardText, Fa } from 'mdbreact';
 
 const socketHost = 'ws://localhost:5001';
+
+const styles = {
+    height: '100vh'
+}
+
+const nav = {
+    width: '100vw'
+}
 
 /* These should be done in a component, or the js file for this window
 
@@ -69,26 +83,43 @@ class App extends React.Component {
     }
 
     render() {
+
         return (
-            <div className="main">
-                <div className="titlebar">
-                    <Titlebar title="Purdue ROV Primary Screen" />
-                </div>
-                <div className="main-container">
-                    <div className="camera-width full-height center" />
-                    <div className="data-width full-height">
-                        <div className="data-column">
-                            <Card />
-                        </div>
-                        <div className="data-column">
-                            <Card />
-                        </div>
-                        <div className="data-column">
-                            <Card />
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <MDBContainer fluid className="elegant-color" style={styles}>
+                <Row>
+                    <Navbar className="mb-3" color="indigo" dark expand="md" style={nav}>
+                        <NavbarBrand>
+                            <strong className="white-text">Purdue IEEE ROV</strong>
+                        </NavbarBrand>
+                    </Navbar>
+                </Row>
+                <Row>
+                    <Col size="6">
+
+                    </Col>
+                    <Col size="3">
+                        <Card>
+                            
+                            <CardBody className="elegant-color white-text rounded-bottom">
+                                <CardTitle>Card Title</CardTitle>
+                                <hr className="hr-light" />
+                                <CardText className="white-text">
+                                    Some quick example text to build on the card title and make
+                                    up the bulk of the card&apos;s content.
+              </CardText>
+                                <a href="#!" className="black-text d-flex justify-content-end" >
+                                    <h5 className="white-text">
+                                        Read more <Fa icon="angle-double-right" />
+                                    </h5>
+                                </a>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                    <Col size="3">
+
+                    </Col>
+                </Row>
+            </MDBContainer>
         );
     }
 }
