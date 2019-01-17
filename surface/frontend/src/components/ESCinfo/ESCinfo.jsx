@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styles from './ESCinfo.css';
+import { Row, Col } from 'mdbreact';
 
 
 export default class ESCinfo extends Component {
@@ -41,20 +42,20 @@ export default class ESCinfo extends Component {
     render() {
         return (
             <div className={styles.container}>
-                <div className={styles.numCount}>
-                    <div>ESCs:</div>
-                    {this.showESCcount()}
-                </div>
-                <div className={styles.infoShow}>
-                    <div className={styles.halfRight}>
+                <Row>
+                    <Col size="4" className="mx-0 px-0">
+                        <div>ESCs:</div>
+                        {this.showESCcount()}
+                    </Col>
+                    <Col size="4" className="mx-0 px-0">
                         <div>Current:</div>
                         {this.rendCur()}
-                    </div>
-                    <div className={styles.halfLeft}>
+                    </Col>
+                    <Col size="4" className="mx-0 px-0">
                         <div>Temp:</div>
                         {this.rendTemp()}
-                    </div>
-                </div>
+                    </Col>
+                </Row>
             </div>
         );
     }

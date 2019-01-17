@@ -3,14 +3,28 @@ import { render } from 'react-dom';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
-import CVview from '../src/components/CVview/CVview.jsx';
 
 // import styles from './main.css';
 import packet from '../src/packets.js';
 
 // import Card from '../src/components/Card/Card.jsx';
 // import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
-import { MDBContainer, Row, Col, Navbar, NavbarBrand, Card, CardBody, CardImage, CardTitle, CardText, Fa } from 'mdbreact';
+import { MDBContainer, Row, Col, Navbar, NavbarBrand } from 'mdbreact';
+
+import Panel from '../src/components/Panel/Panel.jsx';
+import CVview from '../src/components/CVview/CVview.jsx';
+import ESCinfo from '../src/components/ESCinfo/ESCinfo.jsx';
+// import Card from '../src/components/Card/Card.jsx';
+import CameraScreen from '../src/components/CameraScreen/CameraScreen.jsx';
+import ForceScales from '../src/components/ForceScales/ForceScales.jsx';
+import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
+import ThrusterInfo from '../src/components/ThrusterInfo/ThrusterInfo.jsx';
+import ThrusterScales from '../src/components/ThrusterScales/ThrusterScales.jsx';
+import Gpinfo from '../src/components/Gpinfo/Gpinfo.jsx';
+import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
+import ToolView from '../src/components/ToolView/ToolView.jsx';
+import PacketView from '../src/components/PacketView/PacketView.jsx';
+import betterlayouts from '../src/gamepad/betterlayouts.js';
 
 const socketHost = 'ws://localhost:5001';
 
@@ -33,6 +47,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
+        this.state.gp = require('../src/gamepad/bettergamepad.js');
 
         this.state.config = {
             thrust_scales: {
@@ -85,40 +100,74 @@ class App extends React.Component {
     render() {
 
         return (
-            <MDBContainer fluid className="elegant-color" style={styles}>
-                <Row>
-                    <Navbar className="mb-3" color="indigo" dark expand="md" style={nav}>
-                        <NavbarBrand>
-                            <strong className="white-text">Purdue IEEE ROV</strong>
-                        </NavbarBrand>
-                    </Navbar>
-                </Row>
-                <Row>
-                    <Col size="6">
+            <MDBContainer fluid className="elegant-color-dark" style={styles}>
+                <small>
+                    <Row>
+                        <Navbar className="mb-3" color="primary-color-dark" dark expand="md" style={nav}>
+                            <NavbarBrand>
+                                <strong className="white-text">Purdue ROV Primary Screen</strong>
+                            </NavbarBrand>
+                        </Navbar>
+                    </Row>
+                    <Row>
+                        <Col size="5">
+                            <Panel title="Camera Vision will be here.">
 
-                    </Col>
-                    <Col size="3">
-                        <Card>
-                            
-                            <CardBody className="elegant-color white-text rounded-bottom">
-                                <CardTitle>Card Title</CardTitle>
-                                <hr className="hr-light" />
-                                <CardText className="white-text">
-                                    Some quick example text to build on the card title and make
-                                    up the bulk of the card&apos;s content.
-              </CardText>
-                                <a href="#!" className="black-text d-flex justify-content-end" >
-                                    <h5 className="white-text">
-                                        Read more <Fa icon="angle-double-right" />
-                                    </h5>
-                                </a>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    <Col size="3">
+                            </Panel>
+                        </Col>
+                        <Col size="7">
+                            <Row>
+                                <Col size="4">
+                                    <Panel title="Directional Control">
+                                        <ForceScales
+                                            rend={this.changeForceScales}
+                                            scales={this.state.config.thrust_scales}
+                                            invert={this.state.config.thrust_invert}
+                                        />
+                                    </Panel>
 
-                    </Col>
-                </Row>
+                                    <Panel title="Thruster Control">
+
+                                        <ThrusterScales
+                                            rend={this.changeThrustScales}
+                                            scales={this.state.config.thruster_control}
+                                        />
+                                    </Panel>
+
+                                </Col>
+                                <Col size="4">
+                                    <Panel title="Object Display">
+
+                                        <ShowObject
+                                            obj={this.state.dearclient.sensors.obs}
+                                        />
+                                    </Panel>
+                                    <Panel title="ESC readings">
+
+                                        <ESCinfo
+                                            currents={this.state.dearclient.sensors.esc.currents}
+                                            temp={this.state.dearclient.sensors.esc.temperatures}
+                                        />
+                                    </Panel>
+                                    <Panel title="Tool View">
+                                        <ToolView
+                                            manipulator={this.state.dearflask.manipulator.power}
+                                            obs_tool={this.state.dearflask.obs_tool.power}
+                                            servo={this.state.dearflask.maincam_angle}
+                                            transmitter={this.state.dearflask.transmitter}
+                                            magnet={this.state.dearflask.magnet}
+                                            conf={this.state.config.tool_scales}
+                                            rend={this.rendTools}
+                                        />
+                                    </Panel>
+                                </Col>
+                                <Col size="4">
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                </small>
+
             </MDBContainer>
         );
     }

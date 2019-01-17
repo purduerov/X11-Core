@@ -28,7 +28,7 @@ export default class ToolView extends Component {
 
     rendTool() {
         return this.axis.map((val, index) => (
-            <li key={`axis${val}`}>
+            <div key={`axis${val}`}>
                 {this.state.conf[val] == undefined && (
                     <p className={styles.lowMargin}>
                         {val}
@@ -39,7 +39,7 @@ export default class ToolView extends Component {
                 )}
                 {this.state.conf[val] != undefined
           && <SliderControl min="0" max="50" key={val} indx={val} power={this.state.conf[val].master * 100} invert={this.state.conf[val].invert} rend={this.reRender} name={val} />}
-            </li>
+            </div>
         ));
     }
 
@@ -47,9 +47,9 @@ export default class ToolView extends Component {
         return (
             <div className={styles.container}>
                 <div className={styles.ToolView}>
-                    <ul>
+                    <div>
                         {this.rendTool()}
-                    </ul>
+                    </div>
                 </div>
             </div>
         );

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styles from './ShowObject.css';
 
+
+
 let that;
 
 /*
@@ -20,14 +22,14 @@ export default class ShowObject extends Component {
 
     rendChild(obj, parent_key) {
         return Object.keys(obj).map((val, index) => (
-            <li key={`${parent_key}_${val}`} className={styles.center}>
+            <span key={`${parent_key}_${val}`} className={styles.center}>
                 {index != 0 && <hr className={styles.squashed} />}
                 <span className={styles.halfLeft}>
                     {val}
 :
                 </span>
                 <span className={styles.halfRight}>{obj[val]}</span>
-            </li>
+            </span>
         ));
     }
 
@@ -37,11 +39,11 @@ export default class ShowObject extends Component {
                 return (
                     <div key={val} className={styles[val]}>
                         <div key={val} className={styles.openCenter}>
-                            <span>{val}</span>
+                            <center>{val}</center>
                             <hr className={styles.squashed} />
-                            <ul className={styles.offLeft}>
+                            <div>
                                 {this.rendChild(this.props.obj[val], val)}
-                            </ul>
+                            </div>
                         </div>
                         <hr />
                     </div>

@@ -1,16 +1,25 @@
 import React from 'react';
 import { render } from 'react-dom';
-import styles from './buddy.css';
+// import styles from './buddy.css';
 import packet from '../src/packets.js';
 
-import Card from '../src/components/Card/Card.jsx';
+import Panel from '../src/components/Panel/Panel.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
+import { MDBContainer, Row, Col, Navbar, NavbarBrand } from 'mdbreact';
 
 /* These should be done in a component, or the js file for this window
 
 const socket = io.connect(socketHost, { transports: ['websocket'] });
 const { shell, app, ipcRenderer } = window.require('electron');
 */
+
+const styles = {
+    height: '100vh'
+}
+
+const nav = {
+    width: '100vw'
+}
 
 
 class App extends React.Component {
@@ -68,25 +77,38 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="main">
-                <div className="titlebar">
-                    <Titlebar title="Purdue ROV's Buddy Screen" />
-                </div>
-                <div className="main-container">
-                    <div className="camera-width full-height center" />
-                    <div className="data-width full-height">
-                        <div className="data-column">
-                            <Card />
-                        </div>
-                        <div className="data-column">
-                            <Card />
-                        </div>
-                        <div className="data-column">
-                            <Card />
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <MDBContainer fluid className="elegant-color-dark" style={styles}>
+                <small>
+                    <Row>
+                        <Navbar className="mb-3" color="primary-color-dark" dark expand="md" style={nav}>
+                            <NavbarBrand>
+                                <strong className="white-text">Purdue ROV Secondary Screen</strong>
+                            </NavbarBrand>
+                        </Navbar>
+                    </Row>
+                    <Row>
+                        <Col size="5">
+                            <Panel title="Camera Vision will be here.">
+
+                            </Panel>
+                        </Col>
+                        <Col size="7">
+                            <Row>
+                                <Col size="4">
+                                    <Panel />
+                                </Col>
+                                <Col size="4">
+                                    <Panel />
+                                </Col>
+                                <Col size="4">
+                                    <Panel />
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                </small>
+
+            </MDBContainer>
         );
     }
 }
