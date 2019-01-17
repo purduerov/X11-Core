@@ -8,9 +8,9 @@ module.exports = (where, socketHost) => {
 
     // upon new data, save it locally
     socket.on('dearclient', (data) => { // Updates the data sent back from the server
-        this.clientcpy = data;
+        where.clientcpy = data;
 
-        this.setState({
+        where.setState({
             dearclient: this.clientcpy,
         });
     });

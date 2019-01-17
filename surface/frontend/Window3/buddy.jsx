@@ -18,7 +18,7 @@ class App extends React.Component {
         super(props);
         this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
 
-        this.state.pocketrocket = { 37: 0, 38: 0, 39: 0, 40: 0 };
+        this.state.directions = { x: 0, y: 0 };
         this.state.config = {
             thrust_scales: {
                 master: 50,
