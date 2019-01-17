@@ -14,8 +14,8 @@ def process(data):
   img = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) 
  
   #color filtold for red at top and bottom of hue spectrum
-  img_filt = cv2.inRange(img,(),())
-  img_filt = cv2.inRange(img_filt,(),())
+  img_filt = cv2.inRange(img,(0/2,75,48),(30/2,100,75))
+  #img_filt = cv2.inRange(img_filt,(),())
 
   #errode and dilate image
 
