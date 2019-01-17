@@ -15,10 +15,12 @@ export default class IPCtest extends Component {
     }
 
     componentDidMount() {
+/*
         ipcRenderer.on('button-clicked-response', (event, data) => {
             console.log("Here's the response to the button click");
             console.log(data)
         });
+*/
     }
 
     render() {

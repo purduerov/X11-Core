@@ -29,4 +29,8 @@ module.exports = (where, socketHost) => {
     /*
         IPC Connection Section
     */
+
+    ipcRenderer.on('main-window-message', (event, data) => {
+      console.log("main-window-message received");
+    });
 };

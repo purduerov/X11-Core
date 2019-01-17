@@ -8,9 +8,10 @@ module.exports = (where, socketHost) => {
     /*
         IPC Connection Section
     */
-    ipcRenderer.on('second-window-message', (event, data) => {
-        console.log("Here's the response to the button click");
+    ipcRenderer.on('window-message', (event, data) => {
+        console.log("window-message received");
+        ipcRenderer.send('reply', "This is a reply sending from window 2")
         console.log(data);
     });
-
+    
 };
