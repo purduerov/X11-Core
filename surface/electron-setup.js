@@ -93,7 +93,7 @@ ipcMain.on('button-clicked', (event, file) => {
 });
 */
 
-ipcMain.on('button-clicked', (event, message) => {
+/*ipcMain.on('button-clicked', (event, message) => {
     windows[1].webContents.send('window-message', 'Second window is sending a message');
     console.log('One of the windows is sending a message: ' + message);
 });
@@ -102,6 +102,11 @@ ipcMain.on('reply', (event, message) => {
     console.log('reply received')
     windows[0].webContents.send('main-window-message', 'Main window is sending a message');
     console.log('Main window is sending a message')
+});*/
+
+ipcMain.on('button-clicked', (event, message) => {
+    windows[0].webContents.send('other-main-window-message', message);
+    console.log('Main window is sending a message: ' + message);
 });
 
 /*
