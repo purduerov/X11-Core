@@ -9,12 +9,6 @@ export default class IPCtest extends Component {
         super(props);
     }
 
-    testIPC() {
-        console.log("Button clicked in window");
-        let text = document.getElementById('textarea').value;
-        ipcRenderer.send('button-clicked', text);
-    }
-
     componentDidMount() {
 /*
         ipcRenderer.on('button-clicked-response', (event, data) => {
@@ -27,9 +21,8 @@ export default class IPCtest extends Component {
     render() {
         return (
             <div className={styles.container}>
-                <h3> Test IPC </h3>
-                <p id="testwrite"></p>
-                <button id="teststart" onClick={this.testIPC}>TEST</button>
+                <textarea rows="2" cols="20" id="textarea">
+                </textarea>
             </div>
         );
     }
