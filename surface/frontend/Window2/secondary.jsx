@@ -79,7 +79,10 @@ class App extends React.Component {
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card>
-                              <IPCtest />
+                              <IPCtest variable={7} />
+                            </Card>
+                            <Card>
+                              <IPCtest variable={8} />
                             </Card>
                         </div>
                         <div className="data-column">
