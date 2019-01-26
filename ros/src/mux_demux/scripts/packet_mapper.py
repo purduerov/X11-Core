@@ -1,37 +1,52 @@
 #! /usr/bin/python
-#from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg
-#from sensor_msgs.msg import Imu, Temperature
-#from std_msgs.msg import Float32
 import shared_msgs.msg
 
-def init(packet):
-    names = list()
-    msgs = dict([(name, cls) for name, cls in shared_msgs.msg.__dict__.items() if isinstance(cls, type)])
-    for msg in msgs.keys():
-        #print msg
-        for key,value in getattr(shared_msgs.msg, msg).__dict__.iteritems():
-            if type(value).__name__ == 'member_descriptor':
-                names.append(key)
 
-    print 'names: ', names
+class packet_mapper:
 
-    for name in names:
-        found = _match_variable(packet, name)
-        if found:
-            print found
+    topic_paths = {}
 
-def _match_variable(d, name):
-    for key,value in d.items():
-        if type(value) == dict:
-            ret = _match_variable(value, name)
-            if ret != "":
-                return key + '.' + ret
-        if key == name:
-            return key
-    return ""
+    def __init__(self, packet):
+        names = list()
+        msgs = dict([(name, cls) for name, cls in shared_msgs.msg.__dict__.items() if isinstance(cls, type)])
+        for msg in msgs.keys():
+            #print msg
+            for key,value in getattr(shared_msgs.msg, msg).__dict__.iteritems():
+                if type(value).__name__ == 'member_descriptor':
+                    names.append(key)
 
-def map(name):
-    pass
+        print 'names: ', names
+
+        for name in names:
+            path = self._build_path(packet, name)
+            if path:
+                self.topic_paths[name] = path
+
+        print 'paths: ', self.topic_paths
+
+    def map(self, var, value, packet):
+        path = self.topic_paths[var]
+        split = path.split('.')
+        p = packet
+        for e in split[:-1]:
+            p = p[e]
+        p[split[-1]] = value
+
+    def _build_path(self, d, name):
+        for key,value in d.items():
+            if type(value) == dict:
+                ret = self._build_path(value, name)
+                if ret != "":
+                    return key + '.' + ret
+            if key == name:
+                return key
+        return ""
 
 if __name__ == "__main__":
-    init({   'inside' : {   'addr' : 'hello', 'in2' : { 'data' : 1    } }   })
+    packet = { 'addr' : 'hello', 'in2' : { 'data' : 1    }   }
+    mapper = packet_mapper(packet)
+    mapper.map('addr', '6581', packet)
+    mapper.map('data', '0', packet)
+    print packet
+
+
