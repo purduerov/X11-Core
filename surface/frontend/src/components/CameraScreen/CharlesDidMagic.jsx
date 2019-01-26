@@ -1,7 +1,65 @@
 import React, { Component } from 'react';
+import Camera from 'react-camera';
 import styles from './CameraScreen.css';
 
-export default class CameraView extends Component {
+class Square extends React.Component {
+    render() {
+        return (
+            <button className={styles.butt} onClick={() => this.props.onClick()}>
+                {this.props.value}
+            </button>
+        );
+    }
+}
+
+class Stream extends React.Component {
+    render() {
+        return (
+            <img src={this.props.cam} width="100%" />
+        );
+    }
+}
+
+class CamSel extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            sub: 'Name',
+        };
+        this.handleNameChange = this.handleNameChange.bind(this);
+    }
+
+    handleNameChange(event) {
+        this.setState({ name: event.target.value });
+    }
+
+    render() {
+        return (
+            <div>
+                <input
+                    type="text"
+                    value={this.state.name}
+                    onChange={this.handleNameChange}
+                />
+                <input
+                    type="submit"
+                    value={this.state.sub}
+                    onClick={e => this.props.onNewName(this.state.name)}
+                />
+            </div>
+        );
+    }
+}
+
+function getMoviesFromApiAsync(callback) {
+    return fetch('http://localhost:1905')
+        .then(response => response.json())
+        .then((results) => {
+            callback(results);
+        });
+}
+export default class Camera_view extends Component {
     constructor(props) {
         super(props);
 
@@ -34,10 +92,8 @@ export default class CameraView extends Component {
     }
 
     getconf() {
-        var res = null;
-        var bypass = this.state.pxybypass;
-        if (!bypass) {
-            res = fetch('http://localhost:1905')
+        if (!this.state.pxybypass) {
+            return fetch('http://localhost:1905')
                 .then(response => response.json())
                 .then((results) => {
                     this.setState({
@@ -45,8 +101,6 @@ export default class CameraView extends Component {
                     });
                 });
         }
-
-        return res;
     }
 
     handleClick(screennum, camnum) {
@@ -82,20 +136,7 @@ export default class CameraView extends Component {
     }
 
     renderCamSel(screennum) {
-        return (
-            <div>
-                <input
-                    type="text"
-                    value={this.state.name}
-                    onChange={e => this.setState({ name: e.target.value }) }
-                />
-                <input
-                    type="submit"
-                    value={this.state.sub}
-                    onClick={e => this.camUpdate(screennum, this.state.name)}
-                />
-            </div>
-        )
+        return <CamSel onNewName={val => this.camUpdate(screennum, val)} />;
     }
 
     renderStream(strnum) {
@@ -154,14 +195,15 @@ export default class CameraView extends Component {
             IP = this.state.stream.ip;
         }
         const url = `http://${IP}:${port}${query}`;
-        return <img src={url} width="100%" />;
+        return <Stream cam={url} />;
     }
 
     renderSquare(screennum, camnum) {
         return (
-            <button className={styles.butt} onClick={() => this.handleClick(screennum, camnum)}>
-                {this.state.camnames[camnum]}
-            </button>
+            <Square
+              value={this.state.camnames[camnum]}
+                onClick={() => this.handleClick(screennum, camnum)}
+            />
         );
     }
 
@@ -170,7 +212,7 @@ export default class CameraView extends Component {
             <div className={styles.container}>
                 <header className={styles.header}>
                     <div className={styles.whiteText}>
-                        Screen1:
+Screen1:
                         {this.renderCamSel(0)}
                     </div>
                 </header>

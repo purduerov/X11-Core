@@ -89,6 +89,7 @@ class App extends React.Component {
                 </div>
                 <div className="main-container">
                     <div className="camera-width full-height center">
+                    <CameraScreen next={this.state.gp.buttons.left} prev={this.state.gp.buttons.right} />
                     </div>
                     <div className="data-width full-height">
                         <div className="data-column">
