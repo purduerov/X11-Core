@@ -1,3 +1,5 @@
+const { ipcRenderer } = window.require('electron');
+
 module.exports = class keyBind {
   constructor(where) {
       this.directionscpy = {x: 0, y: 0};
@@ -28,6 +30,7 @@ module.exports = class keyBind {
         where.setState({
           directions: this.directionscpy
         });
+        ipcRenderer.send('buddy-controls-from-win-3', this.directionscpy);
       }, 50);
 
   }

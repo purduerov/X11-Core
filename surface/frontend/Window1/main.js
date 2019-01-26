@@ -33,4 +33,8 @@ module.exports = (where, socketHost) => {
     ipcRenderer.on('other-main-window-message', (event, data) => {
       console.log("other-main-window-message received, the message was: " + data);
     });
+
+    ipcRenderer.on('buddy-controls-from-win-1', (event, data) => {
+      console.log("buddy controls received: " + data);
+    });
 };

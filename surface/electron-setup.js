@@ -123,6 +123,10 @@ ipcMain.on('button-clicked', (event, message) => {
     console.log('Main window is sending a message: ' + message);
 });
 
+ipcMain.on('buddy-controls-from-win-3', (event, message) => {
+    windows[0].webContents.send('buddy-controls-from-win-1', message);
+});
+
 /*
     Here we are saying that every time our node application receives data from the python process
     output stream(on 'data'), we want to convert that received data into a string and append it to
