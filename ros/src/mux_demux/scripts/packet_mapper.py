@@ -32,6 +32,12 @@ class packet_mapper:
             p = p[e]
         p[split[-1]] = value
 
+    def get_msg_vars(self, msg):
+        names = list()
+        for key,value in getattr(shared_msgs.msg, type(msg).__name__).__dict__.iteritems():
+            if type(value).__name__ == 'member_descriptor':
+                names.append(key)
+
     def _build_path(self, d, name):
         for key,value in d.items():
             if type(value) == dict:
@@ -45,8 +51,14 @@ class packet_mapper:
 if __name__ == "__main__":
     packet = { 'addr' : 'hello', 'in2' : { 'data' : 1    }   }
     mapper = packet_mapper(packet)
-    mapper.map('addr', '6581', packet)
-    mapper.map('data', '0', packet)
-    print packet
+
+    # This code changes variables within a packet
+    #mapper.map('addr', '6581', packet)
+    #mapper.map('data', '0', packet)
+    #print packet
+
+    # This code gives you a list of the names of the variables in a message object
+    #msg = shared_msgs.msg.can_msg()
+    #mapper.get_msg_vars(msg)
 
 
