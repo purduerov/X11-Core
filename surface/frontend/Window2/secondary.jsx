@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import styles from './secondary.css';
-import packet from '../src/packets.js';
+import packet from '../src/packets.json';
 
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
@@ -16,7 +16,7 @@ const { shell, app, ipcRenderer } = window.require('electron');
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
+        this.state = require("../src/packets.json");
 
         this.state.config = {
             thrust_scales: {
