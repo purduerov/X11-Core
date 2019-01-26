@@ -35,6 +35,8 @@ module.exports = (where, socketHost) => {
     });
 
     ipcRenderer.on('buddy-controls-from-win-1', (event, data) => {
-      console.log("buddy controls received: " + data);
+        where.setState({
+          directions: data
+        });
     });
 };
