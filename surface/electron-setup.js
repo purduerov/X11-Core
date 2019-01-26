@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const spawn = require('child_process').spawn;
@@ -98,6 +98,33 @@ app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     createWindow();
+});
+
+/*
+ipcMain.on('button-clicked', (event, file) => {
+    console.log('Received button-clicked')
+    event.sender.send('button-clicked-response', 'This is some data from button clicked response')
+});
+*/
+
+/*ipcMain.on('button-clicked', (event, message) => {
+    windows[1].webContents.send('window-message', 'Second window is sending a message');
+    console.log('One of the windows is sending a message: ' + message);
+});
+
+ipcMain.on('reply', (event, message) => {
+    console.log('reply received')
+    windows[0].webContents.send('main-window-message', 'Main window is sending a message');
+    console.log('Main window is sending a message')
+});*/
+
+ipcMain.on('button-clicked', (event, message) => {
+    windows[0].webContents.send('other-main-window-message', message);
+    console.log('Main window is sending a message: ' + message);
+});
+
+ipcMain.on('buddy-controls-from-win-3', (event, message) => {
+    windows[0].webContents.send('buddy-controls-from-win-1', message);
 });
 
 /*

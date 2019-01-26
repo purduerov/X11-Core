@@ -9,24 +9,19 @@ export default class BuddyControls extends Component {
     }
 
     readyToRender() {
-      if (this.props.ready === true) {
-        return (
-          <div>
-            <ul>
-              <li>
-x:
-                  {this.props.buddyDirections.x}
-              </li>
-              <li>
-y:
-                  {this.props.buddyDirections.y}
-              </li>
-            </ul>
-          </div>
-        );
-      }
       return (
-        <div>"Go heck yourself"</div>
+        <div>
+          <ul>
+            <li>
+x:
+                {this.props.buddyDirections.x}
+            </li>
+            <li>
+y:
+                {this.props.buddyDirections.y}
+            </li>
+          </ul>
+        </div>
       );
     }
 
