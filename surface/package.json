@@ -11,7 +11,10 @@
     "proxyup": "./pakfront/proxyrun.sh",
     "dev": "webpack -d",
     "watch": "webpack -d --watch",
-    "build": "webpack -p"
+    "build": "webpack -p",
+    "lintFront": "eslint ./**/*.{js,jsx} -c ../eslintrc.js > lintFront.txt | echo 'Linting frontend folder...'",
+    "linit": "eslint --init",
+    "lintfix": "eslint ./**/*.{js,jsx} -c ../eslintrc.js --fix > lintFront.txt | echo 'Linting frontend folder...'"
   },
   "author": "Purdue ROV Software Team",
   "license": "ISC",
@@ -31,5 +34,12 @@
     "style-loader": "^0.23.0",
     "webpack": "^3.12.0",
     "webpack-combine-loaders": "^2.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^5.6.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1"
   }
 }
