@@ -28,6 +28,10 @@ module.exports = class keyBind {
         where.setState({
           directions: this.directionscpy
         });
+
+        
+        // send w/ inspect
+
       }, 50);
 
   }

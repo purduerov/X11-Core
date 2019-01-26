@@ -5,6 +5,7 @@ import packet from '../src/packets.js';
 
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
+import BuddyControls from '../src/components/BuddyControls/BuddyControls.jsx';
 
 const socketHost = 'ws://localhost:5001';
 
@@ -20,6 +21,7 @@ class App extends React.Component {
         super(props);
         this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
 
+        this.state.directions = { x: 0, y: 0 };
         this.state.config = {
             thrust_scales: {
                 master: 50,
@@ -78,7 +80,11 @@ class App extends React.Component {
                     <div className="camera-width full-height center" />
                     <div className="data-width full-height">
                         <div className="data-column">
-                            <Card />
+                            <Card>
+                              <BuddyControls
+                                buddyDirections={this.state.directions}
+                              />
+                            </Card>
                         </div>
                         <div className="data-column">
                             <Card />
