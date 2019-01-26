@@ -16,14 +16,14 @@ def process(data):
   #convert img to cv image and convert to HSV
   img = bridge.imgmsg_to_cv2(data,"bgr8")
   img_og = img
-
+  
+  #MAKE THIS SUCKA NOISY
+  img = cv2.randn(img,(10,10,10),(30,30,30))
+ 
   img = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) 
 
-  #blurring (median and then gaussian)
-  img = cv2.medianBlur(img,5)
-  img = cv2.GaussianBlur(img,(5,5),0)
- 
-  #color filtold for red at top and bottom of hue spectrum
+  '''
+  #color filter for red at top and bottom of hue spectrum
   #red
   #img = cv2.inRange(img,(0/2,150,115),(35/2,255,255))
   #blue
@@ -39,6 +39,7 @@ def process(data):
 
   #contouring
   
+  '''
 
   #show images
   cv2.imshow("Image",img_og)
