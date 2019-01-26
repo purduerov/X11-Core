@@ -10,11 +10,13 @@ bridge = CvBridge()
 #functions that manipulates the data that comes the camera
 def process(data):
   #convert img to cv image and convert to HSV
-  img_og = bridge.imgmsg_to_cv2(data,"bgr8")
-  img = cv2.cvtColor(img_og,cv2.COLOR_BGR2HSV) 
+  img = bridge.imgmsg_to_cv2(data,"bgr8")
+  img_og = img
+
+  img = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) 
  
   #color filtold for red at top and bottom of hue spectrum
-  img_filt = cv2.inRange(img,(0/2,75,48),(40/2,100,100))
+  img = cv2.inRange(img,(0/2,75,45),(40/2,125,70))
   #img_filt = cv2.inRange(img_filt,(),())
 
   #errode and dilate image
@@ -24,8 +26,8 @@ def process(data):
 
   #show images
   cv2.imshow("Image",img_og)
-  cv2.imshow("Filtered",img_filt)
-  cv2.waitKey(1)
+  cv2.imshow("Filtered",img)
+  cv2.waitKey(3)
 
 if __name__ == "__main__":
   rospy.init_node('line_follow',anonymous=True)
