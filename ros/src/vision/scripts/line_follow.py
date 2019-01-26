@@ -9,7 +9,9 @@ import numpy as np
 bridge = CvBridge()
 
 def get_largest(img):
-  pass
+  #grab all of the contours
+
+  #iterate through contours to find one with largest area 
 
 #functions that manipulates the data that comes the camera
 def process(data):
@@ -28,17 +30,17 @@ def process(data):
   #img = cv2.inRange(img,(0/2,150,115),(35/2,255,255))
   #blue
   img = cv2.inRange(img,(216/2,133,67),(230/2,205,236))
-
+  
+  
   #erode and dilate image
   img =  cv2.erode(img,np.ones((5,5)))
   img =  cv2.dilate(img,np.ones((10,10)))
-
-  #masking
   
+  #masking
 
 
   #contouring
-  
+  contour = get_largest(img)
 
   #show images
   cv2.imshow("Image",img_og)
