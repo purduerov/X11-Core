@@ -1,11 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
-import 'font-awesome/css/font-awesome.min.css';
-import 'bootstrap-css-only/css/bootstrap.min.css';
-import 'mdbreact/dist/css/mdb.css';
 
 // import styles from './main.css';
-import packet from '../src/packets.js';
+import packet from '../src/packets.json';
 
 // import Card from '../src/components/Card/Card.jsx';
 // import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
@@ -46,7 +43,7 @@ const { shell, app, ipcRenderer } = window.require('electron');
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
+        this.state = require("../src/packets.json");
         this.state.gp = require('../src/gamepad/bettergamepad.js');
 
         this.state.config = {
@@ -100,6 +97,7 @@ class App extends React.Component {
     render() {
 
         return (
+<<<<<<< HEAD
             <MDBContainer fluid className="elegant-color-dark" style={styles}>
                 <small>
                     <Row>
@@ -169,6 +167,73 @@ class App extends React.Component {
                 </small>
 
             </MDBContainer>
+=======
+            <div className="main">
+                <div className="titlebar">
+                    <Titlebar title="Purdue ROV Primary Screen" />
+                </div>
+                <div className="main-container">
+                    <div className="camera-width full-height center">
+                    <CameraScreen next={this.state.gp.buttons.left} prev={this.state.gp.buttons.right} />
+                    </div>
+                    <div className="data-width full-height">
+                        <div className="data-column">
+                            <Card>
+                                <ThrusterInfo
+                                  thrusters={this.state.dearclient.thrusters}
+                                  disabled={this.state.dearflask.thrusters.disabled_thrusters}
+                                  manipulator={this.state.dearflask.manipulator.power}
+                                  obs_tool={this.state.dearflask.obs_tool.power}
+                                  rend={this.changeDisabled}
+                                />
+                            </Card>
+                            <Card title="CV view window">
+                                <CVview desc={"Purdo good, Purdon't let Eric make messages"} tdist={[0.0, 0.1, 0.2, 0.4, 0.7, 0.8]} />
+                            </Card>
+                        </div>
+                        <div className="data-column">
+                            <Card title="Directional Control">
+                                <ForceScales
+                                  rend={this.changeForceScales}
+                                  scales={this.state.config.thrust_scales}
+                                  invert={this.state.config.thrust_invert}
+                                />
+                            </Card>
+                            <Card title="Thruster Control">
+                                <ThrusterScales
+                                  rend={this.changeThrustScales}
+                                  scales={this.state.config.thruster_control}
+                                  />
+                            </Card>
+                        </div>
+                        <div className="data-column">
+                            <Card title="ESC readings">
+                                <ESCinfo
+                                  currents={this.state.dearclient.sensors.esc.currents}
+                                  temp={this.state.dearclient.sensors.esc.temperatures}
+                                  />
+                            </Card>
+                            <Card>
+                                <ToolView 
+                                  manipulator={this.state.dearflask.manipulator.power}
+                                  obs_tool={this.state.dearflask.obs_tool.power}
+                                  servo={this.state.dearflask.maincam_angle}
+                                  transmitter={this.state.dearflask.transmitter}
+                                  magnet={this.state.dearflask.magnet}
+                                  conf={this.state.config.tool_scales}
+                                  rend={this.rendTools}
+                                  />
+                            </Card>
+                            <Card title="Object Display">
+                                <ShowObject
+                                  obj={this.state.dearclient.sensors.obs}
+                                  />
+                            </Card>
+                        </div>
+                    </div>
+                </div>
+            </div>
+>>>>>>> bb1c4835e27d61d84b90f5d9eca85903f409361e
         );
     }
 }

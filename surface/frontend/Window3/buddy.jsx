@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 // import styles from './buddy.css';
-import packet from '../src/packets.js';
+import packet from '../src/packets.json';
 
 import Panel from '../src/components/Panel/Panel.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
@@ -25,7 +25,7 @@ const nav = {
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
+        this.state = require("../src/packets.json");
 
         this.state.config = {
             thrust_scales: {
