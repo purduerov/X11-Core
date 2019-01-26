@@ -7,6 +7,7 @@ import Panel from '../src/components/Panel/Panel.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
 import { MDBContainer, Row, Col, Navbar, NavbarBrand } from 'mdbreact';
 
+
 const styles = {
     height: '100vh'
 }
