@@ -1,9 +1,17 @@
 #! /usr/bin/python
 import rospy
 from shared_msgs.msg import i2c_msg
+from threading import Thread, Lock
+
+#mutex = Lock()
 
 def message_received(msg):
   # This runs on a seperate thread from the pub
+  m = i2c_msg()
+  m.data = msg.data
+  m.addr = msg.addr
+  
+  rospy.loginfo(m)
   pass
 
 if __name__ == "__main__":
@@ -14,4 +22,13 @@ if __name__ == "__main__":
       message_received)
 
   # TODO: I2C related activities
+  rospy.init_node('talker', anomymous=True)
+  rate = rospy.Rate(10) # 10hz
+
+  msg = i2c_msg()
+  while not rospy.is_shutdown():
+    rospy.loginfo(msg)
+    pub.publish(msg)
+    rate.sleep()
+  
   rospy.spin()
