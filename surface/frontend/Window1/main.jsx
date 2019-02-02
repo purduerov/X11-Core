@@ -89,16 +89,20 @@ class App extends React.Component {
                 </div>
                 <div className="main-container">
                     <div className="camera-width full-height center">
+                        <CameraScreen
+                            next={this.state.gp.buttons.left}
+                            prev={this.state.gp.buttons.right}
+                        />
                     </div>
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card>
                                 <ThrusterInfo
-                                  thrusters={this.state.dearclient.thrusters}
-                                  disabled={this.state.dearflask.thrusters.disabled_thrusters}
-                                  manipulator={this.state.dearflask.manipulator.power}
-                                  obs_tool={this.state.dearflask.obs_tool.power}
-                                  rend={this.changeDisabled}
+                                    thrusters={this.state.dearclient.thrusters}
+                                    disabled={this.state.dearflask.thrusters.disabled_thrusters}
+                                    manipulator={this.state.dearflask.manipulator.power}
+                                    obs_tool={this.state.dearflask.obs_tool.power}
+                                    rend={this.changeDisabled}
                                 />
                             </Card>
                             <Card title="CV view window">
@@ -108,40 +112,40 @@ class App extends React.Component {
                         <div className="data-column">
                             <Card title="Directional Control">
                                 <ForceScales
-                                  rend={this.changeForceScales}
-                                  scales={this.state.config.thrust_scales}
-                                  invert={this.state.config.thrust_invert}
+                                    rend={this.changeForceScales}
+                                    scales={this.state.config.thrust_scales}
+                                    invert={this.state.config.thrust_invert}
                                 />
                             </Card>
                             <Card title="Thruster Control">
                                 <ThrusterScales
-                                  rend={this.changeThrustScales}
-                                  scales={this.state.config.thruster_control}
-                                  />
+                                    rend={this.changeThrustScales}
+                                    scales={this.state.config.thruster_control}
+                                />
                             </Card>
                         </div>
                         <div className="data-column">
                             <Card title="ESC readings">
                                 <ESCinfo
-                                  currents={this.state.dearclient.sensors.esc.currents}
-                                  temp={this.state.dearclient.sensors.esc.temperatures}
-                                  />
+                                    currents={this.state.dearclient.sensors.esc.currents}
+                                    temp={this.state.dearclient.sensors.esc.temperatures}
+                                />
                             </Card>
                             <Card>
                                 <ToolView 
-                                  manipulator={this.state.dearflask.manipulator.power}
-                                  obs_tool={this.state.dearflask.obs_tool.power}
-                                  servo={this.state.dearflask.maincam_angle}
-                                  transmitter={this.state.dearflask.transmitter}
-                                  magnet={this.state.dearflask.magnet}
-                                  conf={this.state.config.tool_scales}
-                                  rend={this.rendTools}
-                                  />
+                                    manipulator={this.state.dearflask.manipulator.power}
+                                    obs_tool={this.state.dearflask.obs_tool.power}
+                                    servo={this.state.dearflask.maincam_angle}
+                                    transmitter={this.state.dearflask.transmitter}
+                                    magnet={this.state.dearflask.magnet}
+                                    conf={this.state.config.tool_scales}
+                                    rend={this.rendTools}
+                                />
                             </Card>
                             <Card title="Object Display">
                                 <ShowObject
-                                  obj={this.state.dearclient.sensors.obs}
-                                  />
+                                    obj={this.state.dearclient.sensors.obs}
+                                />
                             </Card>
                         </div>
                     </div>
