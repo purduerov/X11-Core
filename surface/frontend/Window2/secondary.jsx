@@ -5,8 +5,6 @@ import packet from '../src/packets.js';
 
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
-import IPCtest from '../src/components/IPCtest/IPCtest.jsx'
-import IPCtest2 from '../src/components/IPCtest/IPCtest2.jsx'
 
 /* These should be done in a component, or the js file for this window
 
@@ -78,17 +76,10 @@ class App extends React.Component {
                     <div className="camera-width full-height center" />
                     <div className="data-width full-height">
                         <div className="data-column">
-                            <Card>
-                              <IPCtest variable={7} />
-                            </Card>
-                            <Card>
-                              <IPCtest variable={8} />
-                            </Card>
+                            <Card />
                         </div>
                         <div className="data-column">
-                            <Card>
-                              <IPCtest2 />
-                            </Card>
+                            <Card />
                         </div>
                         <div className="data-column">
                             <Card />

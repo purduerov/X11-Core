@@ -30,10 +30,6 @@ module.exports = (where, socketHost) => {
         IPC Connection Section
     */
 
-    ipcRenderer.on('other-main-window-message', (event, data) => {
-      console.log("other-main-window-message received, the message was: " + data);
-    });
-
     ipcRenderer.on('buddy-controls-from-win-1', (event, data) => {
         where.setState({
           directions: data

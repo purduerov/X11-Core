@@ -64,17 +64,17 @@ function createWindow() {
             windows[i].on('closed', closeWin(i));
             if (i == 2) {
               webContents.sendInputEvent({
-    type: 'keydown',
-    keyCode: key,
-});
-webContents.sendInputEvent({
-    type: 'keyup',
-    keyCode: key,
-});
-webContents.sendInputEvent({
-    type: 'char',
-    keyCode: key,
-});
+                type: 'keydown',
+                keyCode: key,
+              });
+              webContents.sendInputEvent({
+                type: 'keyup',
+                keyCode: key,
+              });
+              webContents.sendInputEvent({
+                type: 'char',
+                keyCode: key,
+              });
             }
         }
     }
@@ -100,31 +100,10 @@ app.on('activate', () => {
     createWindow();
 });
 
-/*
-ipcMain.on('button-clicked', (event, file) => {
-    console.log('Received button-clicked')
-    event.sender.send('button-clicked-response', 'This is some data from button clicked response')
-});
-*/
-
-/*ipcMain.on('button-clicked', (event, message) => {
-    windows[1].webContents.send('window-message', 'Second window is sending a message');
-    console.log('One of the windows is sending a message: ' + message);
-});
-
-ipcMain.on('reply', (event, message) => {
-    console.log('reply received')
-    windows[0].webContents.send('main-window-message', 'Main window is sending a message');
-    console.log('Main window is sending a message')
-});*/
-
-ipcMain.on('button-clicked', (event, message) => {
-    windows[0].webContents.send('other-main-window-message', message);
-    console.log('Main window is sending a message: ' + message);
-});
-
 ipcMain.on('buddy-controls-from-win-3', (event, message) => {
-    windows[0].webContents.send('buddy-controls-from-win-1', message);
+    if (windows[0] != null) {
+      windows[0].webContents.send('buddy-controls-from-win-1', message);
+    }
 });
 
 /*

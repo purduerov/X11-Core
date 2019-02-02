@@ -7,7 +7,6 @@ const { shell, app, ipcRenderer } = window.require('electron');
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
 import BuddyControls from '../src/components/BuddyControls/BuddyControls.jsx';
-import IPCtest from '../src/components/IPCtest/IPCtest.jsx'
 
 const socketHost = 'ws://localhost:5001';
 
@@ -70,10 +69,6 @@ class App extends React.Component {
         window.react = this;
 
         signals(this, socketHost);
-
-        ipcRenderer.on('second-window-message', (event, message) => {
-          console.log('Received message from second window');
-        });
     }
 
     render() {
