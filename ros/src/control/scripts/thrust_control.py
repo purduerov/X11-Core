@@ -5,56 +5,92 @@ from sensor_msgs.msg import Imu
 from std_msgs.msg import Float32
 from rov import movement/mapper/Complex
 
+desired_a = None
+desired_p = None
+locked_dims_list = None
+disabled_list = None
+inverted_list = None
+auto_ctrl_flag = None
+
 def message_received(msg):
-  # This runs on a seperate thread from the pub
-  pass
+  global desired_a #desired thrust from automatic control
+  global locked_dims_list #locked dimensions
+  desired_a = msg.thrust_vec
+  locked_dims_list = msg.dims_locked
+
+  #initialize flag for automatic control vs pilot control
+  auto_ctrl_flag = 0
+  #if there are locked dimensions, set flag to use automatic control
+  for i in range(0, len(locked_dims_list)):
+    if locked_dims_list[i] == True:
+      auto_ctrl_flag = 1
+
 def command_received(comm):
-  # This runs on a seperate thread from the pub
-  pass
+  global desired_p #desired thrust from pilot
+  global disabled_list #disabled thrusters
+  global inverted_list #inverted thrusters
+  desired_p = comm.desired_thrust
+  disabled_list = comm.disable_thrusters
+  inverted_list = comm.inverted
 
 if __name__ == "__main__":
+  
+  #initialize node and rate
   rospy.init_node('thrust_control')
+  rate = rospy.Rate(10) #10 hz
 
+  #initialize subscribers
   auto_sub = rospy.Subscriber('auto_control', 
       auto_control_msg, message_received)
   comm_sub = rospy.Subscriber('/surface/thrust_command',
       thrust_command_msg, command_received)
-
+  
+  #initialize publishers
   thrust_pub = rospy.Publisher('thrust_control',
     thrust_control_msg, queue_size=10)
-
   status_pub = rospy.Publisher('thrust_status',
     thrust_status_msg, queue_size=10)
 
-  rate = rospy.Rate(10) # 10hz
+  #initialize auto_ctrl_flag
+  global auto_ctrl_flag
+  auto_ctrl_flag = 0
 
-  #define variable for class Complex to allow calculation of thruster pwm values
-  c = Complex()
-
-  #TODO: decide to use automatic or pilot control using dims_locked
-
-  #TODO: read desired thrust and disabled thrusters and inverted thrusters
-
-  #calculate thrust
-  thrust_values = c.calculate(desired, disabled, False)
-
-  #TODO: redo this with tcm = thrust_control_msg() and tcm.hfl ...
-  thrust_control_msg.hfl = thrust_values[0]
-  thrust_control_msg.hfr = thrust_values[1]
-  thrust_control_msg.hbl = thrust_values[2]
-  thrust_control_msg.hbr = thrust_values[3]
-  thrust_control_msg.vfl = thrust_values[4]
-  thrust_control_msg.vfr = thrust_values[5]
-  thrust_control_msg.vbl = thrust_values[6]
-  thrust_control_msg.vbr = thrust_values[7]
-
-  #TODO: invert thrust values
-
-  # TODO: I2C related activities
   while not rospy.is_shutdown():
-    #TODO: change thrust_control_msg() to tcm?
-    thrust_pub.publish(thrust_control_msg())
-    status_pub.publish(thrust_status_msg())
-    rate.sleep()
-    
 
+    #set desired thrust to either automatic or pilot control
+    if auto_ctrl_flag == 1:
+      desired_thrust_final = desired_a
+    else:
+      desired_thrust_final = desired_p
+
+    #define variable for class Complex to allow calculation of thruster pwm values
+    c = Complex()
+    #calculate thrust
+    output_values = c.calculate(desired_thrust_final, disabled_list, False)
+    pwm_values = output_values
+    #invert relevant values
+    for i in range(0, len(output_values)):
+      if inverted_list[i] == 1:
+        pwm_values[i] = pwm_values[i] * (-1)
+
+    #assign values to publisher messages for thurst control and status
+    tcm = thrust_control_msg()
+    tcm.hfl = pwm_values[0]
+    tcm.hfr = pwm_values[1]
+    tcm.hbl = pwm_values[2]
+    tcm.hbr = pwm_values[3]
+    tcm.vfl = pwm_values[4]
+    tcm.vfr = pwm_values[5]
+    tcm.vbl = pwm_values[6]
+    tcm.vbr = pwm_values[7]
+
+    tsm = thrust_status_msg()
+    tsm.status = pwm_values
+
+    #reset automatic control flag
+    auto_ctrl_flag = 0
+
+    #publish data
+    thrust_pub.publish(tcm)
+    status_pub.publish(tsm)
+    rate.sleep()
