@@ -9,20 +9,12 @@ export default class BuddyControls extends Component {
     }
 
     readyToRender() {
-      return (
-        <div>
-          <ul>
-            <li>
-x:
-                {this.props.buddyDirections.x}
+        var axis = ['x', 'y'];
+        return axis.map((val, index) => (
+            <li key={`axis${val}`}>
+                {axis[index]}: {this.props.buddyDirections[val]}
             </li>
-            <li>
-y:
-                {this.props.buddyDirections.y}
-            </li>
-          </ul>
-        </div>
-      );
+        ));
     }
 
     render() {
@@ -38,3 +30,23 @@ y:
     }
 
 } //end class
+
+
+
+
+/*    readyToRender() {
+      return (
+        <div>
+          <ul>
+            <li>
+x:
+                {this.props.buddyDirections.x}
+            </li>
+            <li>
+y:
+                {this.props.buddyDirections.y}
+            </li>
+          </ul>
+        </div>
+      );
+    } */

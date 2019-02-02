@@ -40,7 +40,7 @@ module.exports = class keyBind {
     return (value) => {
       if(!(this.directionscpy[key]) || this.directionscpy[key] == posneg) {
         this.directionscpy[key] = value * posneg;
-        console.log(this.directionscpy[key]);
+        //console.log(this.directionscpy[key]);
       }
     }
   }
