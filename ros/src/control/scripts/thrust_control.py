@@ -10,22 +10,14 @@ desired_p = None
 locked_dims_list = None
 disabled_list = None
 inverted_list = None
-auto_ctrl_flag = None
 
-def message_received(msg):
+def _auto_command(msg):
   global desired_a #desired thrust from automatic control
   global locked_dims_list #locked dimensions
   desired_a = msg.thrust_vec
   locked_dims_list = msg.dims_locked
 
-  #initialize flag for automatic control vs pilot control
-  auto_ctrl_flag = 0
-  #if there are locked dimensions, set flag to use automatic control
-  for i in range(0, len(locked_dims_list)):
-    if locked_dims_list[i] == True:
-      auto_ctrl_flag = 1
-
-def command_received(comm):
+def _pilot_command(comm):
   global desired_p #desired thrust from pilot
   global disabled_list #disabled thrusters
   global inverted_list #inverted thrusters
@@ -41,9 +33,9 @@ if __name__ == "__main__":
 
   #initialize subscribers
   auto_sub = rospy.Subscriber('auto_control', 
-      auto_control_msg, message_received)
+      auto_control_msg, _auto_command)
   comm_sub = rospy.Subscriber('/surface/thrust_command',
-      thrust_command_msg, command_received)
+      thrust_command_msg, _pilot_command)
   
   #initialize publishers
   thrust_pub = rospy.Publisher('thrust_control',
@@ -51,25 +43,24 @@ if __name__ == "__main__":
   status_pub = rospy.Publisher('thrust_status',
     thrust_status_msg, queue_size=10)
 
-  #initialize auto_ctrl_flag
-  global auto_ctrl_flag
-  auto_ctrl_flag = 0
+  #define variable for class Complex to allow calculation of thruster pwm values
+  c = Complex()
 
   while not rospy.is_shutdown():
 
     #set desired thrust to either automatic or pilot control
-    if auto_ctrl_flag == 1:
-      desired_thrust_final = desired_a
-    else:
-      desired_thrust_final = desired_p
+    desired_thrust_final = []
+    for i in range(0, len(locked_dims_list)):
+      #if dimension locked, set desired thrust to auto; else set to pilot controls
+      if locked_dims_list[i] == True:
+        desired_thrust_final.append(desired_a[i])
+      else:
+        desired_thrust_final.append(desired_p[i])
 
-    #define variable for class Complex to allow calculation of thruster pwm values
-    c = Complex()
     #calculate thrust
-    output_values = c.calculate(desired_thrust_final, disabled_list, False)
-    pwm_values = output_values
+    pwm_values = c.calculate(desired_thrust_final, disabled_list, False)
     #invert relevant values
-    for i in range(0, len(output_values)):
+    for i in range(0, len(pwm_values)):
       if inverted_list[i] == 1:
         pwm_values[i] = pwm_values[i] * (-1)
 
@@ -86,9 +77,6 @@ if __name__ == "__main__":
 
     tsm = thrust_status_msg()
     tsm.status = pwm_values
-
-    #reset automatic control flag
-    auto_ctrl_flag = 0
 
     #publish data
     thrust_pub.publish(tcm)
