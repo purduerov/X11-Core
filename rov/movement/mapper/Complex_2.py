@@ -31,10 +31,14 @@ class Complex_2():
         [-0.5809, -0.5809, -0.5809, -0.5809, 4.8840, 4.8840, 4.8840, 4.8840, 4.8840, 4.8840]
     ]) * 0.0254
 
+    X = 1.8
+    Y = 0
+    Z = 0
+
     XX_COM = np.matrix([
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        [X, X, X, X, X, X, X, X, X, X],
+        [Y, Y, Y, Y, Y, Y, Y, Y, Y, Y],
+        [Z, Z, Z, Z, Z, Z, Z, Z, Z, Z]
     ]) * 0.0254
 
     # X and Y component of horizontal thrusters converted to radians to be used by numpy 7pi/18 rad = 70 degrees
@@ -54,10 +58,13 @@ class Complex_2():
         # the pseudo inverse of self.matrix used to find the least square solution
         self.pseudo_inverse_matrix = None
         # list of disabled thrusters used to determine when matrix and pseudo_inverse_matrix need to be updated
+        #TODO: len_list = len(Complex_2.XX_THRUSTERS[0][0])
         self.disabled = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        #TODO:self.disabled = np.zeros((len_list), dytpe=int)
         # The last thrust map returned by the calculate function
         self.map = None
 
+        #TODO: make these so that they go off dimensions of thruster position matrix!
         self.thrust = np.matrix([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         self.power = np.matrix([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         self.final_power = 0.0
@@ -131,17 +138,18 @@ class Complex_2():
         #initialize maxPower as lowest power value
         maxPower = 0.51
         maxPowerIndex = 0
-        for thruster in range(10):
+        num_thrusters = len(self.disabled)
+        for thruster in range(num_thrusters):
             if self.power[0, thruster] > maxPower:
                 maxPower = self.power[0, thruster]
                 maxThrust = self.thrust[0, thruster]
                 maxPowerIndex = thruster
         orig_thrust_maxP = maxThrust;
         self.thrust[0, maxPowerIndex] = self._power_to_thrust(init_hw_constants.POWER_THRESH, orig_thrust_maxP)
-        overMaxPower = np.matrix([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        overMaxPower = np.matrix(np.zeros(num_thrusters))
         # find thrusters with over power threshold and make them the threshold value based on PWM value and
         # mark which were changed
-        for thruster in range(10):
+        for thruster in range(num_thrusters):
             if self.thrust[0, thruster] < 0:
                 while self._pwm_to_power(self.map[0, thruster]) > init_hw_constants.POWER_THRESH:
                     self.map[0, thruster] = self.map[0, thruster] + 0.005
@@ -153,7 +161,7 @@ class Complex_2():
             if thruster == maxPowerIndex:
                 self.thrust[0, maxPowerIndex] = self._power_to_thrust(self._pwm_to_power(self.map[0, thruster]), orig_thrust_maxP)
         # change thrust values to
-        for thruster in range(10):
+        for thruster in range(num_thrusters):
             if thruster != maxPowerIndex:
                 self.thrust[0, thruster] = self.thrust[0, thruster] * self.thrust[0, maxPowerIndex] / orig_thrust_maxP
                 self.power[0, thruster] = self._thrust_to_power(self.thrust[0, thruster])
@@ -171,7 +179,8 @@ class Complex_2():
         # calculate thrust output and power used values for each thruster
         totalPower = 0.0
         limitPower = 0
-        for thruster in range(10):
+        num_thrusters = len(self.disabled)
+        for thruster in range(num_thrusters):
             pwm_output = thrusters[0, thruster]
             self.thrust[0, thruster] = self._pwm_to_thrust(pwm_output)
             self.power[0, thruster] = self._pwm_to_power(pwm_output)
@@ -274,7 +283,7 @@ if __name__ == '__main__':
     print('\nPSEUDO-INVERSE MATRIX')
     pp.pprint(c.pseudo_inverse_matrix)
     print('\nRESULT 8D VECTOR')
-    pp.pprint(c.calculate(np.array([1, 1, 0, 0, 0, 0]), [0, 0, 1, 0, 0, 0, 0, 0, 0, 0], False))
+    pp.pprint(c.calculate(np.array([0, 0, 1, 0, 0, 0]), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], False))
     print('\nTHRUST')
     pp.pprint(c.thrust)
     print('POWER')
