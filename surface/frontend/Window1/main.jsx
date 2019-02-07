@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import styles from './main.css';
-import packet from '../src/packets.js';
+import packet from '../src/packets.json';
 
 
 import CVview from '../src/components/CVview/CVview.jsx';
@@ -30,7 +30,7 @@ const { shell, app, ipcRenderer } = window.require('electron');
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
+        this.state = require("../src/packets.json");
         this.state.gp = require('../src/gamepad/bettergamepad.js');
 
         this.state.config = {
