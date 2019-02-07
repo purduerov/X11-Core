@@ -10,7 +10,7 @@ bridge = CvBridge()
 
 def get_largest(img):
   #grab all of the contours
-  im, contours, hierarchy = cv2.findContours(img,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+  im, contours, hierarchy = cv2.findContours(img,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
 
   #iterate through contours to find one with largest area 
   largest_area  = -1 
@@ -38,7 +38,7 @@ def process(data):
   #red
   #img = cv2.inRange(img,(0/2,150,115),(35/2,255,255))
   #blue
-  img = cv2.inRange(img,(197.14/2,77.78 * 2.56,17.65 * 2.56),(201/2,42.86 * 2.56,54.9 * 2.56))
+  img = cv2.inRange(img,(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
   
 
   #erode and dilate image
@@ -49,9 +49,12 @@ def process(data):
 
 
   #contouring
-  contour = [get_largest(img)]
+  #contour = np.array([get_largest(img)])
+  contour = [get_largest(img)]	
   
-  cv2.drawContours(img_og,contour,0,(0,255,0),3)
+  if len(contour) != 0:
+  #if contour.size == 0:
+    cv2.drawContours(img_og,contour,0,(0,255,0),3)
 
   #show images
   cv2.imshow("Image",img_og)
