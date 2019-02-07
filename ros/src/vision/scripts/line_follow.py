@@ -61,14 +61,14 @@ def process(data):
 
   #contouring
   #contour = np.array([get_largest(img)])
-  contour = [get_largest(img)]	
+  contour = get_largest(img)	
   
   if len(contour) != 0:
   #if contour.size == 0:
-    cv2.drawContours(img_og,contour,0,(0,255,0),3)
+    cv2.drawContours(img_og,[contour],0,(0,255,0),3)
 
   #find moment
-  center = draw_center(contour, img)
+  center = draw_center(contour, img_og)
 
   #show images
   cv2.imshow("Image",img_og)
