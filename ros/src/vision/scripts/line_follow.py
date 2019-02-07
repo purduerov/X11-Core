@@ -23,6 +23,17 @@ def get_largest(img):
 
   return largest_cnt
 
+def draw_center(contour, img):
+  #Obtain coordinates of the center of mass of the largest contour
+  moment = cv2.moments(contour)
+  Cx = int(moment['m10']/moment['m00'])
+  Cy = int(moment['m01']/moment['m00'])
+
+  # Print the center of mass onto the screen
+  cv2.circle(img, (Cx, Cy), 3, (255, 255, 255), -1)
+  return (Cx, Cy)
+
+
 #functions that manipulates the data that comes the camera
 def process(data):
   #convert img to cv image and convert to HSV
@@ -55,6 +66,9 @@ def process(data):
   if len(contour) != 0:
   #if contour.size == 0:
     cv2.drawContours(img_og,contour,0,(0,255,0),3)
+
+  #find moment
+  center = draw_center(contour, img)
 
   #show images
   cv2.imshow("Image",img_og)
