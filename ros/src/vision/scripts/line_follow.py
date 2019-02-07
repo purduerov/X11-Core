@@ -38,7 +38,7 @@ def process(data):
   #red
   #img = cv2.inRange(img,(0/2,150,115),(35/2,255,255))
   #blue
-  img = cv2.inRange(img,(216/2,133,67),(230/2,205,236))
+  img = cv2.inRange(img,(197.14/2,77.78 * 2.56,17.65 * 2.56),(201/2,42.86 * 2.56,54.9 * 2.56))
   
 
   #erode and dilate image
