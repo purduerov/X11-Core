@@ -72,6 +72,11 @@ class App extends React.Component {
         this.flaskcpy = this.state.dearflask;
         this.clientcpy = this.state.dearclient;
         this.confcpy = this.state.config;
+
+        this.rendTools = this.rendTools.bind(this);
+        this.changeDisabled = this.changeDisabled.bind(this);
+        this.changeForceScales = this.changeForceScales.bind(this);
+        this.changeThrustScales = this.changeThrustScales.bind(this);
     }
 
     componentDidMount() {
@@ -79,6 +84,51 @@ class App extends React.Component {
         window.react = this;
 
         signals(this, socketHost);
+    }
+
+    rendTools(cinvcpy) {
+        this.confcpy.tool_scales = cinvcpy;
+
+        this.setState({
+            config: this.confcpy,
+        });
+    }
+
+    changeDisabled(dis) {
+        this.flaskcpy.thrusters.disabled_thrusters = dis;
+        this.setState({
+            dearflask: this.flaskcpy,
+        });
+    }
+
+    changeThrustScales(scales) {
+        this.confcpy.thruster_control = scales;
+
+        this.confcpy.thruster_control.forEach((val, i) => {
+            if (val.invert < 0) {
+                this.flaskcpy.thrusters.inverted_thrusters[i] = -Math.abs(
+                    this.flaskcpy.thrusters.inverted_thrusters[i]);
+            } else if (val.invert > 0) {
+                this.flaskcpy.thrusters.inverted_thrusters[i] = Math.abs(
+                    this.flaskcpy.thrusters.inverted_thrusters[i]);
+            } else {
+                console.log('Thruster inversion value is 0... why???');
+            }
+        });
+
+        this.setState({
+            config: this.confcpy,
+            dearflask: this.flaskcpy,
+        });
+    }
+
+    changeForceScales(scales, inv) {
+        this.confcpy.thrust_scales = scales;
+        this.confcpy.thrust_invert = inv;
+
+        this.setState({
+            config: this.confcpy,
+        });
     }
 
     render() {
@@ -101,7 +151,6 @@ class App extends React.Component {
                                     thrusters={this.state.dearclient.thrusters}
                                     disabled={this.state.dearflask.thrusters.disabled_thrusters}
                                     manipulator={this.state.dearflask.manipulator.power}
-                                    obs_tool={this.state.dearflask.obs_tool.power}
                                     rend={this.changeDisabled}
                                 />
                             </Card>
@@ -132,19 +181,13 @@ class App extends React.Component {
                                 />
                             </Card>
                             <Card>
-                                <ToolView 
+                                <ToolView
                                     manipulator={this.state.dearflask.manipulator.power}
-                                    obs_tool={this.state.dearflask.obs_tool.power}
                                     servo={this.state.dearflask.maincam_angle}
                                     transmitter={this.state.dearflask.transmitter}
                                     magnet={this.state.dearflask.magnet}
                                     conf={this.state.config.tool_scales}
                                     rend={this.rendTools}
-                                />
-                            </Card>
-                            <Card title="Object Display">
-                                <ShowObject
-                                    obj={this.state.dearclient.sensors.obs}
                                 />
                             </Card>
                         </div>
