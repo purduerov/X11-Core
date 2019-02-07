@@ -1,10 +1,10 @@
 from numpy import linalg
 import numpy as np
 import pprint as pp
-from rov import init_hw_constants
+import init_hw_constants
 
 
-class Complex_2():
+class Complex():
     """
     This code is a rewrite of MutatorMatrix to simplify and clarify the code without removing the source
     This thrust-mapping works by solving the least squared solution of a system determined by the thrusters locations
@@ -26,19 +26,15 @@ class Complex_2():
     # X11 Thruster locations and center of mass relative to an arbitrary(?) point converted from inches to meters
     # Each column is X, Y, Z: X is forward/back, Y is left/right, Z is up/down
     X11_THRUSTERS = np.matrix([
-        [6.7593, 6.7593, -6.7593, -6.7593, 7.6887, 7.6887, 7.6887, -7.6887, -7.6887, -7.6887],
-		[-6.625, 6.625, -6.625, 6.625, -3.75, 0, 3.75, -3.75, 0, 3.75],
-        [-0.5809, -0.5809, -0.5809, -0.5809, 4.8840, 4.8840, 4.8840, 4.8840, 4.8840, 4.8840]
+        [6.7593, 6.7593, -6.7593, -6.7593, 7.6887, 7.6887, -7.6887, -7.6887],
+		[-6.625, 6.625, -6.625, 6.625, -3.75, 3.75, -3.75, 3.75],
+        [-0.5809, -0.5809, -0.5809, -0.5809, 4.8840, 4.8840, 4.8840, 4.8840]
     ]) * 0.0254
 
-    X = 1.8
-    Y = 0
-    Z = 0
-
     X11_COM = np.matrix([
-        [X, X, X, X, X, X, X, X, X, X],
-        [Y, Y, Y, Y, Y, Y, Y, Y, Y, Y],
-        [Z, Z, Z, Z, Z, Z, Z, Z, Z, Z]
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
     ]) * 0.0254
 
     # X and Y component of horizontal thrusters converted to radians to be used by numpy 7pi/18 rad = 70 degrees
@@ -46,26 +42,24 @@ class Complex_2():
     Y_COMPONENT = np.cos(7 * np.pi / 18)
 
     ROTATION = np.matrix([
-        [X_COMPONENT, X_COMPONENT, -X_COMPONENT, -X_COMPONENT, 0, 0, 0, 0, 0, 0],
-        [Y_COMPONENT, -Y_COMPONENT, Y_COMPONENT, -Y_COMPONENT, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+        [X_COMPONENT, X_COMPONENT, -X_COMPONENT, -X_COMPONENT, 0, 0, 0, 0],
+        [Y_COMPONENT, -Y_COMPONENT, Y_COMPONENT, -Y_COMPONENT, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 1, 1, 1]
     ])
 
     def __init__(self):
-        self.thruster_layout = np.matrix(Complex_2.X11_THRUSTERS - Complex_2.X11_COM)
+        self.thruster_layout = np.matrix(Complex.X11_THRUSTERS - Complex.X11_COM)
         # this is the 6x8 matrix that specifies each thrusters contribution on X, Y, Z, Roll, Pitch, Yaw
         self.matrix = None
         # the pseudo inverse of self.matrix used to find the least square solution
         self.pseudo_inverse_matrix = None
         # list of disabled thrusters used to determine when matrix and pseudo_inverse_matrix need to be updated
-        len_list = Complex_2.X11_THRUSTERS.shape[1]
-        self.disabled = [0 for col in range(len_list)]
+        self.disabled = [0, 0, 0, 0, 0, 0, 0, 0]
         # The last thrust map returned by the calculate function
         self.map = None
-        
-        #initialize thrust and power vectors, and total power value
-        self.thrust = np.matrix(np.zeros(len_list))
-        self.power = np.matrix(np.zeros(len_list))
+
+        self.thrust = np.matrix([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.power = np.matrix([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         self.final_power = 0.0
 
         self._generate_matrix()
@@ -109,7 +103,7 @@ class Complex_2():
         # Calculate the cross product between the location of each thruster and the direction it points in
         rot = np.transpose(np.cross(np.transpose(self.ROTATION), np.transpose(self.thruster_layout), 1))
         self.matrix = np.concatenate((self.ROTATION, rot))
-        for thruster in range(len(self.disabled)):
+        for thruster in range(8):
             if self.disabled[thruster]:
                 self.matrix[:, thruster] = 0.0
         self.pseudo_inverse_matrix = linalg.pinv(self.matrix)
@@ -137,18 +131,17 @@ class Complex_2():
         #initialize maxPower as lowest power value
         maxPower = 0.51
         maxPowerIndex = 0
-        num_thrusters = len(self.disabled)
-        for thruster in range(num_thrusters):
+        for thruster in range(8):
             if self.power[0, thruster] > maxPower:
                 maxPower = self.power[0, thruster]
                 maxThrust = self.thrust[0, thruster]
                 maxPowerIndex = thruster
         orig_thrust_maxP = maxThrust;
         self.thrust[0, maxPowerIndex] = self._power_to_thrust(init_hw_constants.POWER_THRESH, orig_thrust_maxP)
-        overMaxPower = np.matrix(np.zeros(num_thrusters))
+        overMaxPower = np.matrix([0, 0, 0, 0, 0, 0, 0, 0])
         # find thrusters with over power threshold and make them the threshold value based on PWM value and
         # mark which were changed
-        for thruster in range(num_thrusters):
+        for thruster in range(8):
             if self.thrust[0, thruster] < 0:
                 while self._pwm_to_power(self.map[0, thruster]) > init_hw_constants.POWER_THRESH:
                     self.map[0, thruster] = self.map[0, thruster] + 0.005
@@ -160,7 +153,7 @@ class Complex_2():
             if thruster == maxPowerIndex:
                 self.thrust[0, maxPowerIndex] = self._power_to_thrust(self._pwm_to_power(self.map[0, thruster]), orig_thrust_maxP)
         # change thrust values to
-        for thruster in range(num_thrusters):
+        for thruster in range(8):
             if thruster != maxPowerIndex:
                 self.thrust[0, thruster] = self.thrust[0, thruster] * self.thrust[0, maxPowerIndex] / orig_thrust_maxP
                 self.power[0, thruster] = self._thrust_to_power(self.thrust[0, thruster])
@@ -178,8 +171,7 @@ class Complex_2():
         # calculate thrust output and power used values for each thruster
         totalPower = 0.0
         limitPower = 0
-        num_thrusters = len(self.disabled)
-        for thruster in range(num_thrusters):
+        for thruster in range(8):
             pwm_output = thrusters[0, thruster]
             self.thrust[0, thruster] = self._pwm_to_thrust(pwm_output)
             self.power[0, thruster] = self._pwm_to_power(pwm_output)
@@ -275,14 +267,14 @@ class Complex_2():
 
 
 if __name__ == '__main__':
-    c = Complex_2()
+    c = Complex()
     np.set_printoptions(linewidth=150, suppress=True)
     print('MATRIX')
     pp.pprint(c.matrix)
     print('\nPSEUDO-INVERSE MATRIX')
     pp.pprint(c.pseudo_inverse_matrix)
     print('\nRESULT 8D VECTOR')
-    pp.pprint(c.calculate(np.array([0, 0, 1, 0, 0, 0]), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], False))
+    pp.pprint(c.calculate(np.array([1, 0, 0, 0, 0, 0]), [0, 0, 1, 0, 0, 0, 0, 0], False))
     print('\nTHRUST')
     pp.pprint(c.thrust)
     print('POWER')

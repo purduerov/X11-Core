@@ -1,7 +1,7 @@
 from numpy import linalg
 import numpy as np
 import pprint as pp
-from rov import init_hw_constants
+import init_hw_constants
 
 
 class Complex_2():

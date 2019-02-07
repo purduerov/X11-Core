@@ -1,9 +1,10 @@
 #! /usr/bin/python
 import rospy
-from shared_msgs.msg import can_msg, auto_control_msg, thrust_control_msg, thrust_status_msg, thrust_command_msg
+from shared_msgs.msg import auto_control_msg, thrust_control_msg, thrust_status_msg, thrust_command_msg
 from sensor_msgs.msg import Imu
 from std_msgs.msg import Float32
-from rov import movement/mapper/Complex
+import numpy as np
+import Complex_1
 
 desired_a = None
 desired_p = None
@@ -44,23 +45,32 @@ if __name__ == "__main__":
     thrust_status_msg, queue_size=10)
 
   #define variable for class Complex to allow calculation of thruster pwm values
-  c = Complex()
+  c = Complex_1.Complex()
 
   while not rospy.is_shutdown():
-
-    #set desired thrust to either automatic or pilot control
-    desired_thrust_final = []
-    for i in range(0, len(locked_dims_list)):
-      #if dimension locked, set desired thrust to auto; else set to pilot controls
-      if locked_dims_list[i] == True:
-        desired_thrust_final.append(desired_a[i])
-      else:
-        desired_thrust_final.append(desired_p[i])
+    if desired_a == None or desired_p == None:
+      desired_thrust_final = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+      disabled_list = [False, False, False, False, False, False, False, False]
+      inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
+    elif desired_a == None and desired_p != None:
+      desired_thrust_final = desired_p
+    elif desired_a != None and desired_p == None:
+      desired_thrust_final = desired_a
+      disabled_list = [False, False, False, False, False, False, False, False]
+      inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
+    else:
+      #set desired thrust to either automatic or pilot control
+      for i in range(8):
+        #if dimension locked, set desired thrust to auto; else set to pilot controls
+        if locked_dims_list[i] == True:
+          desired_thrust_final.append(desired_a[i])
+        else:
+          desired_thrust_final.append(desired_p[i])
 
     #calculate thrust
     pwm_values = c.calculate(desired_thrust_final, disabled_list, False)
     #invert relevant values
-    for i in range(0, len(pwm_values)):
+    for i in range(8):
       if inverted_list[i] == 1:
         pwm_values[i] = pwm_values[i] * (-1)
 
