@@ -9,14 +9,6 @@
                 0,
                 0
             ],
-            "frozen": [
-                0,
-                0,
-                0,
-                0,
-                0,
-                0
-            ],
             "disabled_thrusters": [
                 false,
                 false,
@@ -41,11 +33,6 @@
         "manipulator": {
             "power": 0
         },
-        "obs_tool": {
-            "power": 0
-        },
-        "magnet": false,
-        "transmitter": false,
         "cameras": {},
         "leds": {
             "bluetooth_led": false,
@@ -82,30 +69,6 @@
             "pressure": {
                 "pressure": 7,
                 "temperature": 4
-            },
-            "obs": {
-                "tilt": {
-                    "x": 0,
-                    "y": 0,
-                    "z": 0
-                },
-                "seismograph_data": {
-                    "time": [
-                        0,
-                        0.1,
-                        0.2
-                    ],
-                    "amplitude": [
-                        0,
-                        0.2,
-                        0.4
-                    ]
-                },
-                "meta": {
-                    "lastupdate": 0,
-                    "connectstat": "foo",
-                    "obsvoltage": 0
-                }
             },
             "esc": {
                 "currents": [
