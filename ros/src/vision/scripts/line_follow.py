@@ -25,9 +25,12 @@ def get_largest(img):
 
 def draw_rect(img, contour):
   x,y,w,h = cv2.boundingRect(contour)
-  cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
-  cv2.circle(img, (x + w/2, y + h/2), (255, 0, 0), -1)
-  return [x+w/2,y+h/2]
+  cv2.rectangle(img,(x,y), (x+w,y+h), (255,0,0),2)
+  
+  x_c = x + int(w/2)
+  y_c = y + int(h/2)
+  cv2.circle(img, (x_c, y_c), 3, (255, 0, 0), -1)
+  return [x_c, y_c]
 
 def draw_center(img, contour):
   #Obtain coordinates of the center of mass of the largest contour
@@ -73,14 +76,17 @@ def process(data):
   
   if contour.all() != -1:
     cv2.drawContours(img_og,[contour],0,(0,255,0),3)
-    center_rect = draw_rect(img_og,contour)
-    center_contour = draw_center(img_og, contour)
-    cv2.line(img_og,(center_rect[0],center_rect[1]),(center_contour[0],center_contour[1]), (0,0,255),1.5)
+    center_rect = draw_rect(img_og, contour)
+    center_cnt = draw_center(img_og, contour)
+    cv2.line(img_og,(center_rect[0],center_rect[1]),(center_cnt[0],center_cnt[1]), (0,0,255),1)
+
   #find moment
-  #if isContourConvex(contour):
-    #center = draw_center(img_og, contour)
-  #else:
-  #  center = draw_center(img_og, contour)
+  if cv2.isContourConvex(contour):
+    center = center_cnt
+  else:
+    center = center_rect
+
+  cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
 
   #show images
   cv2.imshow("Image",img_og)
