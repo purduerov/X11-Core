@@ -7,7 +7,7 @@ import styles from './titlebar.css';
 class Titlebar extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { text: 'Purdue ROV 2018' };
+        this.state = { text: props.title || 'Purdue ROV 2019' };
     }
 
     render() {
