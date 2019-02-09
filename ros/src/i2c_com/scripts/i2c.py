@@ -30,8 +30,6 @@ if __name__ == "__main__":
   sub = rospy.Subscriber('i2c_tx', i2c_msg,
       message_received)
 
-  # TODO: I2C related activities
-  
   # Set rate and tell ROS node name
   rospy.init_node('talker', anomymous=True)
   rate = rospy.Rate(10) # 10hz
