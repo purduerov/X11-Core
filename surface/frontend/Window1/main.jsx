@@ -7,6 +7,7 @@ const { shell, app, ipcRenderer } = window.require('electron');
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
 import BuddyControls from '../src/components/BuddyControls/BuddyControls.jsx';
+import PHinfo from '../src/components/PHinfo/PHinfo.jsx'
 
 const socketHost = 'ws://localhost:5001';
 
@@ -88,7 +89,9 @@ class App extends React.Component {
                             </Card>
                         </div>
                         <div className="data-column">
-                            <Card />
+                            <Card>
+                              <PHinfo />
+                            </Card>
                         </div>
                         <div className="data-column">
                             <Card />
