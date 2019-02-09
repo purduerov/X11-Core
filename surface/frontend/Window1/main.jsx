@@ -99,11 +99,6 @@ class App extends React.Component {
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card>
-                              <BuddyControls
-                                buddyDirections={this.state.directions}
-                              />
-                            </Card>
-                            <Card>
                               <FreezeGp
                                 maybeFreeze={this.state.freeze}
                                 rend={this.setFreeze}

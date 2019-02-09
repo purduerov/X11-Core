@@ -31,7 +31,7 @@ export default class BuddyControls extends Component {
 
 } //end class
 
-
+//buddyDirections={this.state.directions}
 
 
 /*    readyToRender() {
