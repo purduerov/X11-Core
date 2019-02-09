@@ -5,14 +5,18 @@ export default class PHinfo extends Component {
     constructor(props) {
         super(props);
 
-        this.ph;
-        this.temperature;
-        this.isUpdating = true;
+        this.state = {
+          ph: 7,
+          temperature: 20,
+          isUpdating: true
+        };
 
         setInterval(() => {
-            if (this.isUpdating) {
-                this.ph = Math.random();
-                this.temperature = Math.random();
+            if (this.state.isUpdating) {
+                this.setState({
+                  ph: Math.round(10 * Math.random()),
+                  temperature: Math.round(100 * Math.random())
+                });
             }
         }, 500);
 
@@ -24,14 +28,14 @@ export default class PHinfo extends Component {
     displayInfo() {
         return (
             <ul>
-                <li>pH: {this.ph}</li>
-                <li>Temperature: {this.temperature}</li>
+                <li>pH: {this.state.ph}</li>
+                <li>Temperature: {this.state.temperature}</li>
             </ul>
         )
     }
 
     freeze() {
-        this.isUpdating = !this.isUpdating;
+        this.state.isUpdating = !this.state.isUpdating;
     }
 
     render() {
