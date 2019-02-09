@@ -56,15 +56,16 @@ def process(data):
   img =  cv2.erode(img,np.ones((5,5)))
   img =  cv2.dilate(img,np.ones((10,10)))
   
-  #masking
-
-
   #contouring
-  #contour = np.array([get_largest(img)])
+  '''
+  contour = np.array([get_largest(img)])
+  
+  #if contour.size == 0:
+    cv2.drawContours(img_og,[contour],0,(0,255,0),3)
+  '''
   contour = get_largest(img)	
   
   if len(contour) != 0:
-  #if contour.size == 0:
     cv2.drawContours(img_og,[contour],0,(0,255,0),3)
 
   #find moment
