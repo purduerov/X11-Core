@@ -41,7 +41,6 @@ export default class ThrusterInfo extends Component {
           && (
               <div className={styles.tools}>
                   <ToolCircle className={styles.manipulator} val={Math.abs(this.props.manipulator)} />
-                  <ToolCircle className={styles.obs_tool} val={Math.abs(this.props.obs_tool)} />
               </div>
           )}
             </div>
