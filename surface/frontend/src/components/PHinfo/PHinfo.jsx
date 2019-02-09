@@ -14,8 +14,8 @@ export default class PHinfo extends Component {
         setInterval(() => {
             if (this.state.isUpdating) {
                 this.setState({
-                  ph: Math.round(10 * Math.random()),
-                  temperature: Math.round(100 * Math.random())
+                  ph: parseFloat((10 * Math.random()).toFixed(2)),
+                  temperature: parseFloat((100 * Math.random()).toFixed(2))
                 });
             }
         }, 500);
@@ -35,7 +35,9 @@ export default class PHinfo extends Component {
     }
 
     freeze() {
-        this.state.isUpdating = !this.state.isUpdating;
+        this.setState({
+          isUpdating: !this.state.isUpdating
+        });
     }
 
     render() {
