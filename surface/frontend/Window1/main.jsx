@@ -8,6 +8,7 @@ import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
 import BuddyControls from '../src/components/BuddyControls/BuddyControls.jsx';
 import IPCtest from '../src/components/IPCtest/IPCtest.jsx'
+import FreezeGp from '../src/components/FreezeGp/FreezeGp.jsx';
 
 const socketHost = 'ws://localhost:5001';
 
@@ -24,6 +25,7 @@ class App extends React.Component {
         this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
 
         this.state.directions = { x: 0, y: 0 };
+        this.state.freeze = 0;
         this.state.config = {
             thrust_scales: {
                 master: 50,
@@ -63,6 +65,8 @@ class App extends React.Component {
         this.flaskcpy = this.state.dearflask;
         this.clientcpy = this.state.dearclient;
         this.confcpy = this.state.config;
+
+        this.setFreeze = this.setFreeze.bind(this);
     }
 
     componentDidMount() {
@@ -75,6 +79,14 @@ class App extends React.Component {
           console.log('Received message from second window');
         });
     }
+
+
+    setFreeze(value) {
+      this.setState({
+        freeze: value
+      });
+    }
+
 
     render() {
         return (
@@ -89,6 +101,12 @@ class App extends React.Component {
                             <Card>
                               <BuddyControls
                                 buddyDirections={this.state.directions}
+                              />
+                            </Card>
+                            <Card>
+                              <FreezeGp
+                                maybeFreeze={this.state.freeze}
+                                rend={this.setFreeze}
                               />
                             </Card>
                         </div>
