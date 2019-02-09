@@ -17,7 +17,7 @@ export default class ThrusterInfo extends Component {
         discpy[indx] = val;
         this.setState({
             disabled: discpy,
-        }, function () {
+        }, () => {
             this.props.rend(this.state.disabled);
         });
     }
@@ -41,7 +41,6 @@ export default class ThrusterInfo extends Component {
           && (
               <div className={styles.tools}>
                   <ToolCircle className={styles.manipulator} val={Math.abs(this.props.manipulator)} />
-                  <ToolCircle className={styles.obs_tool} val={Math.abs(this.props.obs_tool)} />
               </div>
           )}
             </div>
