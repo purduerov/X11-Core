@@ -9,6 +9,4 @@ POWER_THRESH = 115 # Power threshold for each individual thruster in Watts
 MANIPULATOR_PIN = 15
 OBS_TOOL_PIN = 14
 
-REVERSE_POLARITY = [4, 12, 2, 11, 13]
-TRANSMITTER_PIN = 10
-ELECMAG_PIN=6
+REVERSE_POLARITY = []

@@ -22,6 +22,8 @@ class Complex():
     function returns the 8D pwm vector for the thrusters, and the _get_results function returns the force vector based
     on the pwm vector. The thrust and power output of each thruster are in the arrays thrust and power, and the total
     power can be accessed with the variable final_power.
+    This is now set up so that the number of thrusters on the ROV can be changed by solely changing the sizes of the 
+    position, COM, and rotation matrices.
     """
     # X11 Thruster locations and center of mass relative to an arbitrary(?) point converted from inches to meters
     # Each column is X, Y, Z: X is forward/back, Y is left/right, Z is up/down
@@ -31,10 +33,14 @@ class Complex():
         [-0.5809, -0.5809, -0.5809, -0.5809, 4.8840, 4.8840, 4.8840, 4.8840]
     ]) * 0.0254
 
+    X = 0
+    Y = 0
+    Z = 0
+
     X11_COM = np.matrix([
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
+        [X, X, X, X, X, X, X, X],
+        [Y, Y, Y, Y, Y, Y, Y, Y],
+        [Z, Z, Z, Z, Z, Z, Z, Z]
     ]) * 0.0254
 
     # X and Y component of horizontal thrusters converted to radians to be used by numpy 7pi/18 rad = 70 degrees
@@ -54,12 +60,14 @@ class Complex():
         # the pseudo inverse of self.matrix used to find the least square solution
         self.pseudo_inverse_matrix = None
         # list of disabled thrusters used to determine when matrix and pseudo_inverse_matrix need to be updated
-        self.disabled = [0, 0, 0, 0, 0, 0, 0, 0]
+        len_list = Complex.X11_THRUSTERS.shape[1]
+        self.disabled = [False for col in range(len_list)]
+        print(self.disabled)
         # The last thrust map returned by the calculate function
         self.map = None
 
-        self.thrust = np.matrix([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-        self.power = np.matrix([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.thrust = np.matrix(np.zeros(len_list))
+        self.power = np.matrix(np.zeros(len_list))
         self.final_power = 0.0
 
         self._generate_matrix()
@@ -103,7 +111,7 @@ class Complex():
         # Calculate the cross product between the location of each thruster and the direction it points in
         rot = np.transpose(np.cross(np.transpose(self.ROTATION), np.transpose(self.thruster_layout), 1))
         self.matrix = np.concatenate((self.ROTATION, rot))
-        for thruster in range(8):
+        for thruster in range(len(self.disabled)):
             if self.disabled[thruster]:
                 self.matrix[:, thruster] = 0.0
         self.pseudo_inverse_matrix = linalg.pinv(self.matrix)
@@ -131,17 +139,18 @@ class Complex():
         #initialize maxPower as lowest power value
         maxPower = 0.51
         maxPowerIndex = 0
-        for thruster in range(8):
+        num_thrusters = len(self.disabled)
+        for thruster in range(num_thrusters):
             if self.power[0, thruster] > maxPower:
                 maxPower = self.power[0, thruster]
                 maxThrust = self.thrust[0, thruster]
                 maxPowerIndex = thruster
-        orig_thrust_maxP = maxThrust;
+        orig_thrust_maxP = maxThrust
         self.thrust[0, maxPowerIndex] = self._power_to_thrust(init_hw_constants.POWER_THRESH, orig_thrust_maxP)
-        overMaxPower = np.matrix([0, 0, 0, 0, 0, 0, 0, 0])
+        overMaxPower = np.matrix(np.zeros(num_thrusters))
         # find thrusters with over power threshold and make them the threshold value based on PWM value and
         # mark which were changed
-        for thruster in range(8):
+        for thruster in range(num_thrusters):
             if self.thrust[0, thruster] < 0:
                 while self._pwm_to_power(self.map[0, thruster]) > init_hw_constants.POWER_THRESH:
                     self.map[0, thruster] = self.map[0, thruster] + 0.005
@@ -153,7 +162,7 @@ class Complex():
             if thruster == maxPowerIndex:
                 self.thrust[0, maxPowerIndex] = self._power_to_thrust(self._pwm_to_power(self.map[0, thruster]), orig_thrust_maxP)
         # change thrust values to
-        for thruster in range(8):
+        for thruster in range(num_thrusters):
             if thruster != maxPowerIndex:
                 self.thrust[0, thruster] = self.thrust[0, thruster] * self.thrust[0, maxPowerIndex] / orig_thrust_maxP
                 self.power[0, thruster] = self._thrust_to_power(self.thrust[0, thruster])
@@ -171,7 +180,8 @@ class Complex():
         # calculate thrust output and power used values for each thruster
         totalPower = 0.0
         limitPower = 0
-        for thruster in range(8):
+        num_thrusters = len(self.disabled)
+        for thruster in range(num_thrusters):
             pwm_output = thrusters[0, thruster]
             self.thrust[0, thruster] = self._pwm_to_thrust(pwm_output)
             self.power[0, thruster] = self._pwm_to_power(pwm_output)
@@ -216,7 +226,7 @@ class Complex():
         elif sign < 0:
             thrustVal = -0.0000008*(powerVal**3)+0.0003*(powerVal**2)-0.0697*powerVal
         else:
-            thrustVal = 0;
+            thrustVal = 0
         return thrustVal
 
     def _thrust_to_power(self, thrustVal):
@@ -229,7 +239,7 @@ class Complex():
         if thrustVal > 0:
             powerVal = 1.8977*(thrustVal**2)+8.37*thrustVal+1.2563
         else:
-            powerVal = 0.51;
+            powerVal = 0.51
         return powerVal
 
     def _thrust_to_pwm(self, thrustVal):
@@ -243,8 +253,8 @@ class Complex():
             pwm = 0.0017*(thrustVal**3)-0.025*(thrustVal**2)+0.213*thrustVal+0.0675
         else:
             # assume 0 even though dead band has range of pwm values
-            pwm = 0;
-        return pwm;
+            pwm = 0
+        return pwm
 
     def _get_results(self):
         """

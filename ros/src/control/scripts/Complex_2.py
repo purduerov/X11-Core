@@ -22,6 +22,8 @@ class Complex_2():
     function returns the 8D pwm vector for the thrusters, and the _get_results function returns the force vector based
     on the pwm vector. The thrust and power output of each thruster are in the arrays thrust and power, and the total
     power can be accessed with the variable final_power.
+    This code is different from Complex_1 based on solely the number of thrusters and is being used to test the results
+    of using more than 8 thrusters.
     """
     # X11 Thruster locations and center of mass relative to an arbitrary(?) point converted from inches to meters
     # Each column is X, Y, Z: X is forward/back, Y is left/right, Z is up/down
@@ -59,7 +61,7 @@ class Complex_2():
         self.pseudo_inverse_matrix = None
         # list of disabled thrusters used to determine when matrix and pseudo_inverse_matrix need to be updated
         len_list = Complex_2.X11_THRUSTERS.shape[1]
-        self.disabled = [0 for col in range(len_list)]
+        self.disabled = [False for col in range(len_list)]
         # The last thrust map returned by the calculate function
         self.map = None
         
@@ -143,7 +145,7 @@ class Complex_2():
                 maxPower = self.power[0, thruster]
                 maxThrust = self.thrust[0, thruster]
                 maxPowerIndex = thruster
-        orig_thrust_maxP = maxThrust;
+        orig_thrust_maxP = maxThrust
         self.thrust[0, maxPowerIndex] = self._power_to_thrust(init_hw_constants.POWER_THRESH, orig_thrust_maxP)
         overMaxPower = np.matrix(np.zeros(num_thrusters))
         # find thrusters with over power threshold and make them the threshold value based on PWM value and
@@ -224,7 +226,7 @@ class Complex_2():
         elif sign < 0:
             thrustVal = -0.0000008*(powerVal**3)+0.0003*(powerVal**2)-0.0697*powerVal
         else:
-            thrustVal = 0;
+            thrustVal = 0
         return thrustVal
 
     def _thrust_to_power(self, thrustVal):
@@ -237,7 +239,7 @@ class Complex_2():
         if thrustVal > 0:
             powerVal = 1.8977*(thrustVal**2)+8.37*thrustVal+1.2563
         else:
-            powerVal = 0.51;
+            powerVal = 0.51
         return powerVal
 
     def _thrust_to_pwm(self, thrustVal):
@@ -251,8 +253,8 @@ class Complex_2():
             pwm = 0.0017*(thrustVal**3)-0.025*(thrustVal**2)+0.213*thrustVal+0.0675
         else:
             # assume 0 even though dead band has range of pwm values
-            pwm = 0;
-        return pwm;
+            pwm = 0
+        return pwm
 
     def _get_results(self):
         """
