@@ -138,8 +138,8 @@ if __name__ == '__main__':
 
         # We must initialize the sensor before reading it
         if not sensor:
-                print "Sensor could not be initialized"
-                exit(1)
+            print "Sensor could not be initialized"
+            exit(1)
 
         # We have to read values from sensor to update pressure and temperature
         #if not sensor.read():
@@ -175,6 +175,5 @@ if __name__ == '__main__':
                 else:
                         print "Sensor read failed!"
                         exit(1)
-       
-    main()
 
+    main()
