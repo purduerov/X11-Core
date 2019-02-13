@@ -102,7 +102,7 @@ class BNO055(object):
 
     def reset_calibration(self):
         cal_array_original = self.get_calibration()
-        self._bno.set_calibration(self._bno.get_calibration())
+        self._bno.set_calibration(cal_array_original);
         return cal_array_original
 
     def set_calibration(self, data):
@@ -140,11 +140,6 @@ if __name__ == '__main__':
         if not sensor:
             print "Sensor could not be initialized"
             exit(1)
-
-        # We have to read values from sensor to update pressure and temperature
-        #if not sensor.read():
-        #    print "Sensor read failed!"
-        #    exit(1)
 
         #print("Pressure: %.2f mbar") % (sensor.pressure())
 
