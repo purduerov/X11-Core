@@ -2,8 +2,6 @@
 import rospy
 from shared_msgs.msg import can_msg, thrust_control_msg, esc_single_msg
 
-can_data = []
-
 def message_received(msg):
   # Publish to the CAN hardware transmitter
   can_pub = rospy.Publisher('can_tx', can_msg,
