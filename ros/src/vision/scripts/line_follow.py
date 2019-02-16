@@ -42,7 +42,6 @@ def draw_center(img, contour):
   cv2.circle(img, (Cx, Cy), 3, (0, 255, 0), -1)
   return [Cx, Cy]
 
-
 #functions that manipulates the data that comes the camera
 def process(data):
   #convert img to cv image and convert to HSV
@@ -87,6 +86,34 @@ def process(data):
     center = center_rect
 
   cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
+  print(center)
+
+  #recognize starting square/circle
+  squares = []
+  circles = []
+
+  sq_cnts = []
+  circ_cnts = []
+  for sq, circ in zip(squares, circles):
+    im, sq_cnt, hierarchy = cv2.findContours(sq,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+    im, circ_cnt, hierarchy = cv2.findContours(circ,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+
+    sq_cnts.append(sq_cnt)
+    circ_cnts.append(circ_cnt)
+
+  match = filter(lambda cnt_temp: cv2.matchShapes(contour,cnt_temp) < .02, sq_cnts + circ_cnts)
+  
+  if match != -1:
+    if match in squares:
+      init_shape = "square"
+    else:
+      init_shape = "circle"
+
+    #surround the found shape in circle
+
+    #get moment of circle
+
+    #vector from drawn circle to moment line 
 
   #show images
   cv2.imshow("Image",img_og)
