@@ -18,6 +18,75 @@ var gp = {
     but_func: {},
     ax_func: {},
 
+
+    freeze() {
+      var cur = navigator.getGamepads()[gp.gamepadIndex];
+      var lay = layouts[gp.layoutKey];
+      for (var i = 0; i < lay.buttons.length; i++) {
+          var name = lay.buttons[i].name;
+          var buttn = lay.buttons[i];
+          //var val = cur[buttn.where][buttn.indx];
+          if (lay.buttons[i].where == 'buttons') {
+              val = val.value;
+          }
+          val = 0;
+          if (name.endsWith('trigger') && val == gp.init_trigs[name]) {
+              // console.log(name+" is at "+val);
+              val = 0;
+          } else {
+              gp.init_trigs[name] = 0;
+          }
+
+          /*
+          // should adjust the intput to a 1-0 scale:
+          // console.log(name+" "+val+" "+lay.buttons[i].notpressed+" "+lay.buttons[i].pressed)
+          gp.buttons[name].curVal = (val - lay.buttons[i].notpressed) / (lay.buttons[i].pressed - lay.buttons[i].notpressed);
+          gp.pressRelease(name);
+
+          if (gp.but_func[name].pressed && gp.buttons[name].pressed) { // runs bindfunc
+              gp.but_func[name].pressed();
+          }
+          if (gp.but_func[name].released && gp.buttons[name].released) {
+              gp.but_func[name].released();
+          }
+          if (gp.but_func[name].curVal) {
+              gp.but_func[name].curVal();
+          } */
+
+
+      }
+      for (var i = 0; i < lay.axes.length; i++) {
+          var name = lay.axes[i].name;
+          var val = cur[lay.axes[i].where][lay.axes[i].indx];
+          if (lay.axes[i].where == 'buttons') {
+              val = 0;
+          }
+          if (lay.axes[i].name.endsWith('trigger')) {
+              // console.log(cur[lay.axes[i].where][lay.axes[i].indx].value);
+              // console.log(gp.adjust(i, val))
+              // console.log(lay.axes[i].name)
+              // console.log("val: "+val+" min: "+lay.axes[i].min+" max: "+lay.axes[i].max)
+              // console.log(val+" "+lay.axes[i].min+" "+lay.axes[i].max)
+              // console.log(val+" vs "+gp.init_trigs[name]);
+              if (val == gp.init_trigs[name]) {
+                  val = lay.axes[i].min;
+              } else {
+                  gp.init_trigs[name] = lay.axes[i].min;
+              }
+
+              gp.axes[name].curVal = (val - lay.axes[i].min) / (lay.axes[i].max - lay.axes[i].min);
+          } else if (Math.abs(gp.adjust(i, val)) > 0.15) {
+              gp.axes[lay.axes[i].name].curVal = gp.adjust(i, val);
+          } else {
+              gp.axes[lay.axes[i].name].curVal = 0;
+          }
+          if (gp.ax_func[name].curVal) { // runs bindfunc
+              gp.ax_func[name].curVal();
+          }
+      }
+    },
+
+
     selectController() {
         var cur = navigator.getGamepads();
         Object.keys(cur).forEach((key, i) => {

@@ -35,4 +35,26 @@ module.exports = (where, socketHost) => {
           directions: data
         });
     });
+
+
+    //updating the gamepad
+    setInterval(() => {
+      if(where.gp.ready === false) {
+//        console.log("not yet");
+        where.gp.selectController();
+      }
+      if((where.gp.ready === true) && (where.state.freeze === 0)) {
+        where.gp.update();
+//        console.log('success');
+} else if (where.state.freeze === 1){
+        this.gp.freeze();
+      }
+
+      where.setState({                           //Initiates rendering process
+        gp: where.gp,
+        dearflask: where.flaskcpy
+      });
+    }, 100);
+
+
 };

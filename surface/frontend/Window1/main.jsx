@@ -8,6 +8,7 @@ import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
 import BuddyControls from '../src/components/BuddyControls/BuddyControls.jsx';
 import FreezeGp from '../src/components/FreezeGp/FreezeGp.jsx';
+import betterlayouts from '../src/gamepad/betterlayouts.js';
 
 const socketHost = 'ws://localhost:5001';
 
@@ -22,6 +23,10 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
+
+        this.state.gp = require ("../src/gamepad/bettergamepad.js");
+        this.gp = require('../src/gamepad/bettergamepad.js');
+
 
         this.state.directions = { x: 0, y: 0 };
         this.state.freeze = 0;
