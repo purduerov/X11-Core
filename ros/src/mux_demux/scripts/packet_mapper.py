@@ -1,6 +1,6 @@
 #! /usr/bin/python
 import shared_msgs.msg
-
+import json
 
 class packet_mapper:
 
@@ -51,15 +51,22 @@ class packet_mapper:
 
 if __name__ == "__main__":
     packet = { 'addr' : 'hello', 'in2' : { 'data' : 1    }   }
+    json = { 'one' : { 'two':2, 'three':3}}
     mapper = packet_mapper(packet)
+
+    for data in json['one']:
+      print data
 
     # This code changes variables within a packet
     #mapper.map('addr', '6581', packet)
-    #mapper.map('data', '0', packet)
-    #print packet
+    mapper.map('data', '0', packet)
+    #print packet["in2"]["data"]
 
     # This code gives you a list of the names of the variables in a message object
-    msg = shared_msgs.msg.can_msg()
-    print mapper.get_msg_vars(msg)
-    
 
+    #msg = shared_msgs.msg.can_msg()
+    #print msg
+    #print mapper.get_msg_vars(msg)
+    #print getattr(msg, "id")
+    #setattr(msg, "id", 1)
+    #print getattr(msg, "id")
