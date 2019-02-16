@@ -88,10 +88,14 @@ def process(data):
   cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
   print(center)
 
+
   #recognize starting square/circle
   squares = []
   circles = []
+ 
+  #need to do some thresholding in here
 
+  #getting contours for each image
   sq_cnts = []
   circ_cnts = []
   for sq, circ in zip(squares, circles):
@@ -101,8 +105,10 @@ def process(data):
     sq_cnts.append(sq_cnt)
     circ_cnts.append(circ_cnt)
 
+  #find matches that have a matchShape value of less than .02
   match = filter(lambda cnt_temp: cv2.matchShapes(contour,cnt_temp) < .02, sq_cnts + circ_cnts)
   
+  #if a match is found, identify shape in picuture, draw circle around, and do work with moments
   if match != -1:
     if match in squares:
       init_shape = "square"
