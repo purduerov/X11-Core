@@ -4,19 +4,15 @@ import styles from './main.css';
 import packet from '../src/packets.json';
 
 
-import CVview from '../src/components/CVview/CVview.jsx';
-import ESCinfo from '../src/components/ESCinfo/ESCinfo.jsx';
 import Card from '../src/components/Card/Card.jsx';
 import CameraScreen from '../src/components/CameraScreen/CameraScreen.jsx';
-import ForceScales from '../src/components/ForceScales/ForceScales.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
 import ThrusterInfo from '../src/components/ThrusterInfo/ThrusterInfo.jsx';
-import ThrusterScales from '../src/components/ThrusterScales/ThrusterScales.jsx';
 import Gpinfo from '../src/components/Gpinfo/Gpinfo.jsx';
 import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
-import ToolView from '../src/components/ToolView/ToolView.jsx';
 import PacketView from '../src/components/PacketView/PacketView.jsx';
 import betterlayouts from '../src/gamepad/betterlayouts.js';
+import CVview from '../src/components/CVview/CVview.jsx';
 
 const socketHost = 'ws://localhost:5001';
 
@@ -154,42 +150,17 @@ class App extends React.Component {
                                     rend={this.changeDisabled}
                                 />
                             </Card>
+                            <Card title="Desired Force Vector" />
+                        </div>
+                        <div className="data-column">
+                            <Card title="Computer Vision Stuff" />
                             <Card title="CV view window">
                                 <CVview desc={"Purdo good, Purdon't let Eric make messages"} tdist={[0.0, 0.1, 0.2, 0.4, 0.7, 0.8]} />
                             </Card>
                         </div>
                         <div className="data-column">
-                            <Card title="Directional Control">
-                                <ForceScales
-                                    rend={this.changeForceScales}
-                                    scales={this.state.config.thrust_scales}
-                                    invert={this.state.config.thrust_invert}
-                                />
-                            </Card>
-                            <Card title="Thruster Control">
-                                <ThrusterScales
-                                    rend={this.changeThrustScales}
-                                    scales={this.state.config.thruster_control}
-                                />
-                            </Card>
-                        </div>
-                        <div className="data-column">
-                            <Card title="ESC readings">
-                                <ESCinfo
-                                    currents={this.state.dearclient.sensors.esc.currents}
-                                    temp={this.state.dearclient.sensors.esc.temperatures}
-                                />
-                            </Card>
-                            <Card>
-                                <ToolView
-                                    manipulator={this.state.dearflask.manipulator.power}
-                                    servo={this.state.dearflask.maincam_angle}
-                                    transmitter={this.state.dearflask.transmitter}
-                                    magnet={this.state.dearflask.magnet}
-                                    conf={this.state.config.tool_scales}
-                                    rend={this.rendTools}
-                                />
-                            </Card>
+                            <Card title="IPC Timer (Master?)" />
+                            <Card title="Line Graph Component" />
                         </div>
                     </div>
                 </div>
