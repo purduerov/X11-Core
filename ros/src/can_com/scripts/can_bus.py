@@ -3,6 +3,11 @@ import can
 import rospy
 from shared_msgs.msg import msg_can
 
+# can_bus - This is a ROS node that handles all CAN hardware communication
+#
+#           can_bus reads on the can_tx topic and writes contents to pi CAN line (or vcan)
+#           can_bus reads the pi CAN line (or vcan) and writes contents to can_rx topic.
+
 global can_bus
 global pub
 global sub
@@ -39,7 +44,12 @@ if __name__ == "__main__":
     global can_bus
     rospy.init_node('can_node')
 
-    can_bus = can.interface.Bus(channel='vcan0', bustype='socketcan')
+    channel = 'vcan0'
+    if rospy.has_param('rov/can/channel'):
+        channel = rospy.get_param('rov/can/channel')
+    print channel
+    can_bus = can.interface.Bus(channel=channel, bustype='socketcan')
+
     pub = rospy.Publisher('can_rx', msg_can,
             queue_size= 100)
     sub = rospy.Subscriber('can_tx', msg_can,
