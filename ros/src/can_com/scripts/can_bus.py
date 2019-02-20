@@ -1,9 +1,11 @@
 #! /usr/bin/python
+import sys
 import can
 import rospy
 from shared_msgs.msg import msg_can
 
 # can_bus - This is a ROS node that handles all CAN hardware communication
+#           Arguments: can_bus.py accepts one optional argument: the CAN interface name. Usually can0 or vcan0.
 #
 #           can_bus reads on the can_tx topic and writes contents to pi CAN line (or vcan)
 #           can_bus reads the pi CAN line (or vcan) and writes contents to can_rx topic.
@@ -45,9 +47,8 @@ if __name__ == "__main__":
     rospy.init_node('can_node')
 
     channel = 'vcan0'
-    if rospy.has_param('rov/can/channel'):
-        channel = rospy.get_param('rov/can/channel')
-    print channel
+    if len(sys.argv) == 2:
+        channel = sys.argv[1]
     can_bus = can.interface.Bus(channel=channel, bustype='socketcan')
 
     pub = rospy.Publisher('can_rx', msg_can,
@@ -56,7 +57,7 @@ if __name__ == "__main__":
             topic_message_received)
 
     # Performs publishing on can bus read
-    while True:
+    while not rospy.is_shutdown():
         for can_rx in can_bus:
             bus_message_received(can_rx)
         rospy.loginfo('Done')
