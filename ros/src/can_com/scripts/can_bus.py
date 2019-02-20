@@ -60,4 +60,3 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         for can_rx in can_bus:
             bus_message_received(can_rx)
-        rospy.loginfo('Done')
