@@ -1,5 +1,6 @@
 {
   "name": "frontend",
+  "productName": "rovfe",
   "version": "1.0.0",
   "description": "ROV 2018-19 package.json for our nodejs based framework",
   "main": "electron-setup.js",
@@ -9,9 +10,12 @@
     "start": "webpack -d && electron .",
     "proxy": "./pakfront/proxyinstall.sh",
     "proxyup": "./pakfront/proxyrun.sh",
-    "dev": "webpack -d",
+    "dev": "webpack -d && electron-rebuild",
     "watch": "webpack -d --watch",
     "build": "webpack -p",
+    "package-mac": "electron-rebuild && electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true",
+    "package-win": "electron-rebuild && electron-packager . --overwrite --platform=win32  --arch=x64 --prune=true",
+    "package-linux": "electron-rebuild && electron-packager . --overwrite --platform=linux  --arch=x64 --prune=true"
     "lintFront": "eslint ./**/*.{js,jsx} -c ../eslintrc.js > lintFront.txt | echo 'Linting frontend folder...'",
     "linit": "eslint --init",
     "lintfix": "eslint ./**/*.{js,jsx} -c ../eslintrc.js --fix > lintFront.txt | echo 'Linting frontend folder...'"
@@ -24,7 +28,6 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^1.0.0",
-    "electron": "^1.8.8",
     "electron-context-menu": "^0.9.1",
     "extract-text-webpack-plugin": "^3.0.2",
     "jquery": "^3.3.1",
@@ -36,6 +39,9 @@
     "webpack-combine-loaders": "^2.0.4"
   },
   "devDependencies": {
+    "electron": "^1.8.8",
+    "electron-packager": "^12.1.2",
+    "electron-rebuild": "^1.8.2"
     "eslint": "^5.6.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
