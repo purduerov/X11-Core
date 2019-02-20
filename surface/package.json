@@ -16,6 +16,9 @@
     "package-mac": "electron-rebuild && electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true",
     "package-win": "electron-rebuild && electron-packager . --overwrite --platform=win32  --arch=x64 --prune=true",
     "package-linux": "electron-rebuild && electron-packager . --overwrite --platform=linux  --arch=x64 --prune=true"
+    "lintFront": "eslint ./**/*.{js,jsx} -c ../eslintrc.js > lintFront.txt | echo 'Linting frontend folder...'",
+    "linit": "eslint --init",
+    "lintfix": "eslint ./**/*.{js,jsx} -c ../eslintrc.js --fix > lintFront.txt | echo 'Linting frontend folder...'"
   },
   "author": "Purdue ROV Software Team",
   "license": "ISC",
@@ -39,5 +42,10 @@
     "electron": "^1.8.8",
     "electron-packager": "^12.1.2",
     "electron-rebuild": "^1.8.2"
+    "eslint": "^5.6.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1"
   }
 }

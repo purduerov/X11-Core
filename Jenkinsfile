@@ -1,16 +1,21 @@
 
 def WindDown(errorname){
 
-        SendToPi("docker stop rov")
-        SendToPi("docker rm rov")
-        msg = """
-Pull Request #${PULLNUM}, on branch ${PULLBRANCH} Failed!
-Find the logs here: http://aberdeen.purdueieee.org:1944/
-        """
-        slackSend(color: "#FF0000",message: msg)
+        
+	try{
+                sendStatus("failure","http://aberdeen.purdueieee.org:1944/",errorname,"continuous-integration/aberdeen")
+                SendToPi("docker stop rov")
+                SendToPi("docker rm rov")
+                msg = """
+        Pull Request #${PULLNUM}, on branch ${PULLBRANCH} Failed!
+        Find the logs here: http://aberdeen.purdueieee.org:1944/
+                """
+                slackSend(color: "#FF0000",message: msg)
 
-        sendStatus("failure","http://aberdeen.purdueieee.org:1944/",errorname,"continuous-integration/aberdeen")
-        error(errorname)
+                error(errorname)
+	}catch(error){
+                error(error)
+	}
 }
 
 def SendToPi(cmd){
@@ -96,7 +101,7 @@ node {
                 // Lint Python
                 withPythonEnv('/usr/bin/python'){
                         try{
-                                pysh(returnStdout:true, script: 'pylint --rcfile=pylintrc.conf surface/pakfront/CV/ > pylint.log').trim()
+                                pysh(returnStdout:true, script: 'pylint --rcfile=pylintrc.conf surface/pakfront/cv/ > pylint.log').trim()
                                 pysh(returnStdout:true, script: 'pylint --rcfile=pylintrc.conf rov/ >> pylint.log').trim()
                         }catch(error){
                                 linterrmsg +="Linting Python Files on PR#${PULLNUM} Failed!\n" 
