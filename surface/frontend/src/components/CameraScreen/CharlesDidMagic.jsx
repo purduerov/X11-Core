@@ -1,24 +1,72 @@
 import React, { Component } from 'react';
+import Camera from 'react-camera';
 import styles from './CameraScreen.css';
-// import PropTypes from 'prop-types';
 
-export default class CameraScreen extends Component {
+class Square extends React.Component {
+    render() {
+        return (
+            <button className={styles.butt} onClick={() => this.props.onClick()}>
+                {this.props.value}
+            </button>
+        );
+    }
+}
+
+class Stream extends React.Component {
+    render() {
+        return (
+            <img src={this.props.cam} width="100%" />
+        );
+    }
+}
+
+class CamSel extends React.Component {
     constructor(props) {
         super(props);
-
-        /* https://reactjs.org/docs/typechecking-with-proptypes.html
-        this.propTypes = {
-            next: PropTypes.number,
-            prev: PropTypes.number,
-        };
-        */
-
         this.state = {
             name: '',
             sub: 'Name',
+        };
+        this.handleNameChange = this.handleNameChange.bind(this);
+    }
+
+    handleNameChange(event) {
+        this.setState({ name: event.target.value });
+    }
+
+    render() {
+        return (
+            <div>
+                <input
+                    type="text"
+                    value={this.state.name}
+                    onChange={this.handleNameChange}
+                />
+                <input
+                    type="submit"
+                    value={this.state.sub}
+                    onClick={e => this.props.onNewName(this.state.name)}
+                />
+            </div>
+        );
+    }
+}
+
+function getMoviesFromApiAsync(callback) {
+    return fetch('http://localhost:1905')
+        .then(response => response.json())
+        .then((results) => {
+            callback(results);
+        });
+}
+export default class Camera_view extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
             pxybypass: false,
             pakconf: {},
-            numcams: 2, // Hardcoded number of accessable cams. For future growth use pakfornt api
+            numcams: 2, // Change to the number of accessable cams. For future growth use pakfornt api
             camscreens: [
                 0,
                 1,
@@ -44,10 +92,8 @@ export default class CameraScreen extends Component {
     }
 
     getconf() {
-        var res = null;
-        var bypass = this.state.pxybypass;
-        if (!bypass) {
-            res = fetch('http://localhost:1905')
+        if (!this.state.pxybypass) {
+            return fetch('http://localhost:1905')
                 .then(response => response.json())
                 .then((results) => {
                     this.setState({
@@ -55,8 +101,6 @@ export default class CameraScreen extends Component {
                     });
                 });
         }
-
-        return res;
     }
 
     handleClick(screennum, camnum) {
@@ -92,28 +136,13 @@ export default class CameraScreen extends Component {
     }
 
     renderCamSel(screennum) {
-        return (
-            <div>
-                <input
-                    type="text"
-                    value={this.state.name}
-                    onChange={e => this.setState({ name: e.target.value }) }
-                />
-                <input
-                    type="submit"
-                    value={this.state.sub}
-                    onClick={() => this.camUpdate(screennum, this.state.name)}
-                />
-            </div>);
+        return <CamSel onNewName={val => this.camUpdate(screennum, val)} />;
     }
 
     renderStream(strnum) {
-        var camnum = this.state.camscreens[strnum];
-        var IP;
-
         if (this.checkPrevPress()) {
             const camscreens = this.state.camscreens.slice();
-            camscreens[strnum] -= 1;
+            camscreens[strnum] = camscreens[strnum] - 1;
             if (camscreens[strnum] === -1) {
                 camscreens[strnum] = this.state.numcams;
             }
@@ -128,7 +157,7 @@ export default class CameraScreen extends Component {
                 camscreens,
             });
         }
-
+        var camnum = this.state.camscreens[strnum];
         if (camnum >= this.state.numcams) {
             camnum = 0;
         }
@@ -157,7 +186,7 @@ export default class CameraScreen extends Component {
         } else {
             port = 8000;
         }
-
+        var IP;
         if (this.state.pxybypass) {
             port = 8080;
             query = this.state.stream.query + this.state.camscreens[strnum];
@@ -166,18 +195,15 @@ export default class CameraScreen extends Component {
             IP = this.state.stream.ip;
         }
         const url = `http://${IP}:${port}${query}`;
-        return <img src={url} width="100%" alt="Camera Stream Window wannabe" />;
+        return <Stream cam={url} />;
     }
 
     renderSquare(screennum, camnum) {
         return (
-            <button
-                className={styles.butt}
+            <Square
+              value={this.state.camnames[camnum]}
                 onClick={() => this.handleClick(screennum, camnum)}
-                type="submit"
-            >
-                {this.state.camnames[camnum]}
-            </button>
+            />
         );
     }
 
@@ -186,7 +212,7 @@ export default class CameraScreen extends Component {
             <div className={styles.container}>
                 <header className={styles.header}>
                     <div className={styles.whiteText}>
-                        Screen1:
+Screen1:
                         {this.renderCamSel(0)}
                     </div>
                 </header>

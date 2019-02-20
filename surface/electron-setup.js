@@ -9,8 +9,16 @@ const cvbin = './pakfront/bin/';
 var cvspawns = {};
 var cvref = {};
 
-let win;
+// TODO: webpack.config.js needs to be configured to work with multiple input files
+const files = ['frontend/Window1/main.html', 'frontend/Window2/secondary.html', 'frontend/Window3/buddy.html'];
 
+const windows = [null, null, null];
+
+// Spawning process variables, for proof of concept only currently
+var py = spawn('python', [`${cvbin}print.py`]);
+
+var data = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+var dataString = '';
 
 // ----------------------------------------------------------------------------------------
 // Importing this adds a right-click menu with 'Inspect Element' option [worth it]
@@ -23,27 +31,39 @@ require('electron-context-menu')({
 });
 // ----------------------------------------------------------------------------------------
 
-function createWindow() {
-    // Create the browser window.
-    win = new BrowserWindow({ width: 1600, height: 1200 });
-
-    // and load the index.html of the app.
-    win.loadURL(url.format({
-        pathname: path.join(__dirname, 'frontend/main.html'),
-        protocol: 'file:',
-        slashes: true,
-    }));
-
-    // Open the DevTools.
-    win.webContents.openDevTools();
-
-    // Emitted when the window is closed.
-    win.on('closed', () => {
+function closeWin(i) {
+    return () => {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
-        win = null;
-    });
+        windows[i] = null;
+    };
+}
+
+function createWindow() {
+    var i;
+
+    // Create the browser window.
+
+    for (i = 0; i < files.length; i++) {
+        // Curious if a macOS works better this way with multi-windows...
+        if (windows[i] == null) {
+            windows[i] = new BrowserWindow({ width: 1600, height: 1200 });
+
+            // and load the index.html of the app.
+            windows[i].loadURL(url.format({
+                pathname: path.join(__dirname, files[i]),
+                protocol: 'file:',
+                slashes: true,
+            }));
+
+            // Open the DevTools.
+            windows[i].webContents.openDevTools();
+
+            // Emitted when the window is closed.
+            windows[i].on('closed', closeWin(i));
+        }
+    }
 }
 
 // This method will be called when Electron has finished
@@ -63,30 +83,5 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (win === null) {
-        createWindow();
-    }
+    createWindow();
 });
-
-var py = spawn('python', [`${cvbin}print.py`]);
-
-var data = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-var dataString = '';
-
-/* Here we are saying that every time our node application receives data from the python process output stream(on 'data'), we want to convert that received data into a string and append it to the overall dataString. */
-
-py.stdout.on('data', (data) => {
-    dataString = data.toString();
-});
-
-/* Once the stream is done (on 'end') we want to simply log the received data to the console. */
-
-py.stdout.on('end', () => {
-    console.log('Sum of numbers=', dataString);
-});
-
-/* We have to stringify the data first otherwise our python process wont recognize it */
-
-py.stdin.write(JSON.stringify(data));
-
-py.stdin.end();
