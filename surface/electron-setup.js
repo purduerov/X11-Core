@@ -62,20 +62,6 @@ function createWindow() {
 
             // Emitted when the window is closed.
             windows[i].on('closed', closeWin(i));
-            if (i == 2) {
-              webContents.sendInputEvent({
-                type: 'keydown',
-                keyCode: key,
-              });
-              webContents.sendInputEvent({
-                type: 'keyup',
-                keyCode: key,
-              });
-              webContents.sendInputEvent({
-                type: 'char',
-                keyCode: key,
-              });
-            }
         }
     }
 }
@@ -102,7 +88,7 @@ app.on('activate', () => {
 
 ipcMain.on('buddy-controls-from-win-3', (event, message) => {
     if (windows[0] != null) {
-      windows[0].webContents.send('buddy-controls-from-win-1', message);
+        windows[0].webContents.send('buddy-controls-from-win-1', message);
     }
 });
 
