@@ -58,19 +58,11 @@ def process(data):
   #img = cv2.inRange(img,(0/2,150,115),(35/2,255,255))
   #blue
   img = cv2.inRange(img,(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
-  
-
   #erode and dilate image
   img =  cv2.erode(img,np.ones((5,5)))
   img =  cv2.dilate(img,np.ones((10,10)))
   
   #contouring
-  '''
-  contour = np.array([get_largest(img)])
-  
-  #if contour.size == 0:
-    cv2.drawContours(img_og,[contour],0,(0,255,0),3)
-  '''
   contour = get_largest(img)	
   
   if contour.all() != -1:
@@ -88,12 +80,18 @@ def process(data):
   cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
   print(center)
 
-
+   
   #recognize starting square/circle
-  squares = []
-  circles = []
+  squares = [cv2.imread('sq_bl.png'),cv2.imread('sq_ang_bl.png'),cv2.imread('sq_noise_bl.png')]
+  circles = [cv2.imread('circ_bl.png'),cv2.imread('circ_ang_bl.png'),cv2.imread('circ_noise_bl.png')]
  
   #need to do some thresholding in here
+  squares[img] = bridge.imgmsg_to_cv2(img,"bgr8") for img in range(len(squares)) 
+  circles[img] = bridge.imgmsg_to_cv2(img,"bgr8") for img in range(len(circles)) 
+   
+  squares[img] = bridge.imgmsg_to_cv2(img,"bgr8") for img in range(len(squares)) 
+  circles[img] = bridge.imgmsg_to_cv2(img,"bgr8") for img in range(len(circles)) 
+  
 
   #getting contours for each image
   sq_cnts = []
@@ -108,7 +106,7 @@ def process(data):
   #find matches that have a matchShape value of less than .02
   match = filter(lambda cnt_temp: cv2.matchShapes(contour,cnt_temp) < .02, sq_cnts + circ_cnts)
   
-  #if a match is found, identify shape in picuture, draw circle around, and do work with moments
+  #if a match is found, identify shape in picuture
   if match != -1:
     if match in squares:
       init_shape = "square"
@@ -120,6 +118,7 @@ def process(data):
     #get moment of circle
 
     #vector from drawn circle to moment line 
+  
 
   #show images
   cv2.imshow("Image",img_og)
