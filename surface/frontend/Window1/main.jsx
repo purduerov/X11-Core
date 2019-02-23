@@ -1,14 +1,18 @@
 import React from 'react';
 import { render } from 'react-dom';
 import styles from './main.css';
-import packet from '../src/packets.js';
-const { shell, app, ipcRenderer } = window.require('electron');
 
 import Card from '../src/components/Card/Card.jsx';
+import CameraScreen from '../src/components/CameraScreen/CameraScreen.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
 import BuddyControls from '../src/components/BuddyControls/BuddyControls.jsx';
 import FreezeGp from '../src/components/FreezeGp/FreezeGp.jsx';
 import betterlayouts from '../src/gamepad/betterlayouts.js';
+import ThrusterInfo from '../src/components/ThrusterInfo/ThrusterInfo.jsx';
+import Gpinfo from '../src/components/Gpinfo/Gpinfo.jsx';
+import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
+import PacketView from '../src/components/PacketView/PacketView.jsx';
+import CVview from '../src/components/CVview/CVview.jsx';
 
 const socketHost = 'ws://localhost:5001';
 
@@ -22,7 +26,8 @@ const { shell, app, ipcRenderer } = window.require('electron');
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
+        this.state = require("../src/packets.json");
+        this.state.gp = require('../src/gamepad/bettergamepad.js');
 
         this.state.gp = require ("../src/gamepad/bettergamepad.js");
         this.gp = require('../src/gamepad/bettergamepad.js');
@@ -71,6 +76,10 @@ class App extends React.Component {
         this.confcpy = this.state.config;
 
         this.setFreeze = this.setFreeze.bind(this);
+        this.rendTools = this.rendTools.bind(this);
+        this.changeDisabled = this.changeDisabled.bind(this);
+        this.changeForceScales = this.changeForceScales.bind(this);
+        this.changeThrustScales = this.changeThrustScales.bind(this);
     }
 
     componentDidMount() {
@@ -80,13 +89,55 @@ class App extends React.Component {
         signals(this, socketHost);
     }
 
-
     setFreeze(value) {
         this.setState({
             freeze: value
         });
     }
+    rendTools(cinvcpy) {
+        this.confcpy.tool_scales = cinvcpy;
 
+        this.setState({
+            config: this.confcpy,
+        });
+    }
+
+    changeDisabled(dis) {
+        this.flaskcpy.thrusters.disabled_thrusters = dis;
+        this.setState({
+            dearflask: this.flaskcpy,
+        });
+    }
+
+    changeThrustScales(scales) {
+        this.confcpy.thruster_control = scales;
+
+        this.confcpy.thruster_control.forEach((val, i) => {
+            if (val.invert < 0) {
+                this.flaskcpy.thrusters.inverted_thrusters[i] = -Math.abs(
+                    this.flaskcpy.thrusters.inverted_thrusters[i]);
+            } else if (val.invert > 0) {
+                this.flaskcpy.thrusters.inverted_thrusters[i] = Math.abs(
+                    this.flaskcpy.thrusters.inverted_thrusters[i]);
+            } else {
+                console.log('Thruster inversion value is 0... why???');
+            }
+        });
+
+        this.setState({
+            config: this.confcpy,
+            dearflask: this.flaskcpy,
+        });
+    }
+
+    changeForceScales(scales, inv) {
+        this.confcpy.thrust_scales = scales;
+        this.confcpy.thrust_invert = inv;
+
+        this.setState({
+            config: this.confcpy,
+        });
+    }
 
     render() {
         return (
@@ -95,7 +146,12 @@ class App extends React.Component {
                     <Titlebar title="Purdue ROV Primary Screen" />
                 </div>
                 <div className="main-container">
-                    <div className="camera-width full-height center" />
+                    <div className="camera-width full-height center">
+                        <CameraScreen
+                            next={this.state.gp.buttons.left}
+                            prev={this.state.gp.buttons.right}
+                        />
+                    </div>
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card>
@@ -104,12 +160,25 @@ class App extends React.Component {
                                     rend={this.setFreeze}
                                 />
                             </Card>
+                            <Card>
+                                <ThrusterInfo
+                                    thrusters={this.state.dearclient.thrusters}
+                                    disabled={this.state.dearflask.thrusters.disabled_thrusters}
+                                    manipulator={this.state.dearflask.manipulator.power}
+                                    rend={this.changeDisabled}
+                                />
+                            </Card>
+                            <Card title="Desired Force Vector" />
                         </div>
                         <div className="data-column">
-                            <Card />
+                            <Card title="Computer Vision Stuff" />
+                            <Card title="CV view window">
+                                <CVview desc={"Purdo good, Purdon't let Eric make messages"} tdist={[0.0, 0.1, 0.2, 0.4, 0.7, 0.8]} />
+                            </Card>
                         </div>
                         <div className="data-column">
-                            <Card />
+                            <Card title="IPC Timer (Master?)" />
+                            <Card title="Line Graph Component" />
                         </div>
                     </div>
                 </div>

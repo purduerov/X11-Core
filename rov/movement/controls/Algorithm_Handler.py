@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 
 class Master_Algorithm_Handler():
     # COMPARE THE ACTIVATION LOGIC
-    def __init__(self, activate, sensors): # refer to the XX-Core/frontend/src/packets.js
+    def __init__(self, activate, sensors): # refer to the XX-Core/frontend/src/packets.json
         self._dof_control = [0,0,0,0,0,0] # HOLDS THE OUTPUT FOR MOVEMENT
         self._dof_names = ['x', 'y', 'z', 'roll', 'pitch', 'yaw']
         self._freeze = [] # CONTAINS THE POSITION STABILIZERS

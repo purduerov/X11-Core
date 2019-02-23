@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import styles from './buddy.css';
-import packet from '../src/packets.js';
+import packet from '../src/packets.json';
 
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
@@ -16,7 +16,7 @@ const { shell, app, ipcRenderer } = window.require('electron');
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = require('../src/packets.js'); //= $.extend(true, {}, packets);
+        this.state = require("../src/packets.json");
 
         this.state.directions = { x: 0, y: 0 };
         this.state.config = {
@@ -77,13 +77,13 @@ class App extends React.Component {
                     <div className="camera-width full-height center" />
                     <div className="data-width full-height">
                         <div className="data-column">
-                            <Card />
+                            <Card title="Active Toggle Buttons" />
                         </div>
                         <div className="data-column">
-                            <Card />
+                            <Card title="I see Brown CV" />
                         </div>
                         <div className="data-column">
-                            <Card />
+                            <Card title="IPC Timer (Slave?)" />
                         </div>
                     </div>
                 </div>
