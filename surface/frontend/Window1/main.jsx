@@ -82,9 +82,9 @@ class App extends React.Component {
 
 
     setFreeze(value) {
-      this.setState({
-        freeze: value
-      });
+        this.setState({
+            freeze: value
+        });
     }
 
 
@@ -99,10 +99,10 @@ class App extends React.Component {
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card>
-                              <FreezeGp
-                                maybeFreeze={this.state.freeze}
-                                rend={this.setFreeze}
-                              />
+                                <FreezeGp
+                                    maybeFreeze={this.state.freeze}
+                                    rend={this.setFreeze}
+                                />
                             </Card>
                         </div>
                         <div className="data-column">
