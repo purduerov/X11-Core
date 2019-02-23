@@ -1,19 +1,21 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
-import * as d3 from "d3";
+import PropTypes from "prop-types";
 
 const SQUARE_WIDTH_CM = 30; // 30 cm wide square
-
+const NUM_ROWS = 3;
+const NUM_COLS = 4;
 
 export default class CrackMap extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.getSizes();
+    this.rows.bind(this);
+    this.columns.bind(this);
   }
 
   getSizes() {
-    const { width, height, crackLX, crackLY, crackRX, crackSquare } = this.props;
+    let { width, height, length, crackSquare } = this.props;
+    width -= 2; height -= 2;
     let squareSize;
     if (width / 4 > height / 3) {
       squareSize = height / 3;
@@ -22,31 +24,12 @@ export default class CrackMap extends Component {
       squareSize = width / 4;
       squareSize -= squareSize % 10;
     }
-    const offset = this.getOffset(crackSquare);
-    const crackLXPixels = crackLX / SQUARE_WIDTH_CM * squareSize;
-    const crackLYPixels = crackLY / SQUARE_WIDTH_CM * squareSize;
-    const crackRXPixels = crackRX / SQUARE_WIDTH_CM * squareSize;
-    const absCrackLX = offset.x + crackLXPixels;
-    const absCrackLY= offset.y + crackLYPixels;
-    const crackWidth = Math.abs(crackLXPixels - crackRXPixels);
-    const crackHeight = 1.85 / SQUARE_WIDTH_CM * squareSize;
 
     this.state = {
       squareSize,
-      crackX: absCrackLX,
-      crackY: absCrackLY,
-      crackWidth,
-      crackHeight
+      crackSquare,
+      length
     };
-  }
-
-  getOffset(crackSquare) {
-    crackSquare = crackSquare.split('');
-
-    const letterOffset = { A: 0, B: 1, C: 2, D: 3 }[crackSquare[0]];
-    const numberOffset = crackSquare[1] - 1;
-
-    return { x: letterOffset, y: numberOffset };
   }
 
   gridData() {
@@ -55,12 +38,12 @@ export default class CrackMap extends Component {
     let xpos = 1;
     let ypos = 1;
 
-
     for (let row = 0; row < 3; row++) {
       data.push([]);
 
       for (let column = 0; column < 4; column++) {
         data[row].push({
+          id: `${String.fromCharCode(97 + column).toUpperCase()}${row + 1}`,
           x: xpos,
           y: ypos,
           width: squareSize,
@@ -73,57 +56,64 @@ export default class CrackMap extends Component {
     }
     return data;
   }
-  componentDidMount() {
-    const griddata = this.gridData();
-    console.log(griddata);
-    console.log(this.state);
 
-    const grid = d3
-      .select("#grid")
-      .append("svg")
-      .attr("width", this.props.width + 2)
-      .attr("height", this.props.height + 2);
-
-    const row = grid
-      .selectAll(".row")
-      .data(griddata)
-      .enter()
-      .append("g")
-      .attr("class", "row");
-
-    row
-      .selectAll(".square")
-      .data(d => d)
-      .enter()
-      .append("rect")
-      .attr("class", "square")
-      .attr("x", d => d.x)
-      .attr("y", d => d.y)
-      .attr("width", d => d.width)
-      .attr("height", d => d.height)
-      .style("fill", "#fff")
-      .style("stroke", "#222");
-
-    grid
-      .append("rect")
-      .attr("class", "crack")
-      .attr("x", this.state.crackX)
-      .attr("y", this.state.crackY)
-      .attr("width", this.state.crackWidth)
-      .attr("height", this.state.crackHeight)
-      .style("fill", "green");
+  rows(row, index) {
+    return (
+      <g className="row" key={index}>
+        {row.map(this.columns, this)}
+      </g>
+    );
   }
+
+  columns({ id, x, y, width, height }, index) {
+    return (
+      <g key={index}>
+        <rect
+          key={id}
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          fill="#FFFFFF"
+          stroke="#222222"
+        />
+        {id === this.state.crackSquare ? <Text {...this.state} x={x} y={y}/> : ''}
+      </g>
+    );
+  }
+
   render() {
-    return <div id="grid" />;
+    return (
+      <div>
+        <div id="grid">
+          <svg height={this.props.height} width={this.props.width}>
+            {this.gridData().map(this.rows, this)}
+          </svg>
+        </div>
+      </div>
+    );
   }
+}
+
+function Text({squareSize, length, x, y}) {
+  const fontSize = squareSize / 5.5;
+
+  return (
+    <text
+      x={x + squareSize / 10}
+      y={y + (squareSize - fontSize) / 1.5}
+      fontFamily="monospace"
+      fontSize={`${fontSize}px`}
+      fill="blue"
+    >
+      {length} cm
+    </text>
+  );
 }
 
 CrackMap.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   crackSquare: PropTypes.string.isRequired,
-  crackLX: PropTypes.number.isRequired,
-  crackLY: PropTypes.number.isRequired,
-  crackRX: PropTypes.number.isRequired,
-  crackRY: PropTypes.number,
-}
+  length: PropTypes.number.isRequired
+};
