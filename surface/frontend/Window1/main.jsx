@@ -87,6 +87,25 @@ class App extends React.Component {
         window.react = this;
 
         signals(this, socketHost);
+
+        setInterval( () => {
+          if (this.freeze) {
+            //console.log(flaskcpy)
+            for(var i = 0; i < 6; i++) {
+              if(i = 2) {
+                react.flaskcpy.thrusters.desired_thrust[i] = -.1;
+              } else {
+                react.flaskcpy.thrusters.desired_thrust[i] = 0;
+              }
+            }
+
+            // flaskcpy.desired_thrust = down 10%, all else 0
+          }
+
+          this.setState({
+              dearflask: this.flaskcpy,
+          });
+        }, 50)
     }
 
     setFreeze(value) {
@@ -104,9 +123,6 @@ class App extends React.Component {
 
     changeDisabled(dis) {
         this.flaskcpy.thrusters.disabled_thrusters = dis;
-        this.setState({
-            dearflask: this.flaskcpy,
-        });
     }
 
     changeThrustScales(scales) {
@@ -126,7 +142,6 @@ class App extends React.Component {
 
         this.setState({
             config: this.confcpy,
-            dearflask: this.flaskcpy,
         });
     }
 

@@ -18,7 +18,7 @@ var gp = {
     but_func: {},
     ax_func: {},
 
-
+    /*
     freeze() {
       var cur = navigator.getGamepads()[gp.gamepadIndex];
       var lay = layouts[gp.layoutKey];
@@ -43,7 +43,7 @@ var gp = {
             val = .1;
           }
       }
-    },
+    }, */
 
 
     selectController() {
