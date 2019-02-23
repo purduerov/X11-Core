@@ -47,7 +47,7 @@ module.exports = (where, socketHost) => {
         where.gp.update();
 //        console.log('success');
 } else if (where.state.freeze === 1){
-        this.gp.freeze();
+        where.gp.freeze();
       }
 
       where.setState({                           //Initiates rendering process
