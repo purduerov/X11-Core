@@ -54,7 +54,7 @@ def process(data):
   img = cv2.medianBlur(img,5)
   img = cv2.GaussianBlur(img,(5,5),0)
  
-  #red
+  #red`
   #img = cv2.inRange(img,(0/2,150,115),(35/2,255,255))
   #blue
   img = cv2.inRange(img,(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
@@ -86,11 +86,12 @@ def process(data):
   circles = [cv2.imread('circ_bl.png'),cv2.imread('circ_ang_bl.png'),cv2.imread('circ_noise_bl.png')]
  
   #need to do some thresholding in here
-  squares[img] = bridge.imgmsg_to_cv2(img,"bgr8") for img in range(len(squares)) 
-  circles[img] = bridge.imgmsg_to_cv2(img,"bgr8") for img in range(len(circles)) 
+  squares[img] = bridge.imgmsg_to_cv2(squares[img],"bgr8") for img in range(len(squares)) 
+  circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
    
-  squares[img] = bridge.imgmsg_to_cv2(img,"bgr8") for img in range(len(squares)) 
-  circles[img] = bridge.imgmsg_to_cv2(img,"bgr8") for img in range(len(circles)) 
+  squares[img] = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) for img in range(len(squares)) 
+  circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
+
   
 
   #getting contours for each image
