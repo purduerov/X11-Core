@@ -21,6 +21,8 @@ def _auto_command(msg):
   global locked_dims_list #locked dimensions
   desired_a = msg.thrust_vec
   locked_dims_list = msg.dims_locked
+  curr_time = rospy.get_rostime()
+  compare_time = curr_time.secs + curr_time.secs * 10 ** -9;
   on_loop()
 
 def _pilot_command(comm):
@@ -30,6 +32,8 @@ def _pilot_command(comm):
   desired_p = comm.desired_thrust
   disabled_list = comm.disable_thrusters
   inverted_list = comm.inverted
+  curr_time = rospy.get_rostime()
+  compare_time = curr_time.secs + curr_time.secs * 10 ** -9;
   on_loop()
 
 def on_loop():
@@ -96,6 +100,7 @@ if __name__ == "__main__":
         disabled_list = [True, True, True, True, True, True, True, True]
         on_loop()
     #ask about syntax
-    if(ropsy.time - last_packet_time > WATCHDOG_TIMEOUT):
+
+    if(compare_time - last_packet_time > WATCHDOG_TIMEOUT):
         is_timed_out = True
     rate.sleep()
