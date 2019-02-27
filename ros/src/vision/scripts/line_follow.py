@@ -42,6 +42,47 @@ def draw_center(img, contour):
   cv2.circle(img, (Cx, Cy), 3, (0, 255, 0), -1)
   return [Cx, Cy]
 
+def find_start():
+  #recognize starting square/circle
+  squares = [cv2.imread('sq_bl.png'),cv2.imread('sq_ang_bl.png'),cv2.imread('sq_noise_bl.png')]
+  circles = [cv2.imread('circ_bl.png'),cv2.imread('circ_ang_bl.png'),cv2.imread('circ_noise_bl.png')]
+ 
+  #need to do some thresholding in here
+  squares[img] = bridge.imgmsg_to_cv2(squares[img],"bgr8") for img in range(len(squares)) 
+  circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
+   
+  squares[img] = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) for img in range(len(squares)) 
+  circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
+
+
+  #getting contours for each image
+  sq_cnts = []
+  circ_cnts = []
+  for sq, circ in zip(squares, circles):
+    im, sq_cnt, hierarchy = cv2.findContours(sq,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+    im, circ_cnt, hierarchy = cv2.findContours(circ,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+
+    sq_cnts.append(sq_cnt)
+    circ_cnts.append(circ_cnt)
+
+  #find matches that have a matchShape value of less than .02
+  match = filter(lambda cnt_temp: cv2.matchShapes(contour,cnt_temp) < .02, sq_cnts + circ_cnts)
+  
+  #if a match is found, identify shape in picuture
+  if match != -1:
+    if match in squares:
+      init_shape = "square"
+    else:
+      init_shape = "circle"
+
+    #surround the found shape in circle
+    
+
+    #get moment of circle
+
+    #vector from drawn circle to moment line 
+  
+
 #functions that manipulates the data that comes the camera
 def process(data):
   #convert img to cv image and convert to HSV
@@ -81,45 +122,6 @@ def process(data):
   print(center)
 
    
-  #recognize starting square/circle
-  squares = [cv2.imread('sq_bl.png'),cv2.imread('sq_ang_bl.png'),cv2.imread('sq_noise_bl.png')]
-  circles = [cv2.imread('circ_bl.png'),cv2.imread('circ_ang_bl.png'),cv2.imread('circ_noise_bl.png')]
- 
-  #need to do some thresholding in here
-  squares[img] = bridge.imgmsg_to_cv2(squares[img],"bgr8") for img in range(len(squares)) 
-  circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
-   
-  squares[img] = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) for img in range(len(squares)) 
-  circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
-
-  
-
-  #getting contours for each image
-  sq_cnts = []
-  circ_cnts = []
-  for sq, circ in zip(squares, circles):
-    im, sq_cnt, hierarchy = cv2.findContours(sq,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
-    im, circ_cnt, hierarchy = cv2.findContours(circ,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
-
-    sq_cnts.append(sq_cnt)
-    circ_cnts.append(circ_cnt)
-
-  #find matches that have a matchShape value of less than .02
-  match = filter(lambda cnt_temp: cv2.matchShapes(contour,cnt_temp) < .02, sq_cnts + circ_cnts)
-  
-  #if a match is found, identify shape in picuture
-  if match != -1:
-    if match in squares:
-      init_shape = "square"
-    else:
-      init_shape = "circle"
-
-    #surround the found shape in circle
-
-    #get moment of circle
-
-    #vector from drawn circle to moment line 
-  
 
   #show images
   cv2.imshow("Image",img_og)
