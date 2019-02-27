@@ -11,12 +11,17 @@ desired_p = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 locked_dims_list = [False, False, False, False, False, False]
 disabled_list = [False, False, False, False, False, False, False, False]
 inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
+last_packet_time = 0.0
+is_timed_out = False
+# timout in ms
+WATCHDOG_TIMEOUT = 100
 
 def _auto_command(msg):
   global desired_a #desired thrust from automatic control
   global locked_dims_list #locked dimensions
   desired_a = msg.thrust_vec
   locked_dims_list = msg.dims_locked
+  on_loop()
 
 def _pilot_command(comm):
   global desired_p #desired thrust from pilot
@@ -25,34 +30,9 @@ def _pilot_command(comm):
   desired_p = comm.desired_thrust
   disabled_list = comm.disable_thrusters
   inverted_list = comm.inverted
+  on_loop()
 
-if __name__ == "__main__":
-  '''
-  Note that this file is only set up for using 8 thrusters. 
-  ''' 
-
-  #initialize node and rate
-  rospy.init_node('thrust_control')
-  rate = rospy.Rate(10) #10 hz
-
-  #initialize subscribers
-  auto_sub = rospy.Subscriber('auto_control', 
-      auto_control_msg, _auto_command)
-  comm_sub = rospy.Subscriber('/surface/thrust_command',
-      thrust_command_msg, _pilot_command)
-  
-  #initialize publishers
-  thrust_pub = rospy.Publisher('thrust_control',
-    thrust_control_msg, queue_size=10)
-  status_pub = rospy.Publisher('thrust_status',
-    thrust_status_msg, queue_size=10)
-
-  #define variable for class Complex to allow calculation of thruster pwm values
-  c = Complex_1.Complex()
-  desired_thrust_final = [0, 0, 0, 0, 0, 0]
-
-  while not rospy.is_shutdown():
-    
+def on_loop():
     for i in range(6):
       #if dimension locked, set desired thrust to auto; else set to pilot controls
       if locked_dims_list[i] == True:
@@ -84,4 +64,38 @@ if __name__ == "__main__":
     #publish data
     thrust_pub.publish(tcm)
     status_pub.publish(tsm)
+
+if __name__ == "__main__":
+  '''
+  Note that this file is only set up for using 8 thrusters.
+  '''
+
+  #initialize node and rate
+  rospy.init_node('thrust_control')
+  rate = rospy.Rate(10) #10 hz
+
+  #initialize subscribers
+  auto_sub = rospy.Subscriber('auto_control',
+      auto_control_msg, _auto_command)
+  comm_sub = rospy.Subscriber('/surface/thrust_command',
+      thrust_command_msg, _pilot_command)
+
+  #initialize publishers
+  thrust_pub = rospy.Publisher('thrust_control',
+    thrust_control_msg, queue_size=10)
+  status_pub = rospy.Publisher('thrust_status',
+    thrust_status_msg, queue_size=10)
+
+  #define variable for class Complex to allow calculation of thruster pwm values
+  c = Complex_1.Complex()
+  desired_thrust_final = [0, 0, 0, 0, 0, 0]
+
+  while not rospy.is_shutdown():
+    if(is_timed_out):
+        global disabled_list
+        disabled_list = [True, True, True, True, True, True, True, True]
+        on_loop()
+    #ask about syntax
+    if(ropsy.time - last_packet_time > WATCHDOG_TIMEOUT):
+        is_timed_out = True
     rate.sleep()
