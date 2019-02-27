@@ -11,8 +11,13 @@ desired_p = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 locked_dims_list = [False, False, False, False, False, False]
 disabled_list = [False, False, False, False, False, False, False, False]
 inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
+
+#watch dog stuff
 last_packet_time = 0.0
 is_timed_out = False
+#flags to prevent old data
+new_auto_data = False
+new_pilot_data = False
 # timout in ms
 WATCHDOG_TIMEOUT = 100
 
@@ -23,6 +28,8 @@ def _auto_command(msg):
   locked_dims_list = msg.dims_locked
   curr_time = rospy.get_rostime()
   compare_time = curr_time.secs + curr_time.secs * 10 ** -9;
+  last_packet_time = compare_time
+  new_auto_data = True
   on_loop()
 
 def _pilot_command(comm):
@@ -34,9 +41,17 @@ def _pilot_command(comm):
   inverted_list = comm.inverted
   curr_time = rospy.get_rostime()
   compare_time = curr_time.secs + curr_time.secs * 10 ** -9;
+  last_packet_time = compare_time
+  new_pilot_data = True
   on_loop()
 
 def on_loop():
+    #check to see if you have new data
+    if(!(new_pilot_data && new_auto_data)):
+        return
+    #reset flags and execute
+    new_auto_data = False
+    new_pilot_data = False
     for i in range(6):
       #if dimension locked, set desired thrust to auto; else set to pilot controls
       if locked_dims_list[i] == True:
