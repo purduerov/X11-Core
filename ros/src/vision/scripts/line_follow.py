@@ -5,6 +5,7 @@ from cv_bridge import CvBridge, CvBridgeError   #converts between ROS Image mess
 import std_msgs.msg
 from sensor_msgs.msg import Image
 import numpy as np
+from vector_functions import getVectorStartPoint, getThrustVect
 
 bridge = CvBridge()
 
