@@ -42,7 +42,7 @@ def draw_center(img, contour):
   cv2.circle(img, (Cx, Cy), 3, (0, 255, 0), -1)
   return [Cx, Cy]
 
-def find_start():
+def get_ex_cnts():
   #recognize starting square/circle
   squares = [cv2.imread('sq_bl.png'),cv2.imread('sq_ang_bl.png'),cv2.imread('sq_noise_bl.png')]
   circles = [cv2.imread('circ_bl.png'),cv2.imread('circ_ang_bl.png'),cv2.imread('circ_noise_bl.png')]
@@ -65,9 +65,9 @@ def find_start():
     sq_cnts.append(sq_cnt)
     circ_cnts.append(circ_cnt)
 
-  #find matches that have a matchShape value of less than .02
-  match = filter(lambda cnt_temp: cv2.matchShapes(contour,cnt_temp) < .02, sq_cnts + circ_cnts)
-  
+  return sq_cnts, circ_cnts
+
+def find_start(match):
   #if a match is found, identify shape in picuture
   if match != -1:
     if match in squares:
@@ -81,6 +81,7 @@ def find_start():
     #get moment of circle
 
     #vector from drawn circle to moment line 
+  
   
 
 #functions that manipulates the data that comes the camera
@@ -122,6 +123,9 @@ def process(data):
   print(center)
 
    
+  #find matches that have a matchShape value of less than .02
+  match = filter(lambda cnt_temp: cv2.matchShapes(contour,cnt_temp) < .02, sq_cnts + circ_cnts)
+  
 
   #show images
   cv2.imshow("Image",img_og)
