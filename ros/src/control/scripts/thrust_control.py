@@ -26,9 +26,6 @@ def _auto_command(msg):
   global locked_dims_list #locked dimensions
   desired_a = msg.thrust_vec
   locked_dims_list = msg.dims_locked
-  curr_time = rospy.get_rostime()
-  compare_time = curr_time.secs + curr_time.secs * 10 ** -9;
-  last_packet_time = compare_time
   new_auto_data = True
   on_loop()
 
@@ -40,9 +37,6 @@ def _pilot_command(comm):
   disabled_list = comm.disable_thrusters
   inverted_list = comm.inverted
   curr_time = rospy.get_rostime()
-  compare_time = curr_time.secs + curr_time.secs * 10 ** -9;
-  last_packet_time = compare_time
-  new_pilot_data = True
   on_loop()
 
 def on_loop():
@@ -52,6 +46,9 @@ def on_loop():
     #reset flags and execute
     new_auto_data = False
     new_pilot_data = False
+    #reset the watchdog timer
+    curr_time = rospy.get_rostime()
+    last_packet_time = curr_time.secs + curr_time.secs * 10 ** -9;
     for i in range(6):
       #if dimension locked, set desired thrust to auto; else set to pilot controls
       if locked_dims_list[i] == True:
