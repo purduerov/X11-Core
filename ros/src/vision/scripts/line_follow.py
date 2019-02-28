@@ -53,7 +53,7 @@ def get_ex_cnts():
   circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
    
   squares[img] = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) for img in range(len(squares)) 
-  circles[img] = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) for img in range(len(circles)) 
+  circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
 
 
   #getting contours for each image
@@ -68,7 +68,7 @@ def get_ex_cnts():
 
   return sq_cnts, circ_cnts
 
-def match_beggining():
+def match_beggining(contour,sq_cnts,circ_cnts):
   #find matches that have a matchShape value of less than .02
   match = []
   while(len(match) == 0):
@@ -144,4 +144,4 @@ if __name__ == "__main__":
   rospy.spin()
 
 
-
+# vim: set tabstop=2 shiftwidth=2 fileencoding=utf-8 noexpandtab: 
