@@ -68,6 +68,12 @@ def get_ex_cnts():
 
   return sq_cnts, circ_cnts
 
+def match_beggining():
+  #find matches that have a matchShape value of less than .02
+  match = []
+  while(len(match) == 0):
+    match = filter(lambda cnt_temp: cv2.matchShapes(contour,cnt_temp) < .02, sq_cnts + circ_cnts)
+
 def find_start(match):
   #if a match is found, identify shape in picuture
   if match != -1:
@@ -83,7 +89,22 @@ def find_start(match):
 
     #vector from drawn circle to moment line 
   
-  
+def traverse_line():
+  if contour.all() != -1:
+    cv2.drawContours(img_og,[contour],0,(0,255,0),3)
+    center_rect = draw_rect(img_og, contour)
+    center_cnt = draw_center(img_og, contour)
+    cv2.line(img_og,(center_rect[0],center_rect[1]),(center_cnt[0],center_cnt[1]), (0,0,255),1)
+
+  #find moment
+  if cv2.isContourConvex(contour):
+    center = center_cnt
+  else:
+    center = center_rect
+
+  cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
+  print(center)
+
 
 #functions that manipulates the data that comes the camera
 def process(data):
@@ -108,24 +129,7 @@ def process(data):
   #contouring
   contour = get_largest(img)	
   
-  if contour.all() != -1:
-    cv2.drawContours(img_og,[contour],0,(0,255,0),3)
-    center_rect = draw_rect(img_og, contour)
-    center_cnt = draw_center(img_og, contour)
-    cv2.line(img_og,(center_rect[0],center_rect[1]),(center_cnt[0],center_cnt[1]), (0,0,255),1)
-
-  #find moment
-  if cv2.isContourConvex(contour):
-    center = center_cnt
-  else:
-    center = center_rect
-
-  cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
-  print(center)
-
    
-  #find matches that have a matchShape value of less than .02
-  match = filter(lambda cnt_temp: cv2.matchShapes(contour,cnt_temp) < .02, sq_cnts + circ_cnts)
   
 
   #show images
