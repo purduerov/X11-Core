@@ -109,7 +109,8 @@ def traverse_line():
   startPointVector = getVectorStartPoint(prevVector)
   curr_thrust_vect, resultant_vect = getThrustVect(prevVector, startPointVector, center)
 ####OUTPUT curr_thrust_vect, as this is the direction in which the thrusters should be pushing    MAGNITUDES ARE CURRENTLY AN ISSUE
-  cv2.circle(img_og,(startPointVector[0],startPointVector[1]), 5, (0,0,0), -1)
+  cv2.circle(img_og,(startPointVector[0],startPointVector[1]), 3, (0,0,255), -1)
+  cv2.line(img_og, (startPointVector[0],startPointVector[1]),(center[0],center[1]),(150,255,255),1)
 
 #functions that manipulates the data that comes the camera
 def process(data):
