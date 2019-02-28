@@ -53,7 +53,7 @@ def get_ex_cnts():
   circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
    
   squares[img] = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) for img in range(len(squares)) 
-  circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
+  circles[img] = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) for img in range(len(circles)) 
 
 
   #getting contours for each image
