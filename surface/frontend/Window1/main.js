@@ -1,10 +1,12 @@
 const { shell, app, ipcRenderer } = window.require('electron');
+const net = window.require('net');
 
 module.exports = (where, socketHost) => {
     /*
         Socket Connection Section
     */
     const socket = io.connect(socketHost, { transports: ['websocket'] });
+
 
     // upon new data, save it locally
     socket.on('dearclient', (data) => { // Updates the data sent back from the server
