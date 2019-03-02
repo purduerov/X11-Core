@@ -6,6 +6,7 @@ import std_msgs.msg
 from sensor_msgs.msg import Image
 import numpy as np
 from vector_functions import getVectorStartPoint, getThrustVect
+import math
 
 bridge = CvBridge()
 
@@ -103,10 +104,21 @@ def match_beggining(contour,sq_cnts,circ_cnts):
   #surround the found shape in circle
   (x,y), radius = cv2.minEnclosingCircle(contour)
   center = (int(x),int(y))
-  radius - int(radius)
+  radius = int(radius)
   cv2.circle(img,center,radius,(255,0,0),2)
 
-  return center,init_shape  
+  poles = {"top": (320,0),
+	   "bottom": (320,360),
+	   "left": (0,180),
+	   "right": (640, 180)}
+  
+  dist = -1
+  for pt in poles.itervalues():
+    if((center[0] - pt[0])**2 + (center[1] - pt[1])**2 > dist):
+      dist = (center[0] - pt[0])**2 + (center[1] - pt[1])**2 
+      init_pt = pt
+
+  return (init_pt,center),init_shape  
 
 
 def traverse_line():
