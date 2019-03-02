@@ -151,6 +151,12 @@ def process(data):
   img =  cv2.erode(img,np.ones((5,5)))
   img =  cv2.dilate(img,np.ones((10,10)))
   
+  global at_beginning
+  if (at_beginning):
+    #Code to be run only at the start
+    at_beginning = False
+  else:
+    #In here goes the code that we run every time.  
   #contouring
   contour = get_largest(img)	
   
