@@ -8,6 +8,9 @@ import numpy as np
 from vector_functions import getVectorStartPoint, getThrustVect
 
 bridge = CvBridge()
+thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
+		"blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]
+	      }
 
 class View:
   def __init__(self,cnt):
@@ -86,10 +89,7 @@ def match_beggining(contour,sq_cnts,circ_cnts):
   view = View(contour)
   while(len(match) == 0):
     match = filter(view.compare_cnts , sq_cnts + circ_cnts)
-  return match
-
-
-def find_start(match):
+  
   #if a match is found, identify shape in picuture
   if match != -1:
     if match in squares:
@@ -97,12 +97,14 @@ def find_start(match):
     else:
       init_shape = "circle"
 
-    #surround the found shape in circle
-    
+  #surround the found shape in circle
+  (x,y), radius = cv2.minEnclosingCircle(contour)
+  center = (int(x),int(y))
+  radius - int(radius)
+  cv2.circle(img,center,radius,(255,0,0),2)
 
-    #get moment of circle
+  return center,init_shape  
 
-  
 
 def traverse_line():
   if contour.all() != -1:
@@ -139,10 +141,11 @@ def process(data):
   img = cv2.medianBlur(img,5)
   img = cv2.GaussianBlur(img,(5,5),0)
  
-  #red`
-  #img = cv2.inRange(img,(0/2,150,115),(35/2,255,255))
+  #red
+  #img = cv2.inRange(img,thresh_rngs["blue"][0],thresh_rngs["blue"][1])
   #blue
-  img = cv2.inRange(img,(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
+  img = cv2.inRange(img,thresh_rngs["blue"][0],thresh_rngs["blue"][1])
+
   #erode and dilate image
   img =  cv2.erode(img,np.ones((5,5)))
   img =  cv2.dilate(img,np.ones((10,10)))
