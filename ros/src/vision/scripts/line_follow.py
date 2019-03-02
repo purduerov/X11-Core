@@ -9,6 +9,14 @@ from vector_functions import getVectorStartPoint, getThrustVect
 
 bridge = CvBridge()
 
+class View:
+  def __init__(self,cnt):
+    self.cnt = cnt
+  
+  def compare_cnts(self,ex_cnt):
+    return cv2.matchShapes(contour,ex_cnt) < .02
+    
+
 def get_largest(img):
   #grab all of the contours
   im, contours, hierarchy = cv2.findContours(img,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
@@ -24,6 +32,7 @@ def get_largest(img):
 
   return largest_cnt
 
+
 def draw_rect(img, contour):
   x,y,w,h = cv2.boundingRect(contour)
   cv2.rectangle(img,(x,y), (x+w,y+h), (255,0,0),2)
@@ -32,6 +41,7 @@ def draw_rect(img, contour):
   y_c = y + int(h/2)
   cv2.circle(img, (x_c, y_c), 3, (255, 0, 0), -1)
   return [x_c, y_c]
+
 
 def draw_center(img, contour):
   #Obtain coordinates of the center of mass of the largest contour
@@ -42,6 +52,7 @@ def draw_center(img, contour):
   # Print the center of mass onto the screen
   cv2.circle(img, (Cx, Cy), 3, (0, 255, 0), -1)
   return [Cx, Cy]
+
 
 def get_ex_cnts():
   #recognize starting square/circle
@@ -68,11 +79,15 @@ def get_ex_cnts():
 
   return sq_cnts, circ_cnts
 
+
 def match_beggining(contour,sq_cnts,circ_cnts):
   #find matches that have a matchShape value of less than .02
   match = []
+  view = View(contour)
   while(len(match) == 0):
-    match = filter(lambda cnt_temp: cv2.matchShapes(contour,cnt_temp) < .02, sq_cnts + circ_cnts)
+    match = filter(view.compare_cnts , sq_cnts + circ_cnts)
+  return match
+
 
 def find_start(match):
   #if a match is found, identify shape in picuture
@@ -87,8 +102,8 @@ def find_start(match):
 
     #get moment of circle
 
-    #vector from drawn circle to moment line 
   
+
 def traverse_line():
   if contour.all() != -1:
     cv2.drawContours(img_og,[contour],0,(0,255,0),3)
@@ -110,6 +125,7 @@ def traverse_line():
   curr_thrust_vect, resultant_vect = getThrustVect(prevVector, startPointVector, center)
 ####OUTPUT curr_thrust_vect, as this is the direction in which the thrusters should be pushing    MAGNITUDES ARE CURRENTLY AN ISSUE
   cv2.circle(img_og,(startPointVector[0],startPointVector[1]), 5, (0,0,0), -1)
+
 
 #functions that manipulates the data that comes the camera
 def process(data):
