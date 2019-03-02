@@ -8,13 +8,13 @@ import numpy as np
 from vector_functions import getVectorStartPoint, getThrustVect
 
 bridge = CvBridge()
+
+#Change these global variable to a class later on
 thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
 		"blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]
 	      }
-
-#Change this global variable to a class later on
 at_beginning = True
-  
+
 class View:
   def __init__(self,cnt):
     self.cnt = cnt
@@ -148,7 +148,7 @@ def process(data):
   #red
   #img = cv2.inRange(img,thresh_rngs["blue"][0],thresh_rngs["blue"][1])
   #blue
-  img = cv2.inRange(img,thresh_rngs["blue"][0],thresh_rngs["blue"][1])
+  img = cv2.inRange(img,(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
 
   #erode and dilate image
   img =  cv2.erode(img,np.ones((5,5)))
