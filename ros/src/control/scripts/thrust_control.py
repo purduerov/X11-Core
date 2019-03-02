@@ -41,20 +41,24 @@ def _pilot_command(comm):
 
 def on_loop():
     #check to see if you have new data
-    if(!(new_pilot_data && new_auto_data)):
+    if(!(new_pilot_data and new_auto_data) and !is_timed_out):
         return
     #reset flags and execute
     new_auto_data = False
     new_pilot_data = False
-    #reset the watchdog timer
-    curr_time = rospy.get_rostime()
-    last_packet_time = curr_time.secs + curr_time.secs * 10 ** -9;
+    if(!is_timed_out):
+        #reset the watchdog timer
+        curr_time = rospy.get_rostime()
+        last_packet_time = curr_time.secs + curr_time.secs * 10 ** -9;
     for i in range(6):
-      #if dimension locked, set desired thrust to auto; else set to pilot controls
-      if locked_dims_list[i] == True:
-        desired_thrust_final[i] = desired_a[i]
+      if(is_timed_out):
+          desired_thrust_final[i] = 0.0
       else:
-        desired_thrust_final[i] = desired_p[i]
+          #if dimension locked, set desired thrust to auto; else set to pilot controls
+          if locked_dims_list[i] == True:
+            desired_thrust_final[i] = desired_a[i]
+          else:
+            desired_thrust_final[i] = desired_p[i]
 
     #calculate thrust
     pwm_values = c.calculate(desired_thrust_final, disabled_list, False)
@@ -107,12 +111,13 @@ if __name__ == "__main__":
   desired_thrust_final = [0, 0, 0, 0, 0, 0]
 
   while not rospy.is_shutdown():
+    if(compare_time - last_packet_time > WATCHDOG_TIMEOUT):
+        is_timed_out = True
     if(is_timed_out):
-        global disabled_list
-        disabled_list = [True, True, True, True, True, True, True, True]
+        #global disabled_list
+        #disabled_list = [True, True, True, True, True, True, True, True]
         on_loop()
     #ask about syntax
 
-    if(compare_time - last_packet_time > WATCHDOG_TIMEOUT):
-        is_timed_out = True
+
     rate.sleep()
