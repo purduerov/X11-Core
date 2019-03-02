@@ -9,6 +9,9 @@ from vector_functions import getVectorStartPoint, getThrustVect
 
 bridge = CvBridge()
 
+#Change this global variable to a class later on
+at_beginning = True
+  
 class View:
   def __init__(self,cnt):
     self.cnt = cnt
