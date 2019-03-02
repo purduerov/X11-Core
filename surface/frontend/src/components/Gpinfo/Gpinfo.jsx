@@ -9,66 +9,66 @@ export default class Gpinfo extends Component {
     }
 
     renderReady() {
-        if (this.props.ready === true) {
+        if (this.props.gp.ready === true) {
             return (
                 <div>
                     <div>
                         <ul className={styles.ButtonNames}>
                             <li>
 a:
-                                {this.props.buttons.a.curVal}
+                                {this.props.gp.buttons.a.curVal}
                             </li>
                             <li>
 b:
-                                {this.props.buttons.b.curVal}
+                                {this.props.gp.buttons.b.curVal}
                             </li>
                             <li>
 x:
-                                {this.props.buttons.x.curVal}
+                                {this.props.gp.buttons.x.curVal}
                             </li>
                             <li>
 y:
-                                {this.props.buttons.y.curVal}
+                                {this.props.gp.buttons.y.curVal}
                             </li>
                             <li>
 lb:
-                                {this.props.buttons.lb.curVal}
+                                {this.props.gp.buttons.lb.curVal}
                             </li>
                             <li>
 rb:
-                                {this.props.buttons.rb.curVal}
+                                {this.props.gp.buttons.rb.curVal}
                             </li>
                             <li>
 select:
-                                {this.props.buttons.select.curVal}
+                                {this.props.gp.buttons.select.curVal}
                             </li>
                             <li>
 start:
-                                {this.props.buttons.start.curVal}
+                                {this.props.gp.buttons.start.curVal}
                             </li>
                             <li>
 lpress:
-                                {this.props.buttons.lpress.curVal}
+                                {this.props.gp.buttons.lpress.curVal}
                             </li>
                             <li>
 rpress:
-                                {this.props.buttons.rpress.curVal}
+                                {this.props.gp.buttons.rpress.curVal}
                             </li>
                             <li>
 up:
-                                {this.props.buttons.up.curVal}
+                                {this.props.gp.buttons.up.curVal}
                             </li>
                             <li>
 down:
-                                {this.props.buttons.down.curVal}
+                                {this.props.gp.buttons.down.curVal}
                             </li>
                             <li>
 left:
-                                {this.props.buttons.left.curVal}
+                                {this.props.gp.buttons.left.curVal}
                             </li>
                             <li>
 right:
-                                {this.props.buttons.right.curVal}
+                                {this.props.gp.buttons.right.curVal}
                             </li>
                         </ul>
                     </div>
@@ -76,27 +76,27 @@ right:
                         <ul className={styles.AxisNames}>
                             <li>
 LstickXaxis:
-                                {this.props.axes.LstickXaxis.curVal}
+                                {this.props.gp.axes.LstickXaxis.curVal}
                             </li>
                             <li>
 LstickYaxis:
-                                {this.props.axes.LstickYaxis.curVal}
+                                {this.props.gp.axes.LstickYaxis.curVal}
                             </li>
                             <li>
 RstickXaxis:
-                                {this.props.axes.RstickXaxis.curVal}
+                                {this.props.gp.axes.RstickXaxis.curVal}
                             </li>
                             <li>
 RstickYaxis:
-                                {this.props.axes.RstickYaxis.curVal}
+                                {this.props.gp.axes.RstickYaxis.curVal}
                             </li>
                             <li>
 Ltrigger:
-                                {this.props.axes.Ltrigger.curVal}
+                                {this.props.gp.axes.Ltrigger.curVal}
                             </li>
                             <li>
 Rtrigger:
-                                {this.props.axes.Rtrigger.curVal}
+                                {this.props.gp.axes.Rtrigger.curVal}
                             </li>
                         </ul>
                     </div>
@@ -104,11 +104,11 @@ Rtrigger:
                         <ul>
                             <li>
 upchk:
-                                {this.props.up}
+                                {this.props.gp.up}
                             </li>
                             <li>
 dwnchk:
-                                {this.props.down}
+                                {this.props.gp.down}
                             </li>
                         </ul>
                     </div>

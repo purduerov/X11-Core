@@ -46,7 +46,7 @@ module.exports = (where, socketHost) => {
         if ((where.gp.ready === true) && (where.state.freeze === 0)) {
             where.gp.update();
         //        console.log('success');
-      } /* else if (where.state.freeze === 1) {
+        } /* else if (where.state.freeze === 1) {
             where.gp.freeze();
         } */
 
