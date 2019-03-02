@@ -11,15 +11,24 @@ import math
 bridge = CvBridge()
 
 #Change these global variable to a class later on
-thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
-		"blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]
-	      }
 at_beginning = True
 
 class View:
-  def __init__(self,cnt):
+  def __init__(self,cnt = None, at_beginning = True):
     self.cnt = cnt
-  
+    self.at_beginning = at_beginning
+    self.thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
+        "blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]}
+    self.x_cam_width = 640
+    self.y_cam_height = 360
+  def set_cnt(self,cnt):
+    self.cnt = cnt
+  def get_at_beginning(self):
+    return self.at_beginning
+  def get_thresh_rngs(self):
+    return self.thresh_rngs
+  def get_cam_dim(self):
+    return (self.x_cam_width,self.y_cam_height)
   def compare_cnts(self,ex_cnt):
     return cv2.matchShapes(contour,ex_cnt) < .02
     
@@ -87,7 +96,7 @@ def get_ex_cnts():
   return sq_cnts, circ_cnts
 
 
-def match_beggining(contour,sq_cnts,circ_cnts):
+def match_beginning(img,contour,sq_cnts,circ_cnts):
   #find matches that have a matchShape value of less than .02
   match = []
   view = View(contour)
@@ -137,10 +146,11 @@ def traverse_line():
   cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
   print(center)
   
-##### NEED A PREV VECTOR VALUE TO INITIALIZE TO.  (Could possibly default to one of the four main directions
+  ##### NEED A PREV VECTOR VALUE TO INITIALIZE TO.  (Could possibly default to one of the four main directions
   startPointVector = getVectorStartPoint(prevVector)
   curr_thrust_vect, resultant_vect = getThrustVect(prevVector, startPointVector, center)
-####OUTPUT curr_thrust_vect, as this is the direction in which the thrusters should be pushing    MAGNITUDES ARE CURRENTLY AN ISSUE
+
+  ####OUTPUT curr_thrust_vect, as this is the direction in which the thrusters should be pushing    MAGNITUDES ARE CURRENTLY AN ISSUE
   cv2.circle(img_og,(startPointVector[0],startPointVector[1]), 3, (0,0,255), -1)
   cv2.line(img_og, (startPointVector[0],startPointVector[1]),(center[0],center[1]),(150,255,255),1)
 
@@ -166,18 +176,24 @@ def process(data):
   img =  cv2.erode(img,np.ones((5,5)))
   img =  cv2.dilate(img,np.ones((10,10)))
   
-  global at_beginning
-  if (at_beginning):
-    #Code to be run only at the start
-    at_beginning = False
-  else:
-    #In here goes the code that we run every time.  
   #contouring
   contour = get_largest(img)	
   
-   
-  
+  global at_beginning
+  if (at_beginning):
+    #Code to be run only at the start
+    sq_cnts, circ_cnts = get_ex_cnts()
+    init_points, init_shape = match_beginning(img,contour,sq_cnts,circ_cnts)
 
+    prev_vector = [init_points[1][0] - init_points[0][0],init_points[1][1] - init_points[0][1]]
+    start_point_vector = getVectorStartPoint(prev_vector)     
+    curr_thrust_vect, resultant_vect = getThrustVect(prev_vector, start_point_vector, [init_points[1][0], init_points[1][1]])
+
+    at_beginning = False
+  else:
+    #In here goes the code that we run every time.  Probably traverse line
+
+  
   #show images
   cv2.imshow("Image",img_og)
   cv2.imshow("Filtered",img)
@@ -188,6 +204,5 @@ if __name__ == "__main__":
   rospy.Subscriber("/usb_cam/image_raw",Image,process)
 
   rospy.spin()
-
 
 # vim: set tabstop=2 shiftwidth=2 fileencoding=utf-8 noexpandtab: 
