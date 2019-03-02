@@ -1,34 +1,38 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-const SQUARE_WIDTH_CM = 30; // 30 cm wide square
+import './CrackInfo.css';
+
 const NUM_ROWS = 3;
 const NUM_COLS = 4;
 
-export default class CrackMap extends Component {
+export default class Graph extends Component {
   constructor(props) {
     super(props);
     this.getSizes();
-    this.rows.bind(this);
-    this.columns.bind(this);
   }
 
   getSizes() {
     let { width, height, length, crackSquare } = this.props;
     width -= 2; height -= 2;
     let squareSize;
-    if (width / 4 > height / 3) {
-      squareSize = height / 3;
+    if (width / NUM_COLS > height / NUM_ROWS) {
+      squareSize = height / NUM_ROWS;
       squareSize -= squareSize % 10;
     } else {
-      squareSize = width / 4;
+      squareSize = width / NUM_COLS;
       squareSize -= squareSize % 10;
     }
+
+    height = squareSize * 3 + 2;
+    width = squareSize * 4 + 2;
 
     this.state = {
       squareSize,
       crackSquare,
-      length
+      length,
+      height,
+      width
     };
   }
 
@@ -84,9 +88,9 @@ export default class CrackMap extends Component {
 
   render() {
     return (
-      <div>
+      <div className="crack-map">
         <div id="grid">
-          <svg height={this.props.height} width={this.props.width}>
+          <svg height={this.state.height} width={this.state.width}>
             {this.gridData().map(this.rows, this)}
           </svg>
         </div>
@@ -111,7 +115,7 @@ function Text({squareSize, length, x, y}) {
   );
 }
 
-CrackMap.propTypes = {
+Graph.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   crackSquare: PropTypes.string.isRequired,

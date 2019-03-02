@@ -1,0 +1,41 @@
+.modal-wrapper {
+  background: white;
+  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2), 0 7px 20px 0 rgba(0,0,0,0.17);
+  margin: 100px auto;
+  height: auto;
+  width: 500px;
+}
+
+.crack-map {
+  margin-left: 10px;
+}
+
+.modal-header {
+  height: 40px;
+  line-height: 40px;
+  padding: 5px 20px;
+  text-align: right;
+}
+
+.modal-header h3 {
+  color: white;
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-body {
+  text-align: center;
+}
+
+.close-modal-btn {
+  color: black;
+  cursor: pointer;
+  float: right;
+  font-size: 30px;
+  margin: 0;
+}
+
+.close-modal-btn:hover {
+  color: grey;
+}
