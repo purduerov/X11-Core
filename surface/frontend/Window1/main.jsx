@@ -5,6 +5,7 @@ import styles from './main.css';
 import Card from '../src/components/Card/Card.jsx';
 import CameraScreen from '../src/components/CameraScreen/CameraScreen.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
+import PHinfo from '../src/components/PHinfo/PHinfo.jsx'
 import BuddyControlsShow from '../src/components/BuddyControlsShow/BuddyControlsShow.jsx';
 import FreezeGp from '../src/components/FreezeGp/FreezeGp.jsx';
 import betterlayouts from '../src/gamepad/betterlayouts.js';
@@ -160,6 +161,11 @@ class App extends React.Component {
                         />
                     </div>
                     <div className="data-width full-height">
+                        <div className="data-column">
+                            <Card>
+                                <PHinfo />
+                            </Card>
+                        </div>
                         <div className="data-column">
                             <Card>
                                 <FreezeGp
