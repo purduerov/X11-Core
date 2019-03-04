@@ -168,10 +168,6 @@ var bind = {
             pressed: {
                 func() {
                     react.confcpy.thrust_scales.master = 60;
-
-                    /*react.setState({
-                        config: react.confcpy,
-                    });*/
                 },
             },
         },
@@ -179,10 +175,6 @@ var bind = {
             pressed: {
                 func() {
                     react.confcpy.thrust_scales.master = 35;
-
-                    /*react.setState({
-                        config: react.confcpy,
-                    });*/
                 },
             },
         },

@@ -20,7 +20,7 @@ export default class BuddyControls extends Component {
     render() {
         return (
             <div container={styles.container}>
-                <h1>Buddy's Controls</h1>
+                <h1> Buddy's Controls</h1>
                 <hr />
                 <div className={styles.container}>
                     {this.readyToRender()}
@@ -29,24 +29,4 @@ export default class BuddyControls extends Component {
         );
     }
 
-} //end class
-
-//buddyDirections={this.state.directions}
-
-
-/*    readyToRender() {
-      return (
-        <div>
-          <ul>
-            <li>
-x:
-                {this.props.buddyDirections.x}
-            </li>
-            <li>
-y:
-                {this.props.buddyDirections.y}
-            </li>
-          </ul>
-        </div>
-      );
-    } */
+}

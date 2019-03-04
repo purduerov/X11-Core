@@ -30,7 +30,7 @@ module.exports = (where, socketHost) => {
         IPC Connection Section
     */
 
-    ipcRenderer.on('buddy-controls-from-win-1', (event, data) => {
+    ipcRenderer.on('buddy-controls-to-win-1', (event, data) => {
         where.setState({
             directions: data
         });
@@ -53,7 +53,7 @@ module.exports = (where, socketHost) => {
         where.setState({ // Initiates rendering process
             gp: where.gp,
             dearflask: where.flaskcpy,
-          });
+        });
     }, 100);
 
 

@@ -88,6 +88,6 @@ app.on('activate', () => {
 
 ipcMain.on('buddy-controls-from-win-3', (event, message) => {
     if (windows[0] != null) {
-        windows[0].webContents.send('buddy-controls-from-win-1', message);
+        windows[0].webContents.send('buddy-controls-to-win-1', message);
     }
 });

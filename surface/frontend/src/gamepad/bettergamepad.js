@@ -18,34 +18,6 @@ var gp = {
     but_func: {},
     ax_func: {},
 
-    /*
-    freeze() {
-      var cur = navigator.getGamepads()[gp.gamepadIndex];
-      var lay = layouts[gp.layoutKey];
-      //var buttn = lay.buttons[i];
-      //var val = cur[buttn.where][buttn.indx];
-      //console.log(gp.layoutKey);
-      console.log(gp.buttons);
-      console.log(Object.keys(lay.buttons));
-      for (var i = 0; i < lay.buttons.length; i++) {
-          val = 0;
-          gp.buttons[layouts][gp.layoutKey][i].curVal = 0;
-          gp.buttons[layouts][gp.layoutKey][i].pressed = 0;
-          gp.buttons[layouts][gp.layoutKey][i].released = 1;
-          if (lay.buttons[i].name == 'up') {
-            gp.buttons[layouts][gp.layoutKey][i].curVal = .1; //slight upwards thrust
-          }
-      }
-      for (var i = 0; i < lay.axes.length; i++) {
-          var val = cur[lay.axes[i].where][lay.axes[i].indx];
-          val = 0;
-          if(lay.axes[i].name == 'up') {
-            val = .1;
-          }
-      }
-    }, */
-
-
     selectController() {
         var cur = navigator.getGamepads();
         Object.keys(cur).forEach((key, i) => {

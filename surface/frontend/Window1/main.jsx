@@ -88,23 +88,23 @@ class App extends React.Component {
 
         signals(this, socketHost);
 
-        setInterval( () => {
+        setInterval(() => {
+            if (this.state.freeze) {
+                this.flaskcpy.thrusters.desired_thrust = [0.0, 0.0, -0.1, 0.0, 0.0, 0.0];
+            }
 
-          if (this.state.freeze) {
-            this.flaskcpy.thrusters.desired_thrust = [0.0, 0.0, -.1, 0.0, 0.0, 0.0];
-          }
-
-          this.setState({
-              dearflask: this.flaskcpy,
-          });
-        }, 50)
+            this.setState({
+                dearflask: this.flaskcpy,
+            });
+        }, 50);
     }
 
     setFreeze(value) {
         this.setState({
-            freeze: value
+            freeze: value,
         });
     }
+
     rendTools(cinvcpy) {
         this.confcpy.tool_scales = cinvcpy;
 
@@ -114,9 +114,7 @@ class App extends React.Component {
     }
 
     changeDisabled(dis) {
-        if (!this.freeze) {
-            this.flaskcpy.thrusters.disabled_thrusters = dis;
-        }
+        this.flaskcpy.thrusters.disabled_thrusters = dis;
     }
 
     changeThrustScales(scales) {
@@ -188,11 +186,6 @@ class App extends React.Component {
                         <div className="data-column">
                             <Card title="IPC Timer (Master?)" />
                             <Card title="Line Graph Component" />
-                            <Card title="Gp test">
-                                <Gpinfo
-                                gp={this.state.gp}
-                                />
-                            </Card>
                         </div>
                     </div>
                 </div>
