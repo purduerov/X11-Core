@@ -7,8 +7,6 @@
   "scripts": {
     "last": "electron .",
     "start": "webpack -d && electron .",
-    "proxy": "./pakfront/proxyinstall.sh",
-    "proxyup": "./pakfront/proxyrun.sh",
     "dev": "webpack -d",
     "watch": "webpack -d --watch",
     "build": "webpack -p",

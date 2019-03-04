@@ -62,20 +62,6 @@ function createWindow() {
 
             // Emitted when the window is closed.
             windows[i].on('closed', closeWin(i));
-            if (i == 2) {
-              webContents.sendInputEvent({
-                type: 'keydown',
-                keyCode: key,
-              });
-              webContents.sendInputEvent({
-                type: 'keyup',
-                keyCode: key,
-              });
-              webContents.sendInputEvent({
-                type: 'char',
-                keyCode: key,
-              });
-            }
         }
     }
 }
@@ -102,26 +88,6 @@ app.on('activate', () => {
 
 ipcMain.on('buddy-controls-from-win-3', (event, message) => {
     if (windows[0] != null) {
-      windows[0].webContents.send('buddy-controls-from-win-1', message);
+        windows[0].webContents.send('buddy-controls-to-win-1', message);
     }
 });
-
-/*
-    Here we are saying that every time our node application receives data from the python process
-    output stream(on 'data'), we want to convert that received data into a string and append it to
-    the overall dataString.
-*/
-py.stdout.on('data', (data) => {
-    dataString = data.toString();
-});
-
-/* Once the stream is done (on 'end') we want to simply log the received data to the console. */
-py.stdout.on('end', () => {
-    console.log('Sum of numbers=', dataString);
-});
-
-/* We have to stringify the data first otherwise our python process wont recognize it */
-py.stdin.write(JSON.stringify(data));
-
-/* Sending the 'end' signal to the python process */
-py.stdin.end();
