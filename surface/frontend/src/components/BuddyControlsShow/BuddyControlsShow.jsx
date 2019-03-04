@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import styles from './BuddyControls.css';
+import styles from './BuddyControlsShow.css';
 
-export default class BuddyControls extends Component {
+export default class BuddyControlsShow extends Component {
     constructor(props) {
         super(props);
 

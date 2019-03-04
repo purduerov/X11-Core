@@ -5,7 +5,7 @@ import styles from './main.css';
 import Card from '../src/components/Card/Card.jsx';
 import CameraScreen from '../src/components/CameraScreen/CameraScreen.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
-import BuddyControls from '../src/components/BuddyControls/BuddyControls.jsx';
+import BuddyControlsShow from '../src/components/BuddyControlsShow/BuddyControlsShow.jsx';
 import FreezeGp from '../src/components/FreezeGp/FreezeGp.jsx';
 import betterlayouts from '../src/gamepad/betterlayouts.js';
 import ThrusterInfo from '../src/components/ThrusterInfo/ThrusterInfo.jsx';
