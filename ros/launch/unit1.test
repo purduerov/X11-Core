@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="can_com" type="can_com" name="can_com" />
+    <test test-name="unit1" pkg="can_com" type="unit1" />
+</launch>
