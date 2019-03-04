@@ -1,4 +1,6 @@
 const { shell, app, ipcRenderer } = window.require('electron');
+var keyBind = require('./keyBind.js');
+
 
 module.exports = (where, socketHost) => {
     /*
@@ -9,4 +11,9 @@ module.exports = (where, socketHost) => {
         IPC Connection Section
     */
 
-};
+    /*
+      Keyboard controls section
+    */
+   
+    var buddy = new keyBind(where);
+}; // end export

@@ -1,17 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
 import styles from './main.css';
-import packet from '../src/packets.json';
-
 
 import Card from '../src/components/Card/Card.jsx';
 import CameraScreen from '../src/components/CameraScreen/CameraScreen.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
+import BuddyControlsShow from '../src/components/BuddyControlsShow/BuddyControlsShow.jsx';
+import FreezeGp from '../src/components/FreezeGp/FreezeGp.jsx';
+import betterlayouts from '../src/gamepad/betterlayouts.js';
 import ThrusterInfo from '../src/components/ThrusterInfo/ThrusterInfo.jsx';
 import Gpinfo from '../src/components/Gpinfo/Gpinfo.jsx';
 import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
 import PacketView from '../src/components/PacketView/PacketView.jsx';
-import betterlayouts from '../src/gamepad/betterlayouts.js';
 import CVview from '../src/components/CVview/CVview.jsx';
 
 const socketHost = 'ws://localhost:5001';
@@ -29,6 +29,12 @@ class App extends React.Component {
         this.state = require("../src/packets.json");
         this.state.gp = require('../src/gamepad/bettergamepad.js');
 
+        this.state.gp = require ("../src/gamepad/bettergamepad.js");
+        this.gp = require('../src/gamepad/bettergamepad.js');
+
+
+        this.state.directions = { x: 0, y: 0 };
+        this.state.freeze = 0;
         this.state.config = {
             thrust_scales: {
                 master: 50,
@@ -69,6 +75,7 @@ class App extends React.Component {
         this.clientcpy = this.state.dearclient;
         this.confcpy = this.state.config;
 
+        this.setFreeze = this.setFreeze.bind(this);
         this.rendTools = this.rendTools.bind(this);
         this.changeDisabled = this.changeDisabled.bind(this);
         this.changeForceScales = this.changeForceScales.bind(this);
@@ -80,6 +87,22 @@ class App extends React.Component {
         window.react = this;
 
         signals(this, socketHost);
+
+        setInterval(() => {
+            if (this.state.freeze) {
+                this.flaskcpy.thrusters.desired_thrust = [0.0, 0.0, -0.1, 0.0, 0.0, 0.0];
+            }
+
+            this.setState({
+                dearflask: this.flaskcpy,
+            });
+        }, 50);
+    }
+
+    setFreeze(value) {
+        this.setState({
+            freeze: value,
+        });
     }
 
     rendTools(cinvcpy) {
@@ -92,9 +115,6 @@ class App extends React.Component {
 
     changeDisabled(dis) {
         this.flaskcpy.thrusters.disabled_thrusters = dis;
-        this.setState({
-            dearflask: this.flaskcpy,
-        });
     }
 
     changeThrustScales(scales) {
@@ -114,7 +134,6 @@ class App extends React.Component {
 
         this.setState({
             config: this.confcpy,
-            dearflask: this.flaskcpy,
         });
     }
 
@@ -142,6 +161,12 @@ class App extends React.Component {
                     </div>
                     <div className="data-width full-height">
                         <div className="data-column">
+                            <Card>
+                                <FreezeGp
+                                    maybeFreeze={this.state.freeze}
+                                    rend={this.setFreeze}
+                                />
+                            </Card>
                             <Card>
                                 <ThrusterInfo
                                     thrusters={this.state.dearclient.thrusters}
