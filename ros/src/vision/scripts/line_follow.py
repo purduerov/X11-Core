@@ -1,4 +1,4 @@
-#! /usr/bin/python
+  #! /usr/bin/python
 import rospy
 import cv2      #OpenCV
 from cv_bridge import CvBridge, CvBridgeError   #converts between ROS Image messages and OpenCV images
@@ -75,17 +75,34 @@ def get_ex_cnts():
   squares = [cv2.imread('sq_bl.png'),cv2.imread('sq_ang_bl.png'),cv2.imread('sq_noise_bl.png')]
   circles = [cv2.imread('circ_bl.png'),cv2.imread('circ_ang_bl.png'),cv2.imread('circ_noise_bl.png')]
  
+  sq_thresh = np.zeros(len(squares))
+  circ_thresh = np.zeros(len(circles))
   #need to do some thresholding in here
-  squares[img] = bridge.imgmsg_to_cv2(squares[img],"bgr8") for img in range(len(squares)) 
-  circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
-   
-  squares[img] = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) for img in range(len(squares)) 
-  circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") for img in range(len(circles)) 
+  for img in range(len(squares)):
+    #convert to bgr8
+    squares[img] = bridge.imgmsg_to_cv2(squares[img],"bgr8") 
+    #Convert to HSV
+    squares[img] = cv2.cvtColor(squares[img],cv2.COLOR_BGR2HSV)
+    #threshold for blue
+    sq_thresh[img] = cv2.inRange(squares[img],(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
+    #filter out noise
+    sq_thresh[img] = cv2.erode(sq_cnts[img],np.ones((5,5)))
+    sq_thresh[img] = cv2.dilate(sq_cnts[img],np.ones((10,10)))
+    
+  for img in range(len(circles)):
+    #convert to bgr8
+    circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") 
+    #Convert to HSV
+    circles[img] = cv2.cvtColor(circles[img],cv2.COLOR_BGR2HSV)
+    #threshold for blue
+    circ_thresh[img] = cv2.inRange(circles[img],(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
+    #filter out noise
+    circ_thresh[img] = cv2.erode(circ_cnts[img],np.ones((5,5)))
+    circ_thresh[img] = cv2.dilate(circ_cnts[img],np.ones((10,10)))
 
-
-  #getting contours for each image
   sq_cnts = []
   circ_cnts = []
+  #getting contours for each image
   for sq, circ in zip(squares, circles):
     im, sq_cnt, hierarchy = cv2.findContours(sq,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
     im, circ_cnt, hierarchy = cv2.findContours(circ,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
