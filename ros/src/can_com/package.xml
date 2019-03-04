@@ -51,6 +51,7 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>shared_msgs</build_depend>
+  <test_depend>rosunit</test_depend>
   <exec_depend>shared_msgs</exec_depend>
 
 
