@@ -1,50 +1,74 @@
 #! /usr/bin/python
 import rospy
 import json
+import socket
 import packet_mapper
 from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg
 from sensor_msgs.msg import Imu, Temperature
 from std_msgs.msg import Float32
 
-from threading import Lock
-from flask import Flask, render_template, session, request
-from flask_socketio import SocketIO, emit, disconnect
-
-async_mode = None
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'key'
-socketio = SocketIO(app, async_mode=async_mode)
-thread = None
-thread_lock = Lock()
-
 with open ('../../../../surface/frontend/src/packets.json') as json_data:
   data = json.load(json_data,)
 
-dearFlask = data['dearflask']
-dearClient = data['dearclient']
-flaskMapper = packet_mapper.packet_mapper(dearFlask)
-clientMapper = packet_mapper.packet_mapper(dearClient)
+dearflask = data['dearflask']
+dearclient = data['dearclient']
+flask_mapper = packet_mapper.packet_mapper(dearflask)
+client_mapper = packet_mapper.packet_mapper(dearclient)
 thrust_pub = None
 auto_pub = None
+serversocket = None
+clientsocket = None
 
-@socketio.on('dearflask')
-def dearflask(json):
-  print('received')
-  dearFlask = json
-  socketio.emit('my_response', dearClient)
+def serialize(data):
+  io = StringIO()
+  json.dump(data, io)
+  return io.getvalue()
 
-  #for data in dearFlask["thrusters"]:
-  #  setattr(thrust_command_msg(), data, dearFlask["thrusters"][data])
-  #thrust_pub.publish(thrust_command_msg())
+def deserialize(data):
+  io = StringIO(data)
+  return json.load(io)
 
-  #for data in dearFlask["auto"]:
-  #  setattr(auto_command_msg(), data, dearFlask["auto"][data])
-  #auto_pub.publish(auto_command_msg())
+def init_server():
+  global serversocket
+  global clientsocket
+
+  serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  serversocket.bind((socket.gethostname(), 5001))
+  print('server started')
+
+def listen():
+  global serversocket
+  global clientsocket
+  global dearflask
+  global dearclient
+
+  #get dearflask
+  serversocket.listen(5)
+  (clientsocket, address) = serversocket.accept()
+  length = clientsocket.recv(10)
+  length = int(length)
+  dearflask = deserialize(clientsocket.recv(length))
+
+  #pass back dearclient
+  encode = serialize(dearclient)
+  head = str(len(encode))
+
+  for x in range(10 - len(head)):
+    head = '0' + head
+
+  encode = head + encode
+  serversocket.send(encode)
+
+  #update thrust and auto
+  flask_mapper.pam(thrust_command_msg(), dearflask)
+  flask_mapper.pam(auto_command_msg(), dearflask)
+  thrust_pub.publish(thrust_command_msg())
+  auto_pub.publish(auto_command_msg())
 
 def name_received(msg):
-  names = clientMapper.get_msg_vars(msg)
+  names = client_mapper.get_msg_vars(msg)
   for name in names:
-    clientMapper.map(name, getattr(msg, name), dearClient)
+    client_mapper.map(name, getattr(msg, name), dearclient)
 
 if __name__ == "__main__":
   rospy.init_node('mux_demux')
@@ -54,7 +78,7 @@ if __name__ == "__main__":
   esc_sub = rospy.Subscriber('/rov/esc_single', 
       esc_single_msg, name_received)
 
-  status_sub = rospy.Subscriber('/rov/thrust_status',thrust_status_msg,
+  status_sub = rospy.Subscriber('/rov/thrust_status', thrust_status_msg,
     name_received);
 
   temp_sub = rospy.Subscriber('/rov/temp', Temperature,
@@ -76,9 +100,8 @@ if __name__ == "__main__":
   auto_pub = rospy.Publisher(ns +'auto_command',
     auto_command_msg, queue_size=10);
 
-  # Start socketio
-  socketio.run(app, port=5001, debug=True)
+  init_server()
 
-  rate = rospy.Rate(10) # 10hz
-
-  rospy.spin()
+  while (1):
+    listen()
+    rospy.spin()

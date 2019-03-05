@@ -1,27 +1,39 @@
-# test client for mux_demux.py
-import socketio
-import time
+import socket
 import json
+import os
+from StringIO import StringIO
 
-sio = socketio.Client()
+with open ('packet.json') as json_data:
+  dearflask = json.load(json_data,)
 
-@sio.on('connect')
-def on_connect():
-  print('connected to server')
+# posts dearflask as a client
+def post():
+  global dearflask
+  global s
+  encode = serialize(dearflask)
+  head = str(len(encode))
 
-@sio.on('my_reponse')
-def my_response(json):
-  print(json)
+  for x in range(10 - len(head)):
+    head = '0' + head
 
+  encode = head + encode
+  s.send(encode)
+
+def serialize(data):
+  io = StringIO()
+  json.dump(data, io)
+  return unicode(io.getvalue(), 'utf-8')
+
+def deserialize(data):
+  io = StringIO(data)
+  return json.load(io)
+
+def client():
+  #create an INET, STREAMing socket
+  global s
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((socket.gethostname(), 5001))
+ 
 if __name__ == '__main__':
-
-  with open ('../../../../surface/frontend/src/packets.json') as json_data:
-    data = json.load(json_data,)
-
-  dearFlask = data['dearflask']
-  print(dearFlask)
-
-  sio.connect('http://localhost:5001')
-  sio.emit('dearflask', dearFlask)
-  sio.disconnect()
-
+  client()
+  post()

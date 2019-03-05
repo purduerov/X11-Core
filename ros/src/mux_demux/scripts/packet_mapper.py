@@ -24,6 +24,7 @@ class packet_mapper:
 
         print 'paths: ', self.topic_paths
 
+    # update packet[path] = value
     def map(self, var, value, packet):
         path = self.topic_paths[var]
         split = path.split('.')
@@ -31,6 +32,17 @@ class packet_mapper:
         for e in split[:-1]:
             p = p[e]
         p[split[-1]] = value
+
+    # update msg[path] = packet[path]
+    def pam(self, msg, packet):
+        names = self.get_msg_vars(msg)
+        for name in names:
+            path = self.topic_paths[name]
+            split = path.split('.')
+            p = packet
+            for e in split[:-1]:
+                p = p[e]
+            setattr(msg, name, p[split[-1]])
 
     def get_msg_vars(self, msg):
         names = []
@@ -50,23 +62,30 @@ class packet_mapper:
         return ""
 
 if __name__ == "__main__":
-    packet = { 'addr' : 'hello', 'in2' : { 'data' : 1    }   }
+    packet = { 'lol': 1, 'meme': { 'id':'1', 'lol': '3', 'data': '2' } }
     json = { 'one' : { 'two':2, 'three':3}}
     mapper = packet_mapper(packet)
 
-    for data in json['one']:
-      print data
+    #for data in json['one']:
+    #  print data
 
     # This code changes variables within a packet
     #mapper.map('addr', '6581', packet)
-    mapper.map('data', '0', packet)
-    #print packet["in2"]["data"]
+    #mapper.map('data', '0', packet)
 
-    # This code gives you a list of the names of the variables in a message object
+    #This code gives you a list of the names of the variables in a message object
 
-    #msg = shared_msgs.msg.can_msg()
-    #print msg
-    #print mapper.get_msg_vars(msg)
-    #print getattr(msg, "id")
-    #setattr(msg, "id", 1)
-    #print getattr(msg, "id")
+    msg = shared_msgs.msg.can_msg()
+    print msg
+    print packet
+
+    names = mapper.get_msg_vars(msg)
+    for name in names:
+      mapper.map(name, getattr(msg, name), packet)
+    print packet
+
+    packet = { 'lol': 1, 'meme': { 'id':'1', 'lol': '3', 'data': '2' } }
+
+    mapper.pam(msg, packet)
+    print packet
+    print msg
