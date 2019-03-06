@@ -6,6 +6,7 @@ import packet_mapper
 from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg
 from sensor_msgs.msg import Imu, Temperature
 from std_msgs.msg import Float32
+from StringIO import StringIO
 
 with open ('../../../../surface/frontend/src/packets.json') as json_data:
   data = json.load(json_data,)
@@ -30,7 +31,6 @@ def deserialize(data):
 
 def init_server():
   global serversocket
-  global clientsocket
 
   serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   serversocket.bind((socket.gethostname(), 5001))
@@ -45,8 +45,14 @@ def listen():
   #get dearflask
   serversocket.listen(5)
   (clientsocket, address) = serversocket.accept()
+  print('client connected')
   length = clientsocket.recv(10)
-  length = int(length)
+
+  try:
+    length = int(length)
+  except:
+    print('error in packet')
+
   dearflask = deserialize(clientsocket.recv(length))
 
   #pass back dearclient
@@ -57,7 +63,7 @@ def listen():
     head = '0' + head
 
   encode = head + encode
-  serversocket.send(encode)
+  clientsocket.send(encode)
 
   #update thrust and auto
   flask_mapper.pam(thrust_command_msg(), dearflask)

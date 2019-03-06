@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     #This code gives you a list of the names of the variables in a message object
 
-    msg = shared_msgs.msg.can_msg()
+    msg = shared_msgs.msg.thrust_command_msg()
     print msg
     print packet
 
@@ -84,8 +84,8 @@ if __name__ == "__main__":
       mapper.map(name, getattr(msg, name), packet)
     print packet
 
-    packet = { 'lol': 1, 'meme': { 'id':'1', 'lol': '3', 'data': '2' } }
+    #packet = { 'lol': 1, 'meme': { 'id':'1', 'lol': '3', 'data': '2' } }
 
-    mapper.pam(msg, packet)
-    print packet
-    print msg
+    #mapper.pam(msg, packet)
+    #print packet
+    #print msg
