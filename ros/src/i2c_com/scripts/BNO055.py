@@ -8,7 +8,7 @@ class BNO055(object):
 
         # Fail if it cannot be initialized
         if not self._bno.begin():
-            raise RuntimeError('Failed to initialize BNO055!')
+            raise I2CERROR('Failed to initialize BNO055!')
 
         self._data =  {
             'euler': {
