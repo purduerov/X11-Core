@@ -15,7 +15,7 @@ def getVectorStartPoint(prevVector):
 			#This origin point is the right middle
 			startPoint = [origin[0] + xCamWidth, origin[1] + yCamHeight / 2]	
 	else:
-		if (unitVect[1] > 0);
+		if (unitVect[1] > 0):
 			#This origin point is the bottom middle
 			startPoint = [origin[0] + xCamWidth / 2, origin[1] + yCamHeight]
 		else:
