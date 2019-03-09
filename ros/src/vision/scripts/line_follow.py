@@ -72,15 +72,17 @@ def draw_center(img, contour):
 
 def get_ex_cnts():
   #recognize starting square/circle
-  squares = [cv2.imread('sq_bl.png'),cv2.imread('sq_ang_bl.png'),cv2.imread('sq_noise_bl.png')]
-  circles = [cv2.imread('circ_bl.png'),cv2.imread('circ_ang_bl.png'),cv2.imread('circ_noise_bl.png')]
+  squares = [cv2.imread('sq_bl.png',1),cv2.imread('sq_ang_bl.png',1),cv2.imread('sq_noise_bl.png',1)]
+  circles = [cv2.imread('circ_bl.png',1),cv2.imread('circ_ang_bl.png',1),cv2.imread('circ_noise_bl.png',1)]
  
   sq_thresh = np.zeros(len(squares))
   circ_thresh = np.zeros(len(circles))
   #need to do some thresholding in here
   for img in range(len(squares)):
+    '''
     #convert to bgr8
     squares[img] = bridge.imgmsg_to_cv2(squares[img],"bgr8") 
+    '''
     #Convert to HSV
     squares[img] = cv2.cvtColor(squares[img],cv2.COLOR_BGR2HSV)
     #threshold for blue
@@ -90,8 +92,10 @@ def get_ex_cnts():
     sq_thresh[img] = cv2.dilate(sq_cnts[img],np.ones((10,10)))
     
   for img in range(len(circles)):
+    '''
     #convert to bgr8
     circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") 
+    '''
     #Convert to HSV
     circles[img] = cv2.cvtColor(circles[img],cv2.COLOR_BGR2HSV)
     #threshold for blue
