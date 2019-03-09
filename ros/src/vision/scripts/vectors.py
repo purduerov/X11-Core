@@ -29,3 +29,4 @@ def getThrustVect(prevVector, startPoint, center):
 	
 	return thrustVect,resultantVector
 
+
