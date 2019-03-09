@@ -1,4 +1,4 @@
-  #! /usr/bin/python
+#! /usr/bin/python
 import rospy
 import cv2      #OpenCV
 from cv_bridge import CvBridge, CvBridgeError   #converts between ROS Image messages and OpenCV images

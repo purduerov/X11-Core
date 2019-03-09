@@ -24,7 +24,7 @@ def getVectorStartPoint(prevVector):
 	return startPoint
 
 def getThrustVect(prevVector, startPoint, center):
-	resultantVector = [center[0] - startPoint[0], center[1] - startPoint[1]
+	resultantVector = [center[0] - startPoint[0], center[1] - startPoint[1]]
 	thrustVectX = resultantVector[0] - prevVector[0]
 	thrustVectY = resultantVector[1] - prevVector[1]
 	thrustVect = [thrustVectX, thrustVectY] 
