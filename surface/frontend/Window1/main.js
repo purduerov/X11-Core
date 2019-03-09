@@ -10,9 +10,9 @@ module.exports = (where, socketHost) => {
 
     // upon new data, save it locally
     socket.on('dearclient', (data) => { // Updates the data sent back from the server
-        this.clientcpy = data;
+        where.clientcpy = data;
 
-        this.setState({
+        where.setState({
             dearclient: this.clientcpy,
         });
     });
@@ -31,4 +31,32 @@ module.exports = (where, socketHost) => {
     /*
         IPC Connection Section
     */
+
+    ipcRenderer.on('buddy-controls-to-win-1', (event, data) => {
+        where.setState({
+            directions: data
+        });
+    });
+
+
+    // updating the gamepad
+    setInterval(() => {
+        if (where.gp.ready === false) {
+        //        console.log("not yet");
+            where.gp.selectController();
+        }
+        if ((where.gp.ready === true) && (where.state.freeze === 0)) {
+            where.gp.update();
+        //        console.log('success');
+        } /* else if (where.state.freeze === 1) {
+            where.gp.freeze();
+        } */
+
+        where.setState({ // Initiates rendering process
+            gp: where.gp,
+            dearflask: where.flaskcpy,
+        });
+    }, 100);
+
+
 };

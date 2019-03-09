@@ -18,6 +18,7 @@ class App extends React.Component {
         super(props);
         this.state = require("../src/packets.json");
 
+        this.state.directions = { x: 0, y: 0 };
         this.state.config = {
             thrust_scales: {
                 master: 50,
