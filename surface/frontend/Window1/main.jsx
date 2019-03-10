@@ -76,10 +76,7 @@ class App extends React.Component {
         this.confcpy = this.state.config;
 
         this.setFreeze = this.setFreeze.bind(this);
-        this.rendTools = this.rendTools.bind(this);
         this.changeDisabled = this.changeDisabled.bind(this);
-        this.changeForceScales = this.changeForceScales.bind(this);
-        this.changeThrustScales = this.changeThrustScales.bind(this);
     }
 
     componentDidMount() {
@@ -105,45 +102,8 @@ class App extends React.Component {
         });
     }
 
-    rendTools(cinvcpy) {
-        this.confcpy.tool_scales = cinvcpy;
-
-        this.setState({
-            config: this.confcpy,
-        });
-    }
-
     changeDisabled(dis) {
         this.flaskcpy.thrusters.disabled_thrusters = dis;
-    }
-
-    changeThrustScales(scales) {
-        this.confcpy.thruster_control = scales;
-
-        this.confcpy.thruster_control.forEach((val, i) => {
-            if (val.invert < 0) {
-                this.flaskcpy.thrusters.inverted_thrusters[i] = -Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]);
-            } else if (val.invert > 0) {
-                this.flaskcpy.thrusters.inverted_thrusters[i] = Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]);
-            } else {
-                console.log('Thruster inversion value is 0... why???');
-            }
-        });
-
-        this.setState({
-            config: this.confcpy,
-        });
-    }
-
-    changeForceScales(scales, inv) {
-        this.confcpy.thrust_scales = scales;
-        this.confcpy.thrust_invert = inv;
-
-        this.setState({
-            config: this.confcpy,
-        });
     }
 
     render() {
