@@ -32,7 +32,7 @@ module.exports = (where, socketHost) => {
 
     ipcRenderer.on('buddy-controls-to-win-1', (event, data) => {
         where.setState({
-            directions: data
+            directions: data,
         });
     });
 
