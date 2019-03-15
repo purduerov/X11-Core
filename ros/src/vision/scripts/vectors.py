@@ -5,7 +5,7 @@ def getVectorStartPoint(prevVector):
 	xCamWidth = 640
 	yCamHeight = 360
 	origin = [0, 0]
-	prevMag = sqrt((prevVector[0])**2 + (prevVector[1]**2))
+	prevMag = ((prevVector[0])**2 + (prevVector[1]**2))**0.5
 	unitVect = [prevVector[0]/prevMag, prevVector[1]/prevMag]
 	if(abs(unitVect[0]) > abs(unitVect[1])):
 		if (unitVect[0] > 0):
