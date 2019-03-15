@@ -12,6 +12,7 @@ bridge = CvBridge()
 
 #Change these global variable to a class later on
 at_beginning = True
+prev_vector = []
 
 class View:
   def __init__(self,cnt = None, at_beginning = True):
@@ -30,7 +31,7 @@ class View:
   def get_cam_dim(self):
     return (self.x_cam_width,self.y_cam_height)
   def compare_cnts(self,ex_cnt):
-    return cv2.matchShapes(contour,ex_cnt) < .02
+    return cv2.matchShapes(self.cnt,ex_cnt,1,0.0) < .02
     
 
 def get_largest(img):
@@ -72,42 +73,37 @@ def draw_center(img, contour):
 
 def get_ex_cnts():
   #recognize starting square/circle
-  squares = [cv2.imread('sq_bl.png',1),cv2.imread('sq_ang_bl.png',1),cv2.imread('sq_noise_bl.png',1)]
+
+  #****FIND A WAY TO ONLY DECLARE THES EX IMAGAES ONCE AND THEN PASS AS NEEDED*******
+  squares = [cv2.imread('sq_bl.jpeg',1),cv2.imread('sq_ang_bl.png',1),cv2.imread('sq_noise_bl.png',1)]
   circles = [cv2.imread('circ_bl.png',1),cv2.imread('circ_ang_bl.png',1),cv2.imread('circ_noise_bl.png',1)]
- 
-  sq_thresh = np.zeros(len(squares))
-  circ_thresh = np.zeros(len(circles))
+  
+  sq_thresh = []
+  circ_thresh = []
   #need to do some thresholding in here
   for img in range(len(squares)):
-    '''
-    #convert to bgr8
-    squares[img] = bridge.imgmsg_to_cv2(squares[img],"bgr8") 
-    '''
     #Convert to HSV
     squares[img] = cv2.cvtColor(squares[img],cv2.COLOR_BGR2HSV)
     #threshold for blue
-    sq_thresh[img] = cv2.inRange(squares[img],(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
+    sq_thresh.append(cv2.inRange(squares[img],(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)))
     #filter out noise
-    sq_thresh[img] = cv2.erode(sq_cnts[img],np.ones((5,5)))
-    sq_thresh[img] = cv2.dilate(sq_cnts[img],np.ones((10,10)))
+    sq_thresh[img] = cv2.erode(sq_thresh[img],np.ones((5,5)))
+    sq_thresh[img] = cv2.dilate(sq_thresh[img],np.ones((10,10)))
     
   for img in range(len(circles)):
-    '''
-    #convert to bgr8
-    circles[img] = bridge.imgmsg_to_cv2(circles[img],"bgr8") 
-    '''
     #Convert to HSV
     circles[img] = cv2.cvtColor(circles[img],cv2.COLOR_BGR2HSV)
     #threshold for blue
-    circ_thresh[img] = cv2.inRange(circles[img],(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
+    circ_thresh.append(cv2.inRange(circles[img],(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)))
+    
     #filter out noise
-    circ_thresh[img] = cv2.erode(circ_cnts[img],np.ones((5,5)))
-    circ_thresh[img] = cv2.dilate(circ_cnts[img],np.ones((10,10)))
+    circ_thresh[img] = cv2.erode(circ_thresh[img],np.ones((5,5)))
+    circ_thresh[img] = cv2.dilate(circ_thresh[img],np.ones((10,10)))
 
   sq_cnts = []
   circ_cnts = []
   #getting contours for each image
-  for sq, circ in zip(squares, circles):
+  for sq, circ in zip(sq_thresh, circ_thresh):
     im, sq_cnt, hierarchy = cv2.findContours(sq,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
     im, circ_cnt, hierarchy = cv2.findContours(circ,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
 
@@ -121,8 +117,9 @@ def match_beginning(img,contour,sq_cnts,circ_cnts):
   #find matches that have a matchShape value of less than .02
   match = []
   view = View(contour)
+  sq_circ_cnts = sq_cnts + circ_cnts
   while(len(match) == 0):
-    match = filter(view.compare_cnts , sq_cnts + circ_cnts)
+    match = filter(view.compare_cnts , np.asarray(sq_circ_cnts))
   
   #if a match is found, identify shape in picuture
   if match != -1:
@@ -148,10 +145,10 @@ def match_beginning(img,contour,sq_cnts,circ_cnts):
       dist = (center[0] - pt[0])**2 + (center[1] - pt[1])**2 
       wall_md_pt = pt
 
-  return wall_md_pt, center, init_shape  
+  return wall_md_pt, center, init_shape, view  
 
 
-def traverse_line(img_og,contour,center,prev_vector):
+def traverse_line(img_og,contour,prev_vector):
   if contour.all() != -1:
     cv2.drawContours(img_og,[contour],0,(0,255,0),3)
     center_rect = draw_rect(img_og, contour)
@@ -204,15 +201,26 @@ def process(data):
   img =  cv2.dilate(img,np.ones((10,10)))
   
   #contouring
-  contour = get_largest(img)	
+  contour = get_largest(img)
+
+  get_ex_cnts()	
   
   global at_beginning
+  global prev_vector
   if (at_beginning):
+    '''
     #Code to be run only at the start
     sq_cnts, circ_cnts = get_ex_cnts()
-    wall_md_pt,center, init_shape = match_beginning(img,contour,sq_cnts,circ_cnts)
+    wall_md_pt, center, init_shape = match_beginning(img,contour,sq_cnts,circ_cnts)
 
     prev_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
+    '''
+    view = View()
+    prev_vector = [1, 1]
+    wall_md_pt = [view.x_cam_width / 2, view.y_cam_height]  #Check this to see if it works
+    center = [view.x_cam_width / 2, view.y_cam_height / 2]
+
+    start_point_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
     #start_point_vector = getVectorStartPoint(prev_vector)    # Not necessary anymore due to wall_md_pt output
     curr_thrust_vect, resultant_vect = getThrustVect(prev_vector, wall_md_pt, center)
 
@@ -222,7 +230,7 @@ def process(data):
 
     at_beginning = False
   else:
-    curr_thrust_vect, resultant_vect = traverse_line(img_og,contour,center,prev_vector)
+    curr_thrust_vect, resultant_vect = traverse_line(img_og,contour,prev_vector)
   
   #Set resultant vect to prev_vector 
   prev_vector = resultant_vect
@@ -231,6 +239,7 @@ def process(data):
   cv2.imshow("Image",img_og)
   cv2.imshow("Filtered",img)
   cv2.waitKey(3)
+  
 
 if __name__ == "__main__":
   rospy.init_node('line_follow',anonymous=True)
