@@ -16,6 +16,7 @@ import Gpinfo from '../src/components/Gpinfo/Gpinfo.jsx';
 import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
 import ToolView from '../src/components/ToolView/ToolView.jsx';
 import PacketView from '../src/components/PacketView/PacketView.jsx';
+import Timer from '../src/components/Timer/Timer.jsx';
 import betterlayouts from '../src/gamepad/betterlayouts.js';
 
 const socketHost = 'ws://localhost:5001';
@@ -189,6 +190,9 @@ class App extends React.Component {
                                     conf={this.state.config.tool_scales}
                                     rend={this.rendTools}
                                 />
+                            </Card>
+                            <Card>
+                                <Timer />
                             </Card>
                         </div>
                     </div>
