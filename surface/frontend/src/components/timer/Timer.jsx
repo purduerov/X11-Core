@@ -18,7 +18,7 @@ export default class Timer extends Component {
         this.reset = this.reset.bind(this);
 
         this.interval = setInterval(() => {
-            console.log(this.state);
+            // console.log(this.state);
             if (this.state.isUpdating) {
                 this.setState({
                     curtime: Date.now(),
@@ -78,9 +78,19 @@ export default class Timer extends Component {
     }
 
     render() {
-        // if time < 2, render with red, else, render with green (??)
+        // if time < 2 min, render with red background
+        var timeDisplay;
+        if (this.state.isUpdating) {
+            timeDisplay = 15 * 60 - (this.state.curtime - this.state.timeAtStart + this.state.timeOffset) / 1000;
+        } else {
+            timeDisplay = 15 * 60 - this.state.timeOffset / 1000;
+        }
+        const colorBackground = {
+            background: timeDisplay / 60 < 2 ? "red" : "none"
+        };
+
         return (
-            <div className={styles.container}>
+            <div className={styles.container} style={colorBackground}>
                 <h3>Time</h3>
                 {this.displayInfo()}
                 <button onClick={this.start}>Start</button>
