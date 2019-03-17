@@ -31,27 +31,31 @@ def deserialize(data):
 
 def init_server():
   global serversocket
-
   serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  serversocket.bind((socket.gethostname(), 5001))
+  serversocket.bind((socket.gethostname(), 8000))
   print('server started')
+  serversocket.listen(5)
 
 def listen():
+  global serversocket
+  global clientsocket
+
+  #listen for client
+  (clientsocket, address) = serversocket.accept()
+  print('client connected')
+
+def accept():
   global serversocket
   global clientsocket
   global dearflask
   global dearclient
 
-  #get dearflask
-  serversocket.listen(5)
-  (clientsocket, address) = serversocket.accept()
-  print('client connected')
   length = clientsocket.recv(10)
 
   try:
     length = int(length)
   except:
-    print('error in packet')
+    raise Exception()
 
   dearflask = deserialize(clientsocket.recv(length))
 
@@ -66,10 +70,12 @@ def listen():
   clientsocket.send(encode)
 
   #update thrust and auto
-  flask_mapper.pam(thrust_command_msg(), dearflask)
-  flask_mapper.pam(auto_command_msg(), dearflask)
-  thrust_pub.publish(thrust_command_msg())
-  auto_pub.publish(auto_command_msg())
+  #flask_mapper.pam(thrust_command_msg(), dearflask)
+  #flask_mapper.pam(auto_command_msg(), dearflask)
+  #thrust_pub.publish(thrust_command_msg())
+  #auto_pub.publish(auto_command_msg())
+
+  return dearflask
 
 def name_received(msg):
   names = client_mapper.get_msg_vars(msg)
@@ -77,6 +83,8 @@ def name_received(msg):
     client_mapper.map(name, getattr(msg, name), dearclient)
 
 if __name__ == "__main__":
+  global clientsocket
+
   rospy.init_node('mux_demux')
   ns = rospy.get_namespace() # This should return /surface
   
@@ -107,7 +115,12 @@ if __name__ == "__main__":
     auto_command_msg, queue_size=10);
 
   init_server()
-
-  while (1):
-    listen()
-    rospy.spin()
+  rate = rospy.Rate(10)
+  while not rospy.is_shutdown():
+    try:
+      data = accept()
+      print data
+    except:
+      print('no client connected')
+      listen()
+    rate.sleep()

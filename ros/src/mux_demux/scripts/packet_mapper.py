@@ -1,6 +1,7 @@
 #! /usr/bin/python
 import shared_msgs.msg
 import json
+import os
 
 class packet_mapper:
 
@@ -62,7 +63,9 @@ class packet_mapper:
         return ""
 
 if __name__ == "__main__":
-    packet = { 'lol': 1, 'meme': { 'id':'1', 'lol': '3', 'data': '2' } }
+    with open ('../../../../surface/frontend/src/packets.json') as json_data:
+      packet = json.load(json_data,)
+    #packet = { 'lol': 1, 'meme': { 'id':'1', 'lol': '3', 'data': '2' } }
     json = { 'one' : { 'two':2, 'three':3}}
     mapper = packet_mapper(packet)
 

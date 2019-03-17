@@ -1,13 +1,13 @@
 import socket
 import json
 import os
+import sys
 from StringIO import StringIO
 
 with open ('../../../../surface/frontend/src/packets.json') as json_data:
   dearflask = json.load(json_data,)
-#dearflask = { 'data': 1, 'meme': { 'lol': 'hehexd' } }
-#dearflask = {'youngsik': 'meme', 'tobi': 'peen', 'jeremy': {'sheen': 'leen', 'dean': 'fiend'} }
-
+dearflask = dearflask['dearflask']
+print(dearflask)
 s = None
 
 # posts dearflask as a client
@@ -28,9 +28,10 @@ def talk():
   try:
     length = int(length)
   except:
-    return
+    return None
 
   get = deserialize(s.recv(length))
+
   return get
 
 def serialize(data):
@@ -47,10 +48,16 @@ def init_client():
   global s
 
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  s.connect((socket.gethostname(), 5001))
+  s.connect((socket.gethostname(), 8000))
   print('connected')
  
 if __name__ == '__main__':
   init_client()
-  get = talk()
-  print(get)
+  try:
+    while (1):
+      get = talk()
+      print(get)
+  except (KeyboardInterrupt, SystemExit):
+    print('exit')
+    s.close()
+    sys.exit
