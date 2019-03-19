@@ -1,35 +1,73 @@
 #! /usr/bin/python
 import rospy
-from shared_msgs.msg import can_msg, thrust_control_msg, esc_single_msg
+from shared_msgs.msg import can_msg, final_thrust_msg
+
+# Publishers to the CAN hardware transmitter
+can_pub = rospy.Publisher('can_tx', can_msg,
+    queue_size = 10)
+#esc_pub = rospy.Publisher('esc_single', esc_single_msg,
+#    queue_size = 10)
+
+#TODO Get the ID and position of the thrusters
+# Currently testing values are put in such that there are two boards each with four thrusters
+can_ids = [0, 0, 0, 0, 1, 1, 1, 1] # can IDs
+can_pos = [0, 1, 2, 3, 0, 1, 2, 3] # positions in data packet
+
+can_pow = [] # power of thrusters
 
 def message_received(msg):
-  # Publish to the CAN hardware transmitter
-  can_pub = rospy.Publisher('can_tx', can_msg,
-      queue_size= 10)
-  esc_pub = rospy.Publisher('esc_single', esc_single_msg,
-      queue_size= 10) # This runs on a seperate thread from the pub
-  
-  # Seperate final_thrust_msg
-  can_data = []
-  can_data.append(msg.hfl)
-  can_data.append(msg.hfr)
-  can_data.append(msg.hbl)
-  can_data.append(msg.hbr)
-  can_data.append(msg.vfl)
-  can_data.append(msg.vfr)
-  can_data.append(msg.vbl)
-  can_data.append(msg.vbr)
+  global can_pub
+  global can_ids
+  global can_pos
+  global can_pow
 
-  # TODO: I2C related activities 
-  for i in range(0, len(can_data)):
-    msg = can_msg()
-    msg.id = i
-    msg.data = can_data[i]
+  # Seperate final_thrust_msg
+  can_pow.append(msg.hfl)
+  can_pow.append(msg.hfr)
+  can_pow.append(msg.hbl)
+  can_pow.append(msg.hbr)
+  can_pow.append(msg.vfl)
+  can_pow.append(msg.vfr)
+  can_pow.append(msg.vbl)
+  can_pow.append(msg.vbr)
+
+  # Place thrusters into boards
+  boards = list(set(can_ids))
+  for curr_id in boards:
+    # Get indices of thrusters with ID, boards[i]
+    indices = [i for i, x in enumerate(can_ids) if x == curr_id]
+
+    # Make list of the thruster's positions
+    curr_pos = []
+    for i in indices:
+        curr_pos.append(can_pos[i])
+
+    # Sort indices of thrusters based on position
+    zipped_pairs = zip(curr_pos, indices)
+    sortedIndices = [a for _, a in sorted(zipped_pairs)]
+
+    # Make list of the thruster's power in order of position
+    curr_pow = []
+    for i in sortedIndices:
+        curr_pow.append(can_pow[i])
+    
+    # Make 64 bit data message
+    curr_data = 0
+    for x in curr_pow:
+        curr_data = curr_data << 8
+        curr_data = curr_data | x
+    for x in range(8 - len(curr_pow)):
+        curr_data = curr_data << 8
+
+    # Publish Message
+    new_msg = can_msg()
+    new_msg.id = curr_id
+    new_msg.data = curr_data
     can_pub.publish(msg)
-  
+ 
   #TODO Translate message to esc_single_msg
-  sample_message = esc_single_msg()
-  esc_pub.publish(sample_message)
+  #sample_message = esc_single_msg()
+  #esc_pub.publish(sample_message)
   pass
 
 if __name__ == "__main__":
