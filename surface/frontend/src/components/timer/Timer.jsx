@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styles from './Timer.css';
+const { ipcRenderer } = window.require('electron');
 
 export default class Timer extends Component {
     constructor(props) {
@@ -50,31 +51,42 @@ export default class Timer extends Component {
 
     start() { // TODO: fix clicking start after pause causing time to flicker, displaying 2nd to last time for a fraction of a second
         if (!this.state.isUpdating) {
-            this.setState({
-                isUpdating: true,
-                timeAtStart: Date.now()
-            });
+            this.stateCopy = {
+                timeAtStart: Date.now(),
+                timeOffset: this.state.timeOffset,
+                curtime: this.state.curtime,
+                isUpdating: true
+            };
+            this.setState(this.stateCopy);
         }
+        // ipcRenderer.send('timer-parameters', this.state);
     }
 
     pause() {
         if (this.state.isUpdating) {
-            this.setState({
-                isUpdating: false,
+            this.stateCopy = {
                 timeAtStart: 0,
-                timeOffset: Date.now() - this.state.timeAtStart + this.state.timeOffset
-            });
+                timeOffset: Date.now() - this.state.timeAtStart + this.state.timeOffset,
+                curtime: this.state.curtime,
+                isUpdating: false
+            };
+            this.setState(this.stateCopy);
         }
 
     }
 
     reset() {
-        this.setState({
+        this.stateCopy = {
             timeAtStart: 0,
             timeOffset: 0,
             curtime: 0,
             isUpdating: false
-        });
+        }
+        this.setState(this.stateCopy);
+    }
+
+    componentDidMount() {
+        // ipcRenderer.on('window-message', message)
     }
 
     render() {

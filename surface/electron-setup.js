@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const spawn = require('child_process').spawn;
@@ -85,3 +85,9 @@ app.on('activate', () => {
     // dock icon is clicked and there are no other windows open.
     createWindow();
 });
+
+/*ipcMain.on('window-mesage', (event, message) => {
+    if (windows[0] != null) {
+        windows[0].webContents.send('other-message', message);
+    }
+});*/
