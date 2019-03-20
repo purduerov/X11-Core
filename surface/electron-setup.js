@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const spawn = require('child_process').spawn;
@@ -86,22 +86,8 @@ app.on('activate', () => {
     createWindow();
 });
 
-/*
-    Here we are saying that every time our node application receives data from the python process
-    output stream(on 'data'), we want to convert that received data into a string and append it to
-    the overall dataString.
-*/
-py.stdout.on('data', (data) => {
-    dataString = data.toString();
+ipcMain.on('buddy-controls-from-win-3', (event, message) => {
+    if (windows[0] != null) {
+        windows[0].webContents.send('buddy-controls-to-win-1', message);
+    }
 });
-
-/* Once the stream is done (on 'end') we want to simply log the received data to the console. */
-py.stdout.on('end', () => {
-    console.log('Sum of numbers=', dataString);
-});
-
-/* We have to stringify the data first otherwise our python process wont recognize it */
-py.stdin.write(JSON.stringify(data));
-
-/* Sending the 'end' signal to the python process */
-py.stdin.end();
