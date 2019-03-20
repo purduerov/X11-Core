@@ -15,15 +15,12 @@ app = socketio.WSGIApp(sio, static_files={
 def connect(sid, environ):
     print('connect ', sid)
 
-@sio.on('dearclient-request')
-def dearclient(sid):
-    print(base_packet["dearclient"])
-    print("\n")
-    sio.emit('dearclient-receive', base_packet["dearclient"])
-
-@sio.on('dearflask')
+@sio.on('dearRos')
 def dearflask(sid, data):
     print('message ', data)
+    print(base_packet["dearclient"])
+    print("\n")
+    sio.emit('dearclient-response', base_packet["dearclient"])
 
 @sio.on('disconnect')
 def disconnect(sid):

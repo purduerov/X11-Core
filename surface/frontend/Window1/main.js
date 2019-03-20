@@ -9,14 +9,8 @@ module.exports = (where, socketHost) => {
     */
     const socket = io.connect(socketHost, { transports: ['websocket'] });
 
-
-    // request new data
-    setInterval(() => {
-        socket.emit('dearclient-request');
-    }, 50);
-
     // upon new data, save it locally
-    socket.on('dearclient-receive', (data) => { // Updates the data sent back from the server
+    socket.on('dearclient-response', (data) => { // Updates the data sent back from the server
         where.setState({
             dearclient: data,
         });
@@ -24,7 +18,7 @@ module.exports = (where, socketHost) => {
 
     // send new data
     setInterval(() => { // Sends a message down to the server with updated surface info
-        socket.emit('dearflask', where.state.dearflask);
+        socket.emit('dearRos', where.state.dearflask);
     }, 50);
 
 
