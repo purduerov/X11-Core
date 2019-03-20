@@ -94,7 +94,7 @@ node {
                         WindDown("ROV FAILED TO LAUNCH")
                 }
         }
-        stage('lint'){
+        /*stage('lint'){
                 linterrmsg = ""
 
                 // Lint Python
@@ -129,12 +129,14 @@ node {
                         slackSend(color: "#FF0000",message: linterrmsg)
                         WindDown("LINTERROR")
                 }
-        }
+        }*/
         stage ('test'){
-                withPythonEnv('/usr/bin/python'){
+                sh """ rostest  """
+
+                /*withPythonEnv('/usr/bin/python'){
                         pysh 'python tests/testem.py > runlog.log 2>&1'
                 }
-                SaveLog("runlog.log")
+                SaveLog("runlog.log")*/
         }       
         stage ('post'){
                 msg = """
