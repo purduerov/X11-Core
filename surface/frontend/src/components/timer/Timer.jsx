@@ -48,7 +48,7 @@ export default class Timer extends Component {
         );
     }
 
-    start() { // TODO: fix clicking start after pause causing time to flicker, displaying original time for a fraction of a second
+    start() { // TODO: fix clicking start after pause causing time to flicker, displaying 2nd to last time for a fraction of a second
         if (!this.state.isUpdating) {
             this.setState({
                 isUpdating: true,
@@ -78,19 +78,24 @@ export default class Timer extends Component {
     }
 
     render() {
-        // if time < 2 min, render with red background
         var timeDisplay;
         if (this.state.isUpdating) {
             timeDisplay = 15 * 60 - (this.state.curtime - this.state.timeAtStart + this.state.timeOffset) / 1000;
         } else {
             timeDisplay = 15 * 60 - this.state.timeOffset / 1000;
         }
-        const colorBackground = {
-            background: timeDisplay / 60 < 2 ? "red" : "none"
-        };
+
+        var colorNumbers;
+        if (timeDisplay / 60 < 2) {
+            colorNumbers = { color: "red"};
+        } else if (timeDisplay / 60 < 5) {
+            colorNumbers = { color: "orange"};
+        } else {
+            colorNumbers = { color: "inherit"};
+        }
 
         return (
-            <div className={styles.container} style={colorBackground}>
+            <div className={styles.container} style={colorNumbers}>
                 <h3>Time</h3>
                 {this.displayInfo()}
                 <button onClick={this.start}>Start</button>
