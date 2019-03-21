@@ -71,7 +71,7 @@ class App extends React.Component {
     componentDidMount() {
         var signals = require('./secondary.js');
         window.react = this;
-        signals(this);
+        signals(this, null);
     }
 
     rendTools(cinvcpy) {
@@ -88,10 +88,12 @@ class App extends React.Component {
         this.confcpy.thruster_control.forEach((val, i) => {
             if (val.invert < 0) {
                 this.flaskcpy.thrusters.inverted_thrusters[i] = -Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]);
+                    this.flaskcpy.thrusters.inverted_thrusters[i]
+                );
             } else if (val.invert > 0) {
                 this.flaskcpy.thrusters.inverted_thrusters[i] = Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]);
+                    this.flaskcpy.thrusters.inverted_thrusters[i]
+                );
             } else {
                 console.log('Thruster inversion value is 0... why???');
             }
@@ -99,6 +101,7 @@ class App extends React.Component {
 
         this.setState({
             config: this.confcpy,
+            dearflask: this.flaskcpy
         });
     }
 

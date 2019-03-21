@@ -91,3 +91,9 @@ ipcMain.on('buddy-controls-from-win-3', (event, message) => {
         windows[0].webContents.send('buddy-controls-to-win-1', message);
     }
 });
+
+ipcMain.on('config-from-win2', (event, configs) => {
+    if (windows[0] != null) {
+        windows[0].webContents.send('config-from-win2', configs);
+    }
+});
