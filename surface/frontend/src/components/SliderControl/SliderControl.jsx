@@ -21,7 +21,7 @@ export default class SliderControl extends Component {
 
     onChangeVal(e) {
         const invcpy = this.state.inv;
-        this.setState({ inv: invcpy, val: e.target.value }, function () {
+        this.setState({ inv: invcpy, val: Number(e.target.value) }, function () {
             this.props.rend(Number(this.state.val), Number(this.state.inv), this.props.indx);
             // console.log(this.state.val);
         });
