@@ -162,7 +162,7 @@ def traverse_line(img_og,contour,prev_vector):
       center = center_rect
 
     cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
-    print(center)
+    #print(center)
     
     ##### NEED A PREV VECTOR VALUE TO INITIALIZE TO.  (Could possibly default to one of the four main directions)
     #      # The above comment is no longer necessary
@@ -208,7 +208,7 @@ def process(data):
   global at_beginning
   global prev_vector
   if (at_beginning):
-    print("at beggining")
+    print("at beginning")
     '''
     #Code to be run only at the start
     sq_cnts, circ_cnts = get_ex_cnts()
@@ -233,7 +233,7 @@ def process(data):
   else:
     print("in else")
     curr_thrust_vect, resultant_vect = traverse_line(img_og,contour,prev_vector)
-  
+    print("[%d, %d], [%d, %d]", curr_thrust_vect[0], curr_thrust_vect[1], resultant_vect[0], resultant_vect[1]) 
   #Set resultant vect to prev_vector 
   prev_vector = resultant_vect
   
