@@ -15,6 +15,8 @@ at_beginning = True
 prev_vector = []
 
 class View:
+  at_beginning = True 
+  prev_vector = []
   def __init__(self,cnt = None, at_beginning = True):
     self.cnt = cnt
     self.at_beginning = at_beginning
@@ -32,7 +34,6 @@ class View:
     return (self.x_cam_width,self.y_cam_height)
   def compare_cnts(self,ex_cnt):
     return cv2.matchShapes(self.cnt,ex_cnt,1,0.0) < .02
-    
 
 def get_largest(img):
   #grab all of the contours
@@ -204,10 +205,8 @@ def process(data):
   contour = get_largest(img)
 
   get_ex_cnts()	
-  
-  global at_beginning
-  global prev_vector
-  if (at_beginning):
+
+  if (View.at_beginning):
     print("at beginning")
     '''
     #Code to be run only at the start
@@ -217,13 +216,13 @@ def process(data):
     prev_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
     '''
     view = View()
-    prev_vector = [1, 1]
+    View.prev_vector=[1, 1]
     wall_md_pt = [view.x_cam_width / 2, view.y_cam_height]  #Check this to see if it works
     center = [view.x_cam_width / 2, view.y_cam_height / 2]
 
     start_point_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
     #start_point_vector = getVectorStartPoint(prev_vector)    # Not necessary anymore due to wall_md_pt output
-    curr_thrust_vect, resultant_vect = getThrustVect(prev_vector, wall_md_pt, center)
+    curr_thrust_vect, resultant_vect = getThrustVect(View.prev_vector, wall_md_pt, center)
 
     #Output thrust vect as cv2 line
     cv2.circle(img_og,(start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
@@ -235,7 +234,7 @@ def process(data):
     curr_thrust_vect, resultant_vect = traverse_line(img_og,contour,prev_vector)
     print("[%d, %d], [%d, %d]", curr_thrust_vect[0], curr_thrust_vect[1], resultant_vect[0], resultant_vect[1]) 
   #Set resultant vect to prev_vector 
-  prev_vector = resultant_vect
+  View.prev_vector = resultant_vect
   
   #show images
   cv2.imshow("Image",img_og)
