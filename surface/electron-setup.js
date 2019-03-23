@@ -86,8 +86,14 @@ app.on('activate', () => {
     createWindow();
 });
 
-/*ipcMain.on('window-mesage', (event, message) => {
+ipcMain.on('timer-parameters', (event, message) => {
     if (windows[0] != null) {
-        windows[0].webContents.send('other-message', message);
+        windows[0].webContents.send('timer-parameters-from-main', message);
     }
-});*/
+    if (windows[1] != null) {
+        windows[1].webContents.send('timer-parameters-from-main', message);
+    }
+    if (windows[2] != null) {
+        windows[2].webContents.send('timer-parameters-from-main', message);
+    }
+});

@@ -57,9 +57,9 @@ export default class Timer extends Component {
                 curtime: this.state.curtime,
                 isUpdating: true
             };
+            ipcRenderer.send('timer-parameters', this.stateCopy);
             this.setState(this.stateCopy);
         }
-        // ipcRenderer.send('timer-parameters', this.state);
     }
 
     pause() {
@@ -70,6 +70,7 @@ export default class Timer extends Component {
                 curtime: this.state.curtime,
                 isUpdating: false
             };
+            ipcRenderer.send('timer-parameters', this.stateCopy);
             this.setState(this.stateCopy);
         }
 
@@ -82,11 +83,14 @@ export default class Timer extends Component {
             curtime: 0,
             isUpdating: false
         }
+        ipcRenderer.send('timer-parameters', this.stateCopy);
         this.setState(this.stateCopy);
     }
 
     componentDidMount() {
-        // ipcRenderer.on('window-message', message)
+        ipcRenderer.on('timer-parameters-from-main', (event, message) => {
+            this.setState(message);
+        });
     }
 
     render() {
