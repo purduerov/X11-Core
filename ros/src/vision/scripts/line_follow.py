@@ -152,8 +152,14 @@ def traverse_line(img_og,contour,vects):
     curr_thrust_vect, resultant_vect = vects.get_thrust_vect(start_point_vector, center)
 
     ####OUTPUT curr_thrust_vect, as this is the direction in which the thrusters should be pushing    MAGNITUDES ARE CURRENTLY AN ISSUE
+    '''
     cv2.circle(img_og, (start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
-    cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(center[0],center[1]),(150,255,255),1)
+    cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(center[0],center[1]),(255,0,255),1)
+    cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(curr_thrust_vect[0] + start_point_vector[0], curr_thrust_vect[1] + start_point_vector[1]),(0,255,0),1)
+    '''
+    #purple line is missing (maybe because it goes out of bounds of view frame???  or is tired of living????)
+    cv2.line(img_og, (curr_thrust_vect[0],curr_thrust_vect[1]),(curr_thrust_vect[0] + resultant_vect[0] ,curr_thrust_vect[1] + resultant_vect[1]),(255,0,255),1)
+    cv2.line(img_og, (center[0],center[1]),(center[0] + curr_thrust_vect[0], center[1] +  curr_thrust_vect[0]),(0,255,0),1)
 
   else:
     curr_thrust_vect = np.multiply(vects.prev_vector,-1)
@@ -202,7 +208,7 @@ def process(data):
     center = [Vector.x_cam_width / 2, Vector.y_cam_height / 2]
 
     start_point_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
-    curr_thrust_vect, resultant_vect = vects.get_thrust_vect(View.prev_vector, wall_md_pt, center)
+    curr_thrust_vect, resultant_vect = vects.get_thrust_vect(wall_md_pt, center)
 
     #Output thrust vect as cv2 line
     cv2.circle(img_og,(start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
@@ -210,7 +216,7 @@ def process(data):
 
     View.at_beginning = False
   else:
-    curr_thrust_vect, resultant_vect = traverse_line(img_og,view.cnt,prev_vector)
+    curr_thrust_vect, resultant_vect = traverse_line(img_og,view.cnt,vects)
     print("[%d, %d], [%d, %d]" % (curr_thrust_vect[0], curr_thrust_vect[1], resultant_vect[0], resultant_vect[1]))
 
   #Set resultant vect to prev_vector 
