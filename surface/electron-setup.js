@@ -95,6 +95,8 @@ ipcMain.on('timer-parameters', (event, message) => {
     }
     if (windows[2] != null) {
         windows[2].webContents.send('timer-parameters-from-main', message);
+    }
+});
 
 ipcMain.on('buddy-controls-from-win-3', (event, message) => {
     if (windows[0] != null) {
