@@ -80,6 +80,7 @@ if __name__ == "__main__":
 
     msg = shared_msgs.msg.thrust_command_msg()
     print msg
+    print
     print packet
 
     names = mapper.get_msg_vars(msg)
