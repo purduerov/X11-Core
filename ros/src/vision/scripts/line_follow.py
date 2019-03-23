@@ -21,7 +21,7 @@ class View:
     self.thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
         "blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]}
     self.x_cam_width = 640
-    self.y_cam_height = 360
+    self.y_cam_height = 480 
   def set_cnt(self,cnt):
     self.cnt = cnt
   def get_at_beginning(self):
@@ -208,6 +208,7 @@ def process(data):
   global at_beginning
   global prev_vector
   if (at_beginning):
+    print("at beggining")
     '''
     #Code to be run only at the start
     sq_cnts, circ_cnts = get_ex_cnts()
@@ -230,6 +231,7 @@ def process(data):
 
     at_beginning = False
   else:
+    print("in else")
     curr_thrust_vect, resultant_vect = traverse_line(img_og,contour,prev_vector)
   
   #Set resultant vect to prev_vector 
