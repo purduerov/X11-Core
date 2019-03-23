@@ -77,15 +77,15 @@ class App extends React.Component {
                     <div className="camera-width full-height center" />
                     <div className="data-width full-height">
                         <div className="data-column">
+                            <Card />
+                        </div>
+                        <div className="data-column">
+                            <Card />
+                        </div>
+                        <div className="data-column">
                             <Card>
                                 <Timer />
                             </Card>
-                        </div>
-                        <div className="data-column">
-                            <Card />
-                        </div>
-                        <div className="data-column">
-                            <Card />
                         </div>
                     </div>
                 </div>

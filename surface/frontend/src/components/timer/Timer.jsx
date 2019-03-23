@@ -49,7 +49,7 @@ export default class Timer extends Component {
         );
     }
 
-    start() { // TODO: fix clicking start after pause causing time to flicker, displaying 2nd to last time for a fraction of a second
+    start() {
         if (!this.state.isUpdating) {
             this.stateCopy = {
                 timeAtStart: Date.now(),
@@ -73,7 +73,6 @@ export default class Timer extends Component {
             ipcRenderer.send('timer-parameters', this.stateCopy);
             this.setState(this.stateCopy);
         }
-
     }
 
     reset() {

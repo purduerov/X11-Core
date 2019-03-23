@@ -5,7 +5,6 @@ import packet from '../src/packets.json';
 
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
-import Timer from '../src/components/Timer/Timer.jsx';
 
 /* These should be done in a component, or the js file for this window
 
@@ -77,9 +76,7 @@ class App extends React.Component {
                     <div className="camera-width full-height center" />
                     <div className="data-width full-height">
                         <div className="data-column">
-                            <Card>
-                                <Timer />
-                            </Card>
+                            <Card />
                         </div>
                         <div className="data-column">
                             <Card />
