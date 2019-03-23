@@ -149,11 +149,11 @@ class App extends React.Component {
                             <Card title="CV view window">
                                 <CVview desc={"Purdo good, Purdon't let Eric make messages"} tdist={[0.0, 0.1, 0.2, 0.4, 0.7, 0.8]} />
                             </Card>
-                        </div>
-                        <div className="data-column">
-                            <Card title="IPC Timer">
+                            <Card title="Time">
                                 <Timer />
                             </Card>
+                        </div>
+                        <div className="data-column">
                             <Card title="Line Graph Component" />
                         </div>
                     </div>

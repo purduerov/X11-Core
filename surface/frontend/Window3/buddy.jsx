@@ -84,7 +84,7 @@ class App extends React.Component {
                             <Card title="I see Brown CV" />
                         </div>
                         <div className="data-column">
-                            <Card title="IPC Timer">
+                            <Card title="Time">
                                 <Timer />
                             </Card>
                         </div>

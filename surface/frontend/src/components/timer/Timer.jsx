@@ -111,7 +111,6 @@ export default class Timer extends Component {
 
         return (
             <div className={styles.container} style={colorNumbers}>
-                <h3>Time</h3>
                 {this.displayInfo()}
                 <button onClick={this.start}>Start</button>
                 <button onClick={this.pause}>Pause</button>
