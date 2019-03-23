@@ -1,23 +1,20 @@
 import React from 'react';
 import { render } from 'react-dom';
 import styles from './main.css';
-import packet from '../src/packets.json';
 
-
-import CVview from '../src/components/CVview/CVview.jsx';
-import ESCinfo from '../src/components/ESCinfo/ESCinfo.jsx';
 import Card from '../src/components/Card/Card.jsx';
 import CameraScreen from '../src/components/CameraScreen/CameraScreen.jsx';
-import ForceScales from '../src/components/ForceScales/ForceScales.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
+import PHinfo from '../src/components/PHinfo/PHinfo.jsx'
+import BuddyControlsShow from '../src/components/BuddyControlsShow/BuddyControlsShow.jsx';
+import FreezeGp from '../src/components/FreezeGp/FreezeGp.jsx';
+import betterlayouts from '../src/gamepad/betterlayouts.js';
 import ThrusterInfo from '../src/components/ThrusterInfo/ThrusterInfo.jsx';
-import ThrusterScales from '../src/components/ThrusterScales/ThrusterScales.jsx';
 import Gpinfo from '../src/components/Gpinfo/Gpinfo.jsx';
 import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
-import ToolView from '../src/components/ToolView/ToolView.jsx';
 import PacketView from '../src/components/PacketView/PacketView.jsx';
 import Timer from '../src/components/Timer/Timer.jsx';
-import betterlayouts from '../src/gamepad/betterlayouts.js';
+import CVview from '../src/components/CVview/CVview.jsx';
 
 const socketHost = 'ws://localhost:5001';
 
@@ -34,6 +31,12 @@ class App extends React.Component {
         this.state = require("../src/packets.json");
         this.state.gp = require('../src/gamepad/bettergamepad.js');
 
+        this.state.gp = require ("../src/gamepad/bettergamepad.js");
+        this.gp = require('../src/gamepad/bettergamepad.js');
+
+
+        this.state.directions = { x: 0, y: 0 };
+        this.state.freeze = 0;
         this.state.config = {
             thrust_scales: {
                 master: 50,
@@ -74,10 +77,8 @@ class App extends React.Component {
         this.clientcpy = this.state.dearclient;
         this.confcpy = this.state.config;
 
-        this.rendTools = this.rendTools.bind(this);
+        this.setFreeze = this.setFreeze.bind(this);
         this.changeDisabled = this.changeDisabled.bind(this);
-        this.changeForceScales = this.changeForceScales.bind(this);
-        this.changeThrustScales = this.changeThrustScales.bind(this);
     }
 
     componentDidMount() {
@@ -85,51 +86,26 @@ class App extends React.Component {
         window.react = this;
 
         signals(this, socketHost);
+
+        setInterval(() => {
+            if (this.state.freeze) {
+                this.flaskcpy.thrusters.desired_thrust = [0.0, 0.0, -0.1, 0.0, 0.0, 0.0];
+            }
+
+            this.setState({
+                dearflask: this.flaskcpy,
+            });
+        }, 50);
     }
 
-    rendTools(cinvcpy) {
-        this.confcpy.tool_scales = cinvcpy;
-
+    setFreeze(value) {
         this.setState({
-            config: this.confcpy,
+            freeze: value,
         });
     }
 
     changeDisabled(dis) {
         this.flaskcpy.thrusters.disabled_thrusters = dis;
-        this.setState({
-            dearflask: this.flaskcpy,
-        });
-    }
-
-    changeThrustScales(scales) {
-        this.confcpy.thruster_control = scales;
-
-        this.confcpy.thruster_control.forEach((val, i) => {
-            if (val.invert < 0) {
-                this.flaskcpy.thrusters.inverted_thrusters[i] = -Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]);
-            } else if (val.invert > 0) {
-                this.flaskcpy.thrusters.inverted_thrusters[i] = Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]);
-            } else {
-                console.log('Thruster inversion value is 0... why???');
-            }
-        });
-
-        this.setState({
-            config: this.confcpy,
-            dearflask: this.flaskcpy,
-        });
-    }
-
-    changeForceScales(scales, inv) {
-        this.confcpy.thrust_scales = scales;
-        this.confcpy.thrust_invert = inv;
-
-        this.setState({
-            config: this.confcpy,
-        });
     }
 
     render() {
@@ -148,6 +124,17 @@ class App extends React.Component {
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card>
+                                <PHinfo />
+                            </Card>
+                        </div>
+                        <div className="data-column">
+                            <Card>
+                                <FreezeGp
+                                    maybeFreeze={this.state.freeze}
+                                    rend={this.setFreeze}
+                                />
+                            </Card>
+                            <Card>
                                 <ThrusterInfo
                                     thrusters={this.state.dearclient.thrusters}
                                     disabled={this.state.dearflask.thrusters.disabled_thrusters}
@@ -155,45 +142,19 @@ class App extends React.Component {
                                     rend={this.changeDisabled}
                                 />
                             </Card>
+                            <Card title="Desired Force Vector" />
+                        </div>
+                        <div className="data-column">
+                            <Card title="Computer Vision Stuff" />
                             <Card title="CV view window">
                                 <CVview desc={"Purdo good, Purdon't let Eric make messages"} tdist={[0.0, 0.1, 0.2, 0.4, 0.7, 0.8]} />
                             </Card>
                         </div>
                         <div className="data-column">
-                            <Card title="Directional Control">
-                                <ForceScales
-                                    rend={this.changeForceScales}
-                                    scales={this.state.config.thrust_scales}
-                                    invert={this.state.config.thrust_invert}
-                                />
-                            </Card>
-                            <Card title="Thruster Control">
-                                <ThrusterScales
-                                    rend={this.changeThrustScales}
-                                    scales={this.state.config.thruster_control}
-                                />
-                            </Card>
-                        </div>
-                        <div className="data-column">
-                            <Card title="ESC readings">
-                                <ESCinfo
-                                    currents={this.state.dearclient.sensors.esc.currents}
-                                    temp={this.state.dearclient.sensors.esc.temperatures}
-                                />
-                            </Card>
-                            <Card>
-                                <ToolView
-                                    manipulator={this.state.dearflask.manipulator.power}
-                                    servo={this.state.dearflask.maincam_angle}
-                                    transmitter={this.state.dearflask.transmitter}
-                                    magnet={this.state.dearflask.magnet}
-                                    conf={this.state.config.tool_scales}
-                                    rend={this.rendTools}
-                                />
-                            </Card>
-                            <Card>
+                            <Card title="IPC Timer">
                                 <Timer />
                             </Card>
+                            <Card title="Line Graph Component" />
                         </div>
                     </div>
                 </div>
