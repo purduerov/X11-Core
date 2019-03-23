@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import './CrackInfo.css';
+import styles from "./CrackInfo.css";
 
 const NUM_ROWS = 3;
 const NUM_COLS = 4;
@@ -14,7 +14,8 @@ export default class Graph extends Component {
 
   getSizes() {
     let { width, height, length, crackSquare } = this.props;
-    width -= 2; height -= 2;
+    width -= 2;
+    height -= 2;
     let squareSize;
     if (width / NUM_COLS > height / NUM_ROWS) {
       squareSize = height / NUM_ROWS;
@@ -81,32 +82,33 @@ export default class Graph extends Component {
           fill="#FFFFFF"
           stroke="#222222"
         />
-        {id === this.state.crackSquare ? <Text {...this.state} x={x} y={y}/> : ''}
+        {id === this.state.crackSquare ? (
+          <Text squareSize={this.state.squareSize} length={this.state.length} x={x} y={y} />
+        ) : (
+          ""
+        )}
       </g>
     );
   }
 
   render() {
     return (
-      <div className="crack-map">
-        <div id="grid">
-          <svg height={this.state.height} width={this.state.width}>
-            {this.gridData().map(this.rows, this)}
-          </svg>
-        </div>
+      <div>
+        <svg className={styles.grid} height={this.state.height} width={this.state.width}>
+          {this.gridData().map(this.rows, this)}
+        </svg>
       </div>
     );
   }
 }
 
-function Text({squareSize, length, x, y}) {
+function Text({ squareSize, length, x, y }) {
   const fontSize = squareSize / 5.5;
 
   return (
     <text
       x={x + squareSize / 10}
       y={y + (squareSize - fontSize) / 1.5}
-      fontFamily="monospace"
       fontSize={`${fontSize}px`}
       fill="blue"
     >

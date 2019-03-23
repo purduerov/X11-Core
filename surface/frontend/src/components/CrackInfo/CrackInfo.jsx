@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import Modal from './Modal.jsx';
+import PropTypes from "prop-types";
+import Modal from "./Modal.jsx";
 
-import './CrackInfo.css';
-
-export default class ModalWrapper extends Component {
+export default class CrackInfo extends Component {
   constructor() {
     super();
     this.state = {
@@ -28,19 +27,30 @@ export default class ModalWrapper extends Component {
   render() {
     return (
       <div>
-        <button className="open-modal-btn" onClick={this.openModalHandler}>
-          Open Modal
-        </button>
-
-        <Modal
-          className="modal"
-          show={this.state.showing}
-          close={this.closeModalHandler}
-        >
-        </Modal>
+        <div>
+          <div>Length:</div>
+          {this.props.length} cm
+        </div>
+        {this.state.showing ? (
+          <button onClick={this.closeModalHandler}>Close Graph</button>
+        ) : (
+          <button onClick={this.openModalHandler}>Display Graph</button>
+        )}
+        {this.state.showing ? (
+          <Modal
+            close={this.closeModalHandler}
+            crackSquare={this.props.crackSquare}
+            length={this.props.length}
+          />
+        ) : (
+          ""
+        )}
       </div>
     );
   }
 }
 
-// <CrackMap height="500" width="500" crackSquare="A2" length="12.4" />
+CrackInfo.propTypes = {
+  crackSquare: PropTypes.string.isRequired,
+  length: PropTypes.number.isRequired
+};

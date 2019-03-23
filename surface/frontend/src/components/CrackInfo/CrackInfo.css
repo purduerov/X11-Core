@@ -1,41 +1,32 @@
-.modal-wrapper {
+.modalWrapper {
+  position: fixed;
+  top: 40px;
+  right: 40px;
   background: white;
-  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2), 0 7px 20px 0 rgba(0,0,0,0.17);
-  margin: 100px auto;
-  height: auto;
-  width: 500px;
+  padding: 15px 20px 15px;
+  z-index: 1000;
 }
 
-.crack-map {
-  margin-left: 10px;
-}
-
-.modal-header {
+.modalHeader {
   height: 40px;
-  line-height: 40px;
   padding: 5px 20px;
   text-align: right;
 }
 
-.modal-header h3 {
-  color: white;
+.modalHeader h5 {
+  color: #212529;
   float: left;
   margin: 0;
   padding: 0;
 }
 
-.modal-body {
-  text-align: center;
-}
-
-.close-modal-btn {
-  color: black;
+.closeModalBtn {
   cursor: pointer;
   float: right;
-  font-size: 30px;
-  margin: 0;
+  margin: 0px;
 }
 
-.close-modal-btn:hover {
-  color: grey;
+.grid {
+  display: block;
+  margin: 0 auto;
 }
