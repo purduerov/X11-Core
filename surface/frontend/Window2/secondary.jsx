@@ -6,6 +6,11 @@ import packet from '../src/packets.json';
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
 
+import ThrusterScales from '../src/components/ThrusterScales/ThrusterScales.jsx';
+import ForceScales from '../src/components/ForceScales/ForceScales.jsx';
+import ToolView from '../src/components/ToolView/ToolView.jsx';
+import ESCinfo from '../src/components/ESCinfo/ESCinfo.jsx';
+
 /* These should be done in a component, or the js file for this window
 
 const socket = io.connect(socketHost, { transports: ['websocket'] });
@@ -57,13 +62,56 @@ class App extends React.Component {
         this.flaskcpy = this.state.dearflask;
         this.clientcpy = this.state.dearclient;
         this.confcpy = this.state.config;
+
+        this.rendTools = this.rendTools.bind(this);
+        this.changeForceScales = this.changeForceScales.bind(this);
+        this.changeThrustScales = this.changeThrustScales.bind(this);
     }
 
     componentDidMount() {
         var signals = require('./secondary.js');
         window.react = this;
+        signals(this, null);
+    }
 
-        signals(this);
+    rendTools(cinvcpy) {
+        this.confcpy.tool_scales = cinvcpy;
+
+        this.setState({
+            config: this.confcpy,
+        });
+    }
+
+    changeThrustScales(scales) {
+        this.confcpy.thruster_control = scales;
+
+        this.confcpy.thruster_control.forEach((val, i) => {
+            if (val.invert < 0) {
+                this.flaskcpy.thrusters.inverted_thrusters[i] = -Math.abs(
+                    this.flaskcpy.thrusters.inverted_thrusters[i]
+                );
+            } else if (val.invert > 0) {
+                this.flaskcpy.thrusters.inverted_thrusters[i] = Math.abs(
+                    this.flaskcpy.thrusters.inverted_thrusters[i]
+                );
+            } else {
+                console.log('Thruster inversion value is 0... why???');
+            }
+        });
+
+        this.setState({
+            config: this.confcpy,
+            dearflask: this.flaskcpy
+        });
+    }
+
+    changeForceScales(scales, inv) {
+        this.confcpy.thrust_scales = scales;
+        this.confcpy.thrust_invert = inv;
+
+        this.setState({
+            config: this.confcpy,
+        });
     }
 
     render() {
@@ -76,13 +124,43 @@ class App extends React.Component {
                     <div className="camera-width full-height center" />
                     <div className="data-width full-height">
                         <div className="data-column">
-                            <Card />
+                            <Card title="Cannon Calculator" />
+                            <Card>
+                                <ToolView
+                                    manipulator={this.state.dearflask.manipulator.power}
+                                    servo={this.state.dearflask.maincam_angle}
+                                    transmitter={this.state.dearflask.transmitter}
+                                    magnet={this.state.dearflask.magnet}
+                                    conf={this.state.config.tool_scales}
+                                    rend={this.rendTools}
+                                />
+                            </Card>
+                            <Card title="Task List View" />
                         </div>
                         <div className="data-column">
-                            <Card />
+                            <Card title="Directional Control">
+                                <ForceScales
+                                    rend={this.changeForceScales}
+                                    scales={this.state.config.thrust_scales}
+                                    invert={this.state.config.thrust_invert}
+                                />
+                            </Card>
+                            <Card title="Thruster Control">
+                                <ThrusterScales
+                                    rend={this.changeThrustScales}
+                                    scales={this.state.config.thruster_control}
+                                />
+                            </Card>
                         </div>
                         <div className="data-column">
-                            <Card />
+                            <Card title="pH and Temp readout" />
+                            <Card title="ESC readings">
+                                <ESCinfo
+                                    currents={this.state.dearclient.sensors.esc.currents}
+                                    temp={this.state.dearclient.sensors.esc.temperatures}
+                                />
+                            </Card>
+                            <Card title="Other Sensor Info" />
                         </div>
                     </div>
                 </div>
