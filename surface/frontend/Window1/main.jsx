@@ -15,6 +15,7 @@ import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
 import PacketView from '../src/components/PacketView/PacketView.jsx';
 import Timer from '../src/components/Timer/Timer.jsx';
 import CVview from '../src/components/CVview/CVview.jsx';
+import CrackInfo from '../src/components/CrackInfo/CrackInfo.jsx';
 
 const socketHost = 'ws://localhost:5001';
 
@@ -125,6 +126,12 @@ class App extends React.Component {
                         <div className="data-column">
                             <Card>
                                 <PHinfo />
+                            </Card>
+                            <Card>
+                                <CrackInfo
+                                    length={-27.6}
+                                    crackSquare="D3"
+                                />
                             </Card>
                         </div>
                         <div className="data-column">
