@@ -13,6 +13,7 @@ import ThrusterInfo from '../src/components/ThrusterInfo/ThrusterInfo.jsx';
 import Gpinfo from '../src/components/Gpinfo/Gpinfo.jsx';
 import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
 import PacketView from '../src/components/PacketView/PacketView.jsx';
+import Timer from '../src/components/Timer/Timer.jsx';
 import CVview from '../src/components/CVview/CVview.jsx';
 
 const socketHost = 'ws://localhost:5001';
@@ -148,9 +149,11 @@ class App extends React.Component {
                             <Card title="CV view window">
                                 <CVview desc={"Purdo good, Purdon't let Eric make messages"} tdist={[0.0, 0.1, 0.2, 0.4, 0.7, 0.8]} />
                             </Card>
+                            <Card title="Time">
+                                <Timer />
+                            </Card>
                         </div>
                         <div className="data-column">
-                            <Card title="IPC Timer (Master?)" />
                             <Card title="Line Graph Component" />
                         </div>
                     </div>

@@ -86,6 +86,14 @@ app.on('activate', () => {
     createWindow();
 });
 
+ipcMain.on('timer-parameters', (event, message) => {
+    for (let i = 0; i < windows.length; i++) {
+        if (windows[i] != null) {
+            windows[i].webContents.send('timer-parameters-from-main', message);
+        }
+    }
+});
+
 ipcMain.on('buddy-controls-from-win-3', (event, message) => {
     if (windows[0] != null) {
         windows[0].webContents.send('buddy-controls-to-win-1', message);

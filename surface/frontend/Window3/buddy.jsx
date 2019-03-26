@@ -5,6 +5,7 @@ import packet from '../src/packets.json';
 
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
+import Timer from '../src/components/Timer/Timer.jsx';
 
 /* These should be done in a component, or the js file for this window
 
@@ -83,7 +84,9 @@ class App extends React.Component {
                             <Card title="I see Brown CV" />
                         </div>
                         <div className="data-column">
-                            <Card title="IPC Timer (Slave?)" />
+                            <Card title="Time">
+                                <Timer />
+                            </Card>
                         </div>
                     </div>
                 </div>
