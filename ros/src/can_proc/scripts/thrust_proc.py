@@ -47,10 +47,12 @@ def message_received(msg):
     # Make list of the thruster's power in order of position
     curr_pow = []
     for i in sortedIndices:
-        curr_pow.append(int(((can_pow[i] + 100) * 256) / 201))
-    print curr_pow
+        curr_pow.append(can_pow[i]) # Just append if alread 0-255
 
     # Make 64 bit data message
+    # Ian thinks this can be sped up by bit-shifting the incoming number,
+    # and then a bit-wise | (or) comparison
+    #   ex: 0xf400 | 0x00a900 ==> 0xf4a900
     curr_data = 0
     shift = 0
     for i in range(len(curr_pow)):
@@ -61,6 +63,7 @@ def message_received(msg):
         curr_data = curr_data | curr_pow[i]
         shift += 1
         print str(hex(curr_data))
+        
     for x in range(8 - shift):
         curr_data = curr_data << 8
         print str(hex(curr_data))
