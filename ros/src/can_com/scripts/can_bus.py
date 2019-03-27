@@ -2,7 +2,7 @@
 import sys
 import can
 import rospy
-from shared_msgs.msg import msg_can
+from shared_msgs.msg import can_msg
 
 # can_bus - This is a ROS node that handles all CAN hardware communication
 #           Arguments: can_bus.py accepts one optional argument: the CAN interface name. Usually can0 or vcan0.
@@ -39,7 +39,7 @@ def bus_message_received(can_rx):
         shift -= 8
         data = data + (i << shift)
     #rospy.loginfo('Can Message Received: ' + str(can_rx.arbitration_id) + ':' + str(list(can_rx.data)))
-    can_rx = msg_can(can_rx.arbitration_id, data)
+    can_rx = can_msg(can_rx.arbitration_id, data)
     pub.publish(can_rx)
 
 if __name__ == "__main__":
@@ -51,9 +51,9 @@ if __name__ == "__main__":
         channel = sys.argv[1]
     can_bus = can.interface.Bus(channel=channel, bustype='socketcan')
 
-    pub = rospy.Publisher('can_rx', msg_can,
+    pub = rospy.Publisher('can_rx', can_msg,
             queue_size= 100)
-    sub = rospy.Subscriber('can_tx', msg_can,
+    sub = rospy.Subscriber('can_tx', can_msg,
             topic_message_received)
 
     rospy.loginfo('Started \'can_node\' on channel: ' + channel)
