@@ -2,12 +2,6 @@
 import rospy
 from shared_msgs.msg import can_msg, final_thrust_msg
 
-# Publishers to the CAN hardware transmitter
-can_pub = rospy.Publisher('can_tx', can_msg,
-    queue_size = 10)
-#esc_pub = rospy.Publisher('esc_single', esc_single_msg,
-#    queue_size = 10)
-
 #TODO Get the ID and position of the thrusters
 # Currently testing values are put in such that there are two boards each with four thrusters
 can_ids = [0, 0, 0, 0, 1, 1, 1, 1] # can IDs
@@ -22,6 +16,7 @@ def message_received(msg):
   global can_pow
 
   # Seperate final_thrust_msg
+  can_pow.clear()
   can_pow.append(msg.hfl)
   can_pow.append(msg.hfr)
   can_pow.append(msg.hbl)
@@ -50,7 +45,7 @@ def message_received(msg):
     curr_pow = []
     for i in sortedIndices:
         curr_pow.append(can_pow[i])
-    
+
     # Make 64 bit data message
     curr_data = 0
     for x in curr_pow:
@@ -59,12 +54,14 @@ def message_received(msg):
     for x in range(8 - len(curr_pow)):
         curr_data = curr_data << 8
 
+    roslog('curr_pow: ' + str(curr_pow))
+
     # Publish Message
     new_msg = can_msg()
     new_msg.id = curr_id
     new_msg.data = curr_data
     can_pub.publish(msg)
- 
+
   #TODO Translate message to esc_single_msg
   #sample_message = esc_single_msg()
   #esc_pub.publish(sample_message)
@@ -72,6 +69,13 @@ def message_received(msg):
 
 if __name__ == "__main__":
   rospy.init_node('thrust_proc')
+
+  # Publishers to the CAN hardware transmitter
+  can_pub = rospy.Publisher('can_tx', can_msg,
+      queue_size = 10)
+  #esc_pub = rospy.Publisher('esc_single', esc_single_msg,
+  #    queue_size = 10)
+
 
   # Subscribe to final_thrust and start callback function
   sub = rospy.Subscriber('final_thrust', final_thrust_msg,
