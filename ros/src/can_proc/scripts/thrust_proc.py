@@ -5,8 +5,8 @@ from shared_msgs.msg import can_msg, final_thrust_msg
 #TODO Get the ID and position of the thrusters
 # Currently testing values are put in such that there are two boards each with four thrusters
 global can_pub
-can_ids = [0, 0, 0, 0, 1, 1, 1, 1] # can IDs
-can_pos = [0, 1, 2, 3, 0, 1, 2, 3] # positions in data packet
+can_ids = [201, 201, 203, 202, 202, 203, 203, 202] # can IDs
+can_pos = [0, 3, 2, 0, 3, 1, 0, 2] # positions in data packet
 
 can_pow = [] # power of thrusters
 
@@ -47,15 +47,23 @@ def message_received(msg):
     # Make list of the thruster's power in order of position
     curr_pow = []
     for i in sortedIndices:
-        curr_pow.append(can_pow[i])
+        curr_pow.append(int(((can_pow[i] + 100) * 256) / 201))
+    print curr_pow
 
     # Make 64 bit data message
     curr_data = 0
-    for x in curr_pow:
+    shift = 0
+    for i in range(len(curr_pow)):
+        if can_pos[sortedIndices[i]] != shift:
+            curr_data = curr_data << (8 * (can_pos[sortedIndices[i]] - shift))
+            shift += can_pos[sortedIndices[i]] - shift
         curr_data = curr_data << 8
-        curr_data = curr_data | x
-    for x in range(8 - len(curr_pow)):
+        curr_data = curr_data | curr_pow[i]
+        shift += 1
+        print str(hex(curr_data))
+    for x in range(8 - shift):
         curr_data = curr_data << 8
+        print str(hex(curr_data))
 
     rospy.loginfo('curr_pow: ' + str(curr_pow))
 
