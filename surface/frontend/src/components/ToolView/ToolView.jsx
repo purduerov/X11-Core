@@ -8,7 +8,7 @@ export default class ToolView extends Component {
         super(props);
 
         this.state = { conf: props.conf };
-        this.axis = ['manipulator', 'obs_tool', 'servo', 'transmitter', 'magnet'];
+        this.axis = ['manipulator', 'servo'];
 
         this.rendTool = this.rendTool.bind(this);
         this.reRender = this.reRender.bind(this);

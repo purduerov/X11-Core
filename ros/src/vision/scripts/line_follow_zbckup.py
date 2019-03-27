@@ -5,19 +5,34 @@ from cv_bridge import CvBridge, CvBridgeError   #converts between ROS Image mess
 import std_msgs.msg
 from sensor_msgs.msg import Image
 import numpy as np
-from vectors import Vector
+from vectors import getVectorStartPoint, getThrustVect
 import math
 
 bridge = CvBridge()
 
+#Change these global variable to a class later on
+at_beginning = True
+prev_vector = []
+
 class View:
-  at_beginning = True 
-  thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
-      "blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]}
   def __init__(self,cnt = None, at_beginning = True):
     self.cnt = cnt
+    self.at_beginning = at_beginning
+    self.thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
+        "blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]}
+    self.x_cam_width = 640
+    self.y_cam_height = 360
+  def set_cnt(self,cnt):
+    self.cnt = cnt
+  def get_at_beginning(self):
+    return self.at_beginning
+  def get_thresh_rngs(self):
+    return self.thresh_rngs
+  def get_cam_dim(self):
+    return (self.x_cam_width,self.y_cam_height)
   def compare_cnts(self,ex_cnt):
     return cv2.matchShapes(self.cnt,ex_cnt,1,0.0) < .02
+    
 
 def get_largest(img):
   #grab all of the contours
@@ -133,12 +148,12 @@ def match_beginning(img,contour,sq_cnts,circ_cnts):
   return wall_md_pt, center, init_shape, view  
 
 
-def traverse_line(img_og,contour,vects):
+def traverse_line(img_og,contour,prev_vector):
   if contour.all() != -1:
     cv2.drawContours(img_og,[contour],0,(0,255,0),3)
     center_rect = draw_rect(img_og, contour)
     center_cnt = draw_center(img_og, contour)
-    #cv2.line(img_og,(center_rect[0],center_rect[1]),(center_cnt[0],center_cnt[1]), (0,0,255),1)
+    cv2.line(img_og,(center_rect[0],center_rect[1]),(center_cnt[0],center_cnt[1]), (0,0,255),1)
 
     #find moment
     if cv2.isContourConvex(contour):
@@ -147,22 +162,18 @@ def traverse_line(img_og,contour,vects):
       center = center_rect
 
     cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
+    print(center)
     
-    start_point_vector = vects.get_vector_start_point()
-    curr_thrust_vect, resultant_vect = vects.get_thrust_vect(start_point_vector, center)
+    ##### NEED A PREV VECTOR VALUE TO INITIALIZE TO.  (Could possibly default to one of the four main directions)
+    #      # The above comment is no longer necessary
+    start_point_vector = getVectorStartPoint(prev_vector)
+    curr_thrust_vect, resultant_vect = getThrustVect(prev_vector, start_point_vector, center)
 
     ####OUTPUT curr_thrust_vect, as this is the direction in which the thrusters should be pushing    MAGNITUDES ARE CURRENTLY AN ISSUE
-    '''
-    cv2.circle(img_og, (start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
-    cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(center[0],center[1]),(255,0,255),1)
-    cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(curr_thrust_vect[0] + start_point_vector[0], curr_thrust_vect[1] + start_point_vector[1]),(0,255,0),1)
-    '''
-    #purple line is missing (maybe because it goes out of bounds of view frame???  or is tired of living????)
-    cv2.line(img_og, (curr_thrust_vect[0],curr_thrust_vect[1]),(curr_thrust_vect[0] + resultant_vect[0] ,curr_thrust_vect[1] + resultant_vect[1]),(255,0,255),1)
-    cv2.line(img_og, (center[0],center[1]),(center[0] + curr_thrust_vect[0], center[1] +  curr_thrust_vect[0]),(0,255,0),1)
-
+    cv2.circle(img_og,(start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
+    cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(center[0],center[1]),(150,255,255),1)
   else:
-    curr_thrust_vect = np.multiply(vects.prev_vector,-1)
+    curr_thrust_vect = np.multiply(prev_vector,-1)
     resultant_vect = [0, 0]
 
   return curr_thrust_vect, resultant_vect
@@ -191,36 +202,38 @@ def process(data):
   
   #contouring
   contour = get_largest(img)
-  view = View(contour)
-  vects = Vector()
 
-  if (View.at_beginning):
-    print("at beginning")
+  get_ex_cnts()	
+  
+  global at_beginning
+  global prev_vector
+  if (at_beginning):
     '''
     #Code to be run only at the start
     sq_cnts, circ_cnts = get_ex_cnts()
-    wall_md_pt, center, init_shape = match_beginning(img,view.cnt,sq_cnts,circ_cnts)
+    wall_md_pt, center, init_shape = match_beginning(img,contour,sq_cnts,circ_cnts)
 
-    Vector.prev_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
+    prev_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
     '''
-    Vector.prev_vector = [1, 1]
-    wall_md_pt = [Vector.x_cam_width / 2, Vector.y_cam_height]
-    center = [Vector.x_cam_width / 2, Vector.y_cam_height / 2]
+    view = View()
+    prev_vector = [1, 1]
+    wall_md_pt = [view.x_cam_width / 2, view.y_cam_height]  #Check this to see if it works
+    center = [view.x_cam_width / 2, view.y_cam_height / 2]
 
     start_point_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
-    curr_thrust_vect, resultant_vect = vects.get_thrust_vect(wall_md_pt, center)
+    #start_point_vector = getVectorStartPoint(prev_vector)    # Not necessary anymore due to wall_md_pt output
+    curr_thrust_vect, resultant_vect = getThrustVect(prev_vector, wall_md_pt, center)
 
     #Output thrust vect as cv2 line
     cv2.circle(img_og,(start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
     cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(wall_md_pt[0],wall_md_pt[1]),(150,255,255),1)
 
-    View.at_beginning = False
+    at_beginning = False
   else:
-    curr_thrust_vect, resultant_vect = traverse_line(img_og,view.cnt,vects)
-    print("[%d, %d], [%d, %d]" % (curr_thrust_vect[0], curr_thrust_vect[1], resultant_vect[0], resultant_vect[1]))
-
+    curr_thrust_vect, resultant_vect = traverse_line(img_og,contour,prev_vector)
+  
   #Set resultant vect to prev_vector 
-  Vector.prev_vector = resultant_vect
+  prev_vector = resultant_vect
   
   #show images
   cv2.imshow("Image",img_og)
