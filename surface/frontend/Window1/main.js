@@ -28,7 +28,17 @@ module.exports = (where, socketHost) => {
 
     ipcRenderer.on('buddy-controls-to-win-1', (event, data) => {
         where.setState({
-            directions: data
+            directions: data,
+        });
+    });
+
+    ipcRenderer.on('config-from-win2', (event, data) => {
+        var flaskcpy = where.flaskcpy;
+        flaskcpy.thrusters.inverted_thrusters = data.invertThrust;
+
+        where.setState({
+            config: data.config,
+            dearflask: flaskcpy,
         });
     });
 
