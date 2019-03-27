@@ -15,14 +15,14 @@ class Complex():
     equation by it. If a inverse of the matrix A exists the pseudo-inverse(A) = inverse(A) if not then
     pseudo-inverse(A) * A can be ignored because math leaving
     thrust map matrix = pseudo-inverse(A) * desired thrust
-    For location and rotation vectors, the first four thrusters are the horizontal thrusters clockwise from the front left: 
-    first is front left, second is front right, third is back right, and fourth is back left. The last four are the vertical 
+    For location and rotation vectors, the first four thrusters are the horizontal thrusters clockwise from the front left:
+    first is front left, second is front right, third is back right, and fourth is back left. The last four are the vertical
     thrusters in the same clockwise order: front left, front right, back right, and back left.
     Outside classes use this class to find the pwm values for each thruster based on force input. The _calculate
     function returns the 8D pwm vector for the thrusters, and the _get_results function returns the force vector based
     on the pwm vector. The thrust and power output of each thruster are in the arrays thrust and power, and the total
     power can be accessed with the variable final_power.
-    This is now set up so that the number of thrusters on the ROV can be changed by solely changing the sizes of the 
+    This is now set up so that the number of thrusters on the ROV can be changed by solely changing the sizes of the
     position, COM, and rotation matrices.
     """
     # X11 Thruster locations and center of mass relative to an arbitrary(?) point converted from inches to meters
@@ -62,7 +62,7 @@ class Complex():
         # list of disabled thrusters used to determine when matrix and pseudo_inverse_matrix need to be updated
         len_list = Complex.X11_THRUSTERS.shape[1]
         self.disabled = [False for col in range(len_list)]
-        print(self.disabled)
+        #print(self.disabled)
         # The last thrust map returned by the calculate function
         self.map = None
 
@@ -127,7 +127,7 @@ class Complex():
              max_val = 1
 
         max_force = np.amax(np.abs(desired_thrust))
-        
+
         self.map *= (max_force/max_val)
 
     def _limit_power(self, initialPower):
