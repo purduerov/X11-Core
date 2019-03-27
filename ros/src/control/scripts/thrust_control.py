@@ -1,6 +1,6 @@
 #! /usr/bin/python
 import rospy
-from shared_msgs.msg import auto_control_msg, thrust_control_msg, thrust_status_msg, thrust_command_msg
+from shared_msgs.msg import auto_control_msg, final_thrust_msg, thrust_status_msg, thrust_command_msg
 from sensor_msgs.msg import Imu
 from std_msgs.msg import Float32
 import numpy as np
@@ -42,8 +42,8 @@ if __name__ == "__main__":
       thrust_command_msg, _pilot_command)
   
   #initialize publishers
-  thrust_pub = rospy.Publisher('thrust_control',
-    thrust_control_msg, queue_size=10)
+  thrust_pub = rospy.Publisher('final_thrust',
+    final_thrust_msg, queue_size=10)
   status_pub = rospy.Publisher('thrust_status',
     thrust_status_msg, queue_size=10)
 
@@ -62,22 +62,24 @@ if __name__ == "__main__":
 
     #calculate thrust
     pwm_values = c.calculate(desired_thrust_final, disabled_list, False)
-    ui8_values = np.uint8(np.asarray(pwm_values, dtype=np.float32) * 255)
     #invert relevant values
     for i in range(8):
       if inverted_list[i] == 1:
         pwm_values[i] = pwm_values[i] * (-1)
 
     #assign values to publisher messages for thurst control and status
-    tcm = thrust_control_msg()
-    tcm.hfl = ui8_values[0]
-    tcm.hfr = ui8_values[1]
-    tcm.hbl = ui8_values[2]
-    tcm.hbr = ui8_values[3]
-    tcm.vfl = ui8_values[4]
-    tcm.vfr = ui8_values[5]
-    tcm.vbl = ui8_values[6]
-    tcm.vbr = ui8_values[7]
+    tcm = final_thrust_msg()
+    # val = float of range(-1, 1)
+    # if int8: (val * 127.5) - 0.5 will give range -128 to 127
+    # if uint8: (val + 1) * 127.5 will give 0 to 255
+    tcm.hfl = int((pwm_values[0] * 127.5) - 0.5)
+    tcm.hfr = int((pwm_values[1] * 127.5) - 0.5)
+    tcm.hbl = int((pwm_values[2] * 127.5) - 0.5)
+    tcm.hbr = int((pwm_values[3] * 127.5) - 0.5)
+    tcm.vfl = int((pwm_values[4] * 127.5) - 0.5)
+    tcm.vfr = int((pwm_values[5] * 127.5) - 0.5)
+    tcm.vbl = int((pwm_values[6] * 127.5) - 0.5)
+    tcm.vbr = int((pwm_values[7] * 127.5) - 0.5)
 
     tsm = thrust_status_msg()
     tsm.status = pwm_values
