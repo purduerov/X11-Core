@@ -5,7 +5,8 @@ import socketio
 import engineio
 import eventlet
 import packet_mapper
-import atexit
+import sys
+from multiprocessing import Process, Lock
 from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg
 from sensor_msgs.msg import Imu, Temperature
 from std_msgs.msg import Float32
@@ -29,7 +30,7 @@ def close_server():
   sys.exit(1)
 
 @sio.on('dearRos')
-def accept(sid, data):
+def accept(data):
   global dearflask
   global dearclient
 
@@ -54,9 +55,11 @@ def name_received(msg):
   for name in names:
     client_mapper.map(name, getattr(msg, name), dearclient)
 
+def start_server():
+  eventlet.wsgi.server(eventlet.listen(('', 5001)), app)
+
 if __name__ == "__main__":
-  atexit.register(close_server)
-  rospy.init_node('mux_demux')
+  #rospy.init_node('mux_demux')
   #ns = rospy.get_namespace() # This should return /surface
   #
   ## Retrieve data from the ROS System
@@ -85,7 +88,8 @@ if __name__ == "__main__":
   #auto_pub = rospy.Publisher(ns +'auto_command',
   #  auto_command_msg, queue_size=10);
 
-  eventlet.wsgi.server(eventlet.listen(('', 5001)), app)
+  p = Process(target=start_server).start()
+  p.terminate()
 
   #rate = rospy.Rate(10)
   #while not rospy.is_shutdown():
