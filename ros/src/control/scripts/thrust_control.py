@@ -62,6 +62,7 @@ if __name__ == "__main__":
 
     #calculate thrust
     pwm_values = c.calculate(desired_thrust_final, disabled_list, False)
+    ui8_values = np.uint8(np.asarray(pwm_values, dtype=np.float32) * 255)
     #invert relevant values
     for i in range(8):
       if inverted_list[i] == 1:
@@ -69,14 +70,14 @@ if __name__ == "__main__":
 
     #assign values to publisher messages for thurst control and status
     tcm = thrust_control_msg()
-    tcm.hfl = np.uint8(pwm_values[0] * 255)
-    tcm.hfr = np.uint8(pwm_values[1] * 255)
-    tcm.hbl = np.uint8(pwm_values[2] * 255)
-    tcm.hbr = np.uint8(pwm_values[3] * 255)
-    tcm.vfl = np.uint8(pwm_values[4] * 255)
-    tcm.vfr = np.uint8(pwm_values[5] * 255)
-    tcm.vbl = np.uint8(pwm_values[6] * 255)
-    tcm.vbr = np.uint8(pwm_values[7] * 255)
+    tcm.hfl = ui8_values[0]
+    tcm.hfr = ui8_values[1]
+    tcm.hbl = ui8_values[2]
+    tcm.hbr = ui8_values[3]
+    tcm.vfl = ui8_values[4]
+    tcm.vfr = ui8_values[5]
+    tcm.vbl = ui8_values[6]
+    tcm.vbr = ui8_values[7]
 
     tsm = thrust_status_msg()
     tsm.status = pwm_values
