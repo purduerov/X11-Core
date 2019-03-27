@@ -17,7 +17,7 @@
                 0,
                 0
             ],
-            "disabled_thrusters": [
+            "disable_thrusters": [
                 false,
                 false,
                 false,
@@ -27,7 +27,7 @@
                 false,
                 false
             ],
-            "inverted_thrusters": [
+            "inverted": [
                 1,
                 1,
                 1,
