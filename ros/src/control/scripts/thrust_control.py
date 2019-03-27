@@ -69,14 +69,14 @@ if __name__ == "__main__":
 
     #assign values to publisher messages for thurst control and status
     tcm = thrust_control_msg()
-    tcm.hfl = pwm_values[0]
-    tcm.hfr = pwm_values[1]
-    tcm.hbl = pwm_values[2]
-    tcm.hbr = pwm_values[3]
-    tcm.vfl = pwm_values[4]
-    tcm.vfr = pwm_values[5]
-    tcm.vbl = pwm_values[6]
-    tcm.vbr = pwm_values[7]
+    tcm.hfl = np.uint8(pwm_values[0] * 255)
+    tcm.hfr = np.uint8(pwm_values[1] * 255)
+    tcm.hbl = np.uint8(pwm_values[2] * 255)
+    tcm.hbr = np.uint8(pwm_values[3] * 255)
+    tcm.vfl = np.uint8(pwm_values[4] * 255)
+    tcm.vfr = np.uint8(pwm_values[5] * 255)
+    tcm.vbl = np.uint8(pwm_values[6] * 255)
+    tcm.vbr = np.uint8(pwm_values[7] * 255)
 
     tsm = thrust_status_msg()
     tsm.status = pwm_values
