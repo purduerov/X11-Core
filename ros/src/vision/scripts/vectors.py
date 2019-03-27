@@ -1,31 +1,38 @@
 #This is a playground to use for getting our vector math correct.  
 #One of the main issues with this is that it assumes that the ROV moved exactly in the direction that it previously told it to move.  Very difficult to assume this.
+import math as m
 
-def getVectorStartPoint(prevVector):
-	xCamWidth = 640
-	yCamHeight = 360
-	origin = [0, 0]
-	prevMag = ((prevVector[0])**2 + (prevVector[1]**2))**0.5
-	unitVect = [prevVector[0]/prevMag, prevVector[1]/prevMag]
-	if(abs(unitVect[0]) > abs(unitVect[1])):
-		if (unitVect[0] > 0):
-			#This origin point is the left middle
-			startPoint = [origin[0], origin[1] + yCamHeight / 2]
-		else:
-			#This origin point is the right middle
-			startPoint = [origin[0] + xCamWidth, origin[1] + yCamHeight / 2]	
-	else:
-		if (unitVect[1] > 0):
-			#This origin point is the bottom middle
-			startPoint = [origin[0] + xCamWidth / 2, origin[1] + yCamHeight]
-		else:
-			#This origin point is the top middle
-			startPoint = [origin[0] + xCamWidth / 2, origin[1]]
-	return startPoint
+class Vector:
+	prev_vector = []
+	x_cam_width = 640
+	y_cam_height = 480
+	def __init__(self,thrust_vect = [], resultant_vect = []):
+		self.thrust_vect = thrust_vect
+		self.resultant_vect = resultant_vect
 
-def getThrustVect(prevVector, startPoint, center):
-	resultantVector = [center[0] - startPoint[0], center[1] - startPoint[1]]
-	thrustVect = [resultantVector[0] - prevVector[0], resultantVector[1] - prevVector[1]] 
-	
-	return thrustVect,resultantVector
+	def get_vector_start_point(self):
+		origin = [0, 0]
+		prev_mag = m.sqrt((self.prev_vector[0])**2 + (self.prev_vector[1]**2))
+		unit_vect = [self.prev_vector[0]/prev_mag, self.prev_vector[1]/prev_mag]
+		if(abs(unit_vect[0]) > abs(unit_vect[1])):
+			if (unit_vect[0] > 0):
+				#This origin point is the left middle
+				start_point = [origin[0], origin[1] + self.y_cam_height / 2]
+			else:
+				#This origin point is the right middle
+				start_point = [origin[0] + self.x_cam_width, origin[1] + self.y_cam_height / 2]	
+		else:
+			if (unit_vect[1] > 0):
+				#This origin point is the bottom middle
+				start_point = [origin[0] + self.x_cam_width / 2, origin[1] + self.y_cam_height]
+			else:
+				#This origin point is the top middle
+				start_point = [origin[0] + self.x_cam_width / 2, origin[1]]
+		return start_point
+
+	def get_thrust_vect(self,start_point, center):
+		self.resultant_vect = [center[0] - start_point[0], center[1] - start_point[1]]
+		self.thrust_vect = [self.resultant_vect[0] - self.prev_vector[0], self.resultant_vect[1] - self.prev_vector[1]] 
+		
+		return self.thrust_vect, self.resultant_vect
 
