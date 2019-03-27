@@ -86,12 +86,12 @@ def on_loop():
     tcm = final_thrust_msg()
     tcm.hfl = pwm_values[0]
     tcm.hfr = pwm_values[1]
-    tcm.hbl = pwm_values[2]
-    tcm.hbr = pwm_values[3]
+    tcm.hbr = pwm_values[2]
+    tcm.hbl = pwm_values[3]
     tcm.vfl = pwm_values[4]
     tcm.vfr = pwm_values[5]
-    tcm.vbl = pwm_values[6]
-    tcm.vbr = pwm_values[7]
+    tcm.vbr = pwm_values[6]
+    tcm.vbl = pwm_values[7]
 
     tsm = thrust_status_msg()
     tsm.status = pwm_values
