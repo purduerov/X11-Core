@@ -1,0 +1,11 @@
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.innerRow {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
