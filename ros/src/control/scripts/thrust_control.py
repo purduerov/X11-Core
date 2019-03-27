@@ -72,14 +72,14 @@ if __name__ == "__main__":
     # val = float of range(-1, 1)
     # if int8: (val * 127.5) - 0.5 will give range -128 to 127
     # if uint8: (val + 1) * 127.5 will give 0 to 255
-    tcm.hfl = int((pwm_values[0] * 127.5) - 0.5)
-    tcm.hfr = int((pwm_values[1] * 127.5) - 0.5)
-    tcm.hbl = int((pwm_values[2] * 127.5) - 0.5)
-    tcm.hbr = int((pwm_values[3] * 127.5) - 0.5)
-    tcm.vfl = int((pwm_values[4] * 127.5) - 0.5)
-    tcm.vfr = int((pwm_values[5] * 127.5) - 0.5)
-    tcm.vbl = int((pwm_values[6] * 127.5) - 0.5)
-    tcm.vbr = int((pwm_values[7] * 127.5) - 0.5)
+    tcm.hfl = int((pwm_values[0] + 1) * 127.5)
+    tcm.hfr = int((pwm_values[1] + 1) * 127.5)
+    tcm.hbl = int((pwm_values[2] + 1) * 127.5)
+    tcm.hbr = int((pwm_values[3] + 1) * 127.5)
+    tcm.vfl = int((pwm_values[4] + 1) * 127.5)
+    tcm.vfr = int((pwm_values[5] + 1) * 127.5)
+    tcm.vbl = int((pwm_values[6] + 1) * 127.5)
+    tcm.vbr = int((pwm_values[7] + 1) * 127.5)
 
     tsm = thrust_status_msg()
     tsm.status = pwm_values

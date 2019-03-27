@@ -47,7 +47,7 @@ def message_received(msg):
     # Make list of the thruster's power in order of position
     curr_pow = []
     for i in sortedIndices:
-        curr_pow.append(int(((can_pow[i] + 100) * 256) / 201))
+        curr_pow.append(can_pow[i]) # Just append if alread 0-255
     print curr_pow
 
     # Make 64 bit data message
@@ -61,6 +61,7 @@ def message_received(msg):
         curr_data = curr_data | curr_pow[i]
         shift += 1
         print str(hex(curr_data))
+        
     for x in range(8 - shift):
         curr_data = curr_data << 8
         print str(hex(curr_data))
