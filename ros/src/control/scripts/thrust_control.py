@@ -1,6 +1,6 @@
 #! /usr/bin/python
 import rospy
-from shared_msgs.msg import auto_control_msg, thrust_control_msg, thrust_status_msg, thrust_command_msg
+from shared_msgs.msg import auto_control_msg, final_thrust_msg, thrust_status_msg, thrust_command_msg
 from sensor_msgs.msg import Imu
 from std_msgs.msg import Float32
 import numpy as np
@@ -41,12 +41,12 @@ def _pilot_command(comm):
 
 def on_loop():
     #check to see if you have new data
-    if(!(new_pilot_data and new_auto_data) and !is_timed_out):
+    if(not (new_pilot_data and new_auto_data) and not is_timed_out):
         return
     #reset flags and execute
     new_auto_data = False
     new_pilot_data = False
-    if(!is_timed_out):
+    if(not is_timed_out):
         #reset the watchdog timer
         curr_time = rospy.get_rostime()
         last_packet_time = curr_time.secs + curr_time.secs * 10 ** -9;
@@ -68,7 +68,7 @@ def on_loop():
         pwm_values[i] = pwm_values[i] * (-1)
 
     #assign values to publisher messages for thurst control and status
-    tcm = thrust_control_msg()
+    tcm = final_thrust_msg()
     tcm.hfl = pwm_values[0]
     tcm.hfr = pwm_values[1]
     tcm.hbl = pwm_values[2]
@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
   #initialize publishers
   thrust_pub = rospy.Publisher('thrust_control',
-    thrust_control_msg, queue_size=10)
+    final_thrust_msg, queue_size=10)
   status_pub = rospy.Publisher('thrust_status',
     thrust_status_msg, queue_size=10)
 
