@@ -63,7 +63,7 @@ if __name__ == "__main__":
   #ns = rospy.get_namespace() # This should return /surface
   #
   ## Retrieve data from the ROS System
-  #esc_sub = rospy.Subscriber('/rov/esc_single', 
+  #esc_sub = rospy.Subscriber('/rov/esc_single',
   #    esc_single_msg, name_received)
 
   #status_sub = rospy.Subscriber('/rov/thrust_status', thrust_status_msg,
