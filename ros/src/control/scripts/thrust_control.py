@@ -19,7 +19,7 @@ is_timed_out = False
 new_auto_data = False
 new_pilot_data = False
 # timout in ms
-WATCHDOG_TIMEOUT = 10000
+WATCHDOG_TIMEOUT = 10
 
 def _auto_command(msg):
   global desired_a #desired thrust from automatic control
@@ -61,7 +61,7 @@ def on_loop():
     if(not is_timed_out):
         #reset the watchdog timer
         curr_time = rospy.get_rostime()
-        last_packet_time = curr_time.secs + curr_time.secs * 10 ** -9
+        last_packet_time = curr_time.secs + curr_time.nsecs * 10 ** -9
     for i in range(6):
       if(is_timed_out):
           desired_thrust_final[i] = 0.0
@@ -78,9 +78,6 @@ def on_loop():
     for i in range(8):
       if inverted_list[i] == 1:
         pwm_values[i] = pwm_values[i] * (-1)
-
-    #type change for final_thrust_msg
-    pwm_values = [int(v * 100) for v in pwm_values]
 
     #assign values to publisher messages for thurst control and status
     tcm = final_thrust_msg()
@@ -107,7 +104,7 @@ if __name__ == "__main__":
 
   #initialize node and rate
   rospy.init_node('thrust_control')
-  rate = rospy.Rate(0.1) #10 hz
+  rate = rospy.Rate(10) #10 hz
 
   #initialize subscribers
   auto_sub = rospy.Subscriber('auto_control',
@@ -127,18 +124,16 @@ if __name__ == "__main__":
 
   while not rospy.is_shutdown():
     compare_time = rospy.get_rostime()
-    compare_time = compare_time.secs + compare_time.secs * 10 ** -9
+    compare_time = compare_time.secs + compare_time.nsecs * 10 ** -9
+    print str(compare_time) + " : "  + str(last_packet_time)
     if(compare_time - last_packet_time > WATCHDOG_TIMEOUT):
         is_timed_out = True
     if(is_timed_out):
-        print last_packet_time
         #global disabled_list
         #disabled_list = [True, True, True, True, True, True, True, True]
         on_loop()
         curr_time = rospy.get_rostime()
-        last_packet_time = curr_time.secs + curr_time.secs * 10 ** -9
+        last_packet_time = curr_time.secs + curr_time.nsecs * 10 ** -9
         is_timed_out = False
-    #ask about syntax
-
 
     rate.sleep()
