@@ -2,6 +2,7 @@
 import rospy
 import json
 import socketio
+import engineio
 import eventlet
 import packet_mapper
 import atexit
