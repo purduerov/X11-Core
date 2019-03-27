@@ -4,6 +4,7 @@ from shared_msgs.msg import can_msg, final_thrust_msg
 
 #TODO Get the ID and position of the thrusters
 # Currently testing values are put in such that there are two boards each with four thrusters
+global can_pub
 can_ids = [0, 0, 0, 0, 1, 1, 1, 1] # can IDs
 can_pos = [0, 1, 2, 3, 0, 1, 2, 3] # positions in data packet
 
@@ -15,8 +16,10 @@ def message_received(msg):
   global can_pos
   global can_pow
 
+  rospy.loginfo('message received')
+
   # Seperate final_thrust_msg
-  can_pow.clear()
+  del can_pow[:]
   can_pow.append(msg.hfl)
   can_pow.append(msg.hfr)
   can_pow.append(msg.hbl)
@@ -54,13 +57,13 @@ def message_received(msg):
     for x in range(8 - len(curr_pow)):
         curr_data = curr_data << 8
 
-    roslog('curr_pow: ' + str(curr_pow))
+    rospy.loginfo('curr_pow: ' + str(curr_pow))
 
     # Publish Message
     new_msg = can_msg()
     new_msg.id = curr_id
     new_msg.data = curr_data
-    can_pub.publish(msg)
+    can_pub.publish(new_msg)
 
   #TODO Translate message to esc_single_msg
   #sample_message = esc_single_msg()
@@ -81,5 +84,8 @@ if __name__ == "__main__":
   sub = rospy.Subscriber('final_thrust', final_thrust_msg,
       message_received)
 
+  rospy.loginfo('thrust_proc started')
+
   # Keeps from exiting until node is stopped
-  rospy.spin()
+  while not rospy.is_shutdown():
+    rospy.spin()
