@@ -5,10 +5,7 @@ import smbus
 from BNO055 import BNO055
 from TYS01 import TSYS01
 from ms5837 import MS5837
-from shared_msgs.msg import imu_msg
-from shared_msgs.msg import temp_msg
-from shared_msgs.msg import depth_msg
-
+from shared_msgs.msg import imu_msg, temp_msg, depth_msg
 IMU_PUB_RATE = 50
 
 def message_received(msg):
@@ -28,7 +25,7 @@ if __name__ == "__main__":
     except:
         #add mock classes to return 0 and continue and alert pilots
         pass
-    temp_sleep = 0;
+    temp_sens.init()
     while not rospy.is_shutdown():
         # using imu rate to poll the temp sensor as well beacuse IMU updates faster
         if imu_sens.update():

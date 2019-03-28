@@ -28,7 +28,6 @@ class TSYS01(object):
             print("Available busses are listed as /dev/i2c*")
             self._bus = None
             raise I2CERROR('failed to start TYS01')
-        init()
 
 
     def init(self):
