@@ -1,0 +1,101 @@
+{
+    "axis": {
+        "ABS_HAT0X": {
+            "max": 1, 
+            "min": -1, 
+            "val": 0
+        }, 
+        "ABS_HAT0Y": {
+            "max": 1, 
+            "min": -1, 
+            "val": 0
+        }, 
+        "ABS_RX": {
+            "max": 32767, 
+            "min": -32768, 
+            "val": 330
+        }, 
+        "ABS_RY": {
+            "max": 32767, 
+            "min": -32768, 
+            "val": -1
+        }, 
+        "ABS_RZ": {
+            "max": 1023, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "ABS_X": {
+            "max": 32767, 
+            "min": -32768, 
+            "val": 0
+        }, 
+        "ABS_Y": {
+            "max": 32767, 
+            "min": -32768, 
+            "val": -1
+        }, 
+        "ABS_Z": {
+            "max": 1023, 
+            "min": 0, 
+            "val": 0
+        }
+    }, 
+    "bttn": {
+        "BTN_EAST": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "BTN_MODE": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "BTN_NORTH": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "BTN_SELECT": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "BTN_SOUTH": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "BTN_START": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "BTN_THUMBL": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "BTN_THUMBR": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "BTN_TL": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "BTN_TR": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }, 
+        "BTN_WEST": {
+            "max": 1, 
+            "min": 0, 
+            "val": 0
+        }
+    }
+}
