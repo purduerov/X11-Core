@@ -11,9 +11,13 @@ module.exports = (where, socketHost) => {
 
     // upon new data, save it locally
     socket.on('dearclient-response', (data) => { // Updates the data sent back from the server
+
+        ipcRenderer.send('update-info-to', data); //send data to window 2
+
         where.setState({
             dearclient: data,
         });
+
     });
 
     // send new data
@@ -31,6 +35,14 @@ module.exports = (where, socketHost) => {
             directions: data
         });
     });
+    /*
+    this.bigCopy = where.dearclient;
+    setInterval(() => { //update window 2 info
+      where.setState({
+        clientStuff = this.bigCopy
+      });
+      ipcRenderer.send('update-info-to', this.bigCopy)
+    }, 50); */
 
 
     // updating the gamepad

@@ -168,6 +168,11 @@ class App extends React.Component {
                                 />
                             </Card>
                             <Card>
+                              <ShowObject
+                                    obj={this.state.dearclient.sensors.imu}
+                              />
+                            </Card>
+                            <Card>
                                 <ThrusterInfo
                                     thrusters={this.state.dearclient.thrusters}
                                     disabled={this.state.dearflask.thrusters.disabled_thrusters}

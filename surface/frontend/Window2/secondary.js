@@ -8,5 +8,10 @@ module.exports = (where, socketHost) => {
     /*
         IPC Connection Section
     */
-
+    ipcRenderer.on('update-info-from', (event, data) => {
+      where.setState({
+        where.dearclient: data
+      });
+    });
+    
 };

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styles from './ShowObject.css';
+import PropTypes from "prop-types";
 
 let that;
 
@@ -14,6 +15,7 @@ export default class ShowObject extends Component {
         this.state = { obj: props.obj };
 
         this.rendObj = this.rendObj.bind(this);
+        this.rendChild = this.rendChild.bind(this);
 
         that = this;
     }

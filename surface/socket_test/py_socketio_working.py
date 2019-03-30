@@ -5,6 +5,7 @@ import json
 
 with open('../frontend/src/packets.json') as json_file:
     base_packet = json.load(json_file)
+    base_packet["dearclient"]["sensor"]["imu"]["acceleration"] = 1
 
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={
@@ -18,6 +19,10 @@ def connect(sid, environ):
 @sio.on('dearRos')
 def dearflask(sid, data):
     print('message ', data)
+
+    
+    base_packet["dearclient"]["sensor"]["imu"]["acceleration"] = random.random()
+
     print(base_packet["dearclient"])
     print("\n")
     sio.emit('dearclient-response', base_packet["dearclient"])
