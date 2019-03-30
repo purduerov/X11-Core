@@ -138,7 +138,6 @@ def traverse_line(img_og,contour,vects):
     cv2.drawContours(img_og,[contour],0,(0,255,0),3)
     center_rect = draw_rect(img_og, contour)
     center_cnt = draw_center(img_og, contour)
-    #cv2.line(img_og,(center_rect[0],center_rect[1]),(center_cnt[0],center_cnt[1]), (0,0,255),1)
 
     #find moment
     if cv2.isContourConvex(contour):
@@ -193,7 +192,7 @@ def process(data):
   view = View(contour)
   vects = Vector()
 
-  if (View.at_beginning):
+  if View.at_beginning:
     print("at beginning")
     '''
     #Code to be run only at the start
