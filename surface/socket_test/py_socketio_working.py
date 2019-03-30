@@ -6,7 +6,6 @@ import random
 
 with open('../frontend/src/packets.json') as json_file:
     base_packet = json.load(json_file)
-    base_packet["dearclient"]["manipulator"]["power"] = 1
 
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={

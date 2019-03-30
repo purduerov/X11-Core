@@ -10,6 +10,11 @@ module.exports = (where, socketHost) => {
     /*
         IPC Connection Section
     */
+    ipcRenderer.on('update-info-from', (event, data) => {
+      where.setState({
+        dearclient: data
+      });
+    });
 
     /*
       Keyboard controls section
