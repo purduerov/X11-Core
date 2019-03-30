@@ -1,7 +1,4 @@
 <launch>
-    <group ns="surface">
-        <node name="mux_demux" pkg="mux_demux" type="mux_demux.py" />
-    </group>
     <group ns="rov">
         <node name="can_node" pkg="can_com" type="can_bus.py"/>
         <node name="thrust_proc" pkg="can_proc" type="thrust_proc.py"/>

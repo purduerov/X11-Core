@@ -50,7 +50,7 @@ add_message_files(
    auto_command_msg.msg
    pressure_msg.msg
    thrust_command_msg.msg
-   thrust_control_msg.msg
+   final_thrust_msg.msg
    can_msg.msg
    i2c_msg.msg
    thrust_status_msg.msg
