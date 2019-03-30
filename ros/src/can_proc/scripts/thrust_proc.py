@@ -5,7 +5,7 @@ from shared_msgs.msg import can_msg, final_thrust_msg
 #TODO Get the ID and position of the thrusters
 # Currently testing values are put in such that there are two boards each with four thrusters
 global can_pub
-can_ids = [201, 201, 203, 202, 202, 203, 203, 202] # can IDs
+can_ids = [513, 513, 515, 514, 514, 515, 515, 514] # can IDs
 can_pos = [0, 3, 2, 0, 3, 1, 0, 2] # positions in data packet
 
 can_pow = [] # power of thrusters
@@ -63,7 +63,7 @@ def message_received(msg):
         curr_data = curr_data | curr_pow[i]
         shift += 1
         print str(hex(curr_data))
-        
+
     for x in range(8 - shift):
         curr_data = curr_data << 8
         print str(hex(curr_data))
