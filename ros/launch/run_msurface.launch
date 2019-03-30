@@ -1,0 +1,6 @@
+<launch>
+    <group ns="surface">
+        <node name="mock_gp" pkg="mux_demux" type="driver_mocker.py" />
+        <node name="mock_mux" pkg="mux_demux" type="mock_propigate.py" />
+    </group>
+</launch>
