@@ -32,26 +32,26 @@ if __name__ == "__main__":
         esc_single_msg, esc_single_received)
 
     status_sub = rospy.Subscriber('/rov/thrust_status',thrust_status_msg,
-        thrust_status_received);
+        thrust_status_received)
 
     temp_sub = rospy.Subscriber('/rov/temp', Temperature,
-        temp_received);
+        temp_received)
 
     imu_sub = rospy.Subscriber('/rov/imu', Imu,
-        imu_received);
+        imu_received)
 
     ph_sub = rospy.Subscriber('/rov/ph',Float32,
-        ph_received);
+        ph_received)
 
     depth_sub = rospy.Subscriber('/rov/depth', Float32,
-        depth_received);
+        depth_received)
 
     # Publishers out onto the ROS System
     thrust_pub = rospy.Publisher(ns + 'thrust_mock',
-        thrust_command_msg, queue_size=10);
+        thrust_command_msg, queue_size=10)
 
     auto_pub= rospy.Publisher(ns +'auto_command',
-        auto_command_msg, queue_size=10);
+        auto_command_msg, queue_size=10)
     
     out = thrust_command_msg()
     
