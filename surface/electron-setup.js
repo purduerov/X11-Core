@@ -96,4 +96,7 @@ ipcMain.on('update-info-to', (event, message) => {
   if (windows[1] != null) {
       windows[1].webContents.send('update-info-from', message);
   }
+  if (windows[2] != null) {
+      windows[2].webContents.send('update-info-from', message);
+  }
 })

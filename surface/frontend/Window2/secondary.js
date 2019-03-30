@@ -10,8 +10,8 @@ module.exports = (where, socketHost) => {
     */
     ipcRenderer.on('update-info-from', (event, data) => {
       where.setState({
-        where.dearclient: data
+        dearclient: data
       });
     });
-    
+
 };

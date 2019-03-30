@@ -14,6 +14,12 @@ module.exports = (where, socketHost) => {
     /*
       Keyboard controls section
     */
-   
+
+    ipcRenderer.on('update-info-from', (event, data) => {
+      where.setState({
+        dearclient: data
+      });
+    });
+
     var buddy = new keyBind(where);
 }; // end export
