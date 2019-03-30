@@ -2,9 +2,11 @@ import engineio
 import eventlet
 import socketio
 import json
+import random
 
 with open('../frontend/src/packets.json') as json_file:
     base_packet = json.load(json_file)
+    base_packet["dearclient"]["manipulator"]["power"] = 1
 
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={
@@ -17,6 +19,9 @@ def connect(sid, environ):
 
 @sio.on('dearRos')
 def dearflask(sid, data):
+    # base_packet["dearclient"]["manipulator"]["power"] = base_packet["dearclient"]["manipulator"]["power"] + 1
+    base_packet["dearclient"]["sensors"]["esc"]["temperatures"][0] += 1
+    base_packet["dearclient"]["sensors"]["esc"]["currents"][0] += 1
     print('message ', data)
     print(base_packet["dearclient"])
     print("\n")
