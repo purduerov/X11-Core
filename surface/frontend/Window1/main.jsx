@@ -124,8 +124,6 @@ class App extends React.Component {
                     </div>
                     <div className="data-width full-height">
                         <div className="data-column">
-                        </div>
-                        <div className="data-column">
                             <Card>
                                 <PHinfo />
                             </Card>
@@ -135,6 +133,7 @@ class App extends React.Component {
                                     crackSquare="D3"
                                 />
                             </Card>
+                            <Card title="Line Graph Component" />
                         </div>
                         <div className="data-column">
                             <Card>
@@ -169,9 +168,6 @@ class App extends React.Component {
                             <Card title="Time">
                                 <Timer />
                             </Card>
-                        </div>
-                        <div className="data-column">
-                            <Card title="Line Graph Component" />
                         </div>
                     </div>
                 </div>
