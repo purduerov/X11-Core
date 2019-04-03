@@ -3,7 +3,7 @@ var keyBind = require('./keyBind.js');
 
 
 module.exports = (where, socketHost) => {
-    var buddy = None;
+    var buddy = null;
     /*
         Socket Connection Section
     */
