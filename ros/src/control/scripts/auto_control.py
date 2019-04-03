@@ -68,8 +68,9 @@ if __name__ == "__main__":
   rospy.init_node('auto_control')
 
   #receive data 
-  imu_sub = rospy.Subscriber('imu', Imu,
-      imu_received)
+  #TODO: UNCOMMENT THIS; COMMENTED BECAUSE NOT USING STANDARD IMU MSG FILE SO Imu WILL CAUSE AN ERROR
+  #imu_sub = rospy.Subscriber('imu', Imu,
+  #    imu_received)
   depth_sub = rospy.Subscriber('depth', Float32,
       depth_received)
   command_sub = rospy.Subscriber('/surface/auto_command',
