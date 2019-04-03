@@ -10,6 +10,7 @@ import ThrusterScales from '../src/components/ThrusterScales/ThrusterScales.jsx'
 import ForceScales from '../src/components/ForceScales/ForceScales.jsx';
 import ToolView from '../src/components/ToolView/ToolView.jsx';
 import ESCinfo from '../src/components/ESCinfo/ESCinfo.jsx';
+import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
 
 /* These should be done in a component, or the js file for this window
 
@@ -136,6 +137,9 @@ class App extends React.Component {
                                 />
                             </Card>
                             <Card title="Task List View" />
+                            <Card>
+                                <ShowObject obj={this.state.dearclient.sensors.esc.temperatures} />
+                            </Card>
                         </div>
                         <div className="data-column">
                             <Card title="Directional Control">

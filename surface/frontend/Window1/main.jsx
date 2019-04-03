@@ -133,12 +133,18 @@ class App extends React.Component {
                                     crackSquare="D3"
                                 />
                             </Card>
+                            <Card title="Line Graph Component" />
                         </div>
                         <div className="data-column">
                             <Card>
                                 <FreezeGp
                                     maybeFreeze={this.state.freeze}
                                     rend={this.setFreeze}
+                                />
+                            </Card>
+                            <Card>
+                                <ShowObject
+                                    obj={this.state.dearclient.sensors.imu}
                                 />
                             </Card>
                             <Card>
@@ -152,6 +158,9 @@ class App extends React.Component {
                             <Card title="Desired Force Vector" />
                         </div>
                         <div className="data-column">
+                            <Card>
+                                <ShowObject obj={this.state.dearclient.sensors.esc.temperatures} />
+                            </Card>
                             <Card title="Computer Vision Stuff" />
                             <Card title="CV view window">
                                 <CVview desc={"Purdo good, Purdon't let Eric make messages"} tdist={[0.0, 0.1, 0.2, 0.4, 0.7, 0.8]} />
@@ -159,9 +168,6 @@ class App extends React.Component {
                             <Card title="Time">
                                 <Timer />
                             </Card>
-                        </div>
-                        <div className="data-column">
-                            <Card title="Line Graph Component" />
                         </div>
                     </div>
                 </div>

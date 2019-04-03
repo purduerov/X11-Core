@@ -1,4 +1,7 @@
 const { shell, app, ipcRenderer } = window.require('electron');
+const net = window.require('net');
+
+const base_packet = require("../src/packets.json");
 
 module.exports = (where, socketHost) => {
     /*
@@ -7,22 +10,19 @@ module.exports = (where, socketHost) => {
     const socket = io.connect(socketHost, { transports: ['websocket'] });
 
     // upon new data, save it locally
-    socket.on('dearclient', (data) => { // Updates the data sent back from the server
-        where.clientcpy = data;
+    socket.on('dearclient-response', (data) => { // Updates the data sent back from the server
+
+        ipcRenderer.send('update-info-to', data); //send data to window 2
 
         where.setState({
-            dearclient: this.clientcpy,
+            dearclient: data,
         });
-    });
 
-    // request new data
-    setInterval(() => {
-        socket.emit('dearclient');
-    }, 50);
+    });
 
     // send new data
     setInterval(() => { // Sends a message down to the server with updated surface info
-        socket.emit('dearflask', where.state.dearflask);
+        socket.emit('dearRos', where.state.dearflask);
     }, 50);
 
 
@@ -45,6 +45,14 @@ module.exports = (where, socketHost) => {
             dearflask: flaskcpy,
         });
     });
+    /*
+    this.bigCopy = where.dearclient;
+    setInterval(() => { //update window 2 info
+      where.setState({
+        clientStuff = this.bigCopy
+      });
+      ipcRenderer.send('update-info-to', this.bigCopy)
+    }, 50); */
 
 
     // updating the gamepad
