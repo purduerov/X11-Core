@@ -1,4 +1,5 @@
 #! /usr/bin/python
+#https://wiki.ros.org/rospy_message_converter ??
 import shared_msgs.msg
 import json
 import os
@@ -27,7 +28,8 @@ class packet_mapper:
 
     # update packet[path] = value
     def map(self, var, value, packet):
-        path = self.topic_paths[var]
+        path = self._build_path(packet, var)
+        #path = self.topic_paths[var]
         split = path.split('.')
         p = packet
         for e in split[:-1]:
@@ -38,7 +40,8 @@ class packet_mapper:
     def pam(self, msg, packet):
         names = self.get_msg_vars(msg)
         for name in names:
-            path = self.topic_paths[name]
+            path = self._build_path(packet, name)
+            #path = self.topic_paths[name]
             split = path.split('.')
             p = packet
             for e in split[:-1]:
@@ -47,9 +50,12 @@ class packet_mapper:
 
     def get_msg_vars(self, msg):
         names = []
-        for key,value in getattr(shared_msgs.msg, type(msg).__name__).__dict__.iteritems():
-            if type(value).__name__ == 'member_descriptor':
-                names.append(key)
+        #for key,value in getattr(shared_msgs.msg, type(msg).__name__).__dict__.iteritems():
+        #    if type(value).__name__ == 'member_descriptor':
+        #        names.append(key)
+        #return names
+        for name, var_type in zip(msg.__slots__, msg._slot_types):
+            names.append(name)
         return names
 
     def _build_path(self, d, name):
@@ -79,14 +85,16 @@ if __name__ == "__main__":
     #This code gives you a list of the names of the variables in a message object
 
     msg = shared_msgs.msg.thrust_command_msg()
-    print msg
     print
-    print packet
+    lol = zip(msg.__slots__, msg._slot_types)
+    print lol
+    #print
+    #print packet
 
-    names = mapper.get_msg_vars(msg)
-    for name in names:
-      mapper.map(name, getattr(msg, name), packet)
-    print packet
+    #names = mapper.get_msg_vars(msg)
+    #for name in names:
+    #  mapper.map(name, getattr(msg, name), packet)
+    #print packet
 
     #packet = { 'lol': 1, 'meme': { 'id':'1', 'lol': '3', 'data': '2' } }
 
