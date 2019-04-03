@@ -10,10 +10,21 @@ module.exports = (where, socketHost) => {
     /*
         IPC Connection Section
     */
+    ipcRenderer.on('update-info-from', (event, data) => {
+      where.setState({
+        dearclient: data
+      });
+    });
 
     /*
       Keyboard controls section
     */
-   
+
+    ipcRenderer.on('update-info-from', (event, data) => {
+      where.setState({
+        dearclient: data
+      });
+    });
+
     var buddy = new keyBind(where);
 }; // end export

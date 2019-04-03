@@ -124,6 +124,8 @@ class App extends React.Component {
                     </div>
                     <div className="data-width full-height">
                         <div className="data-column">
+                        </div>
+                        <div className="data-column">
                             <Card>
                                 <PHinfo />
                             </Card>
@@ -142,6 +144,11 @@ class App extends React.Component {
                                 />
                             </Card>
                             <Card>
+                                <ShowObject
+                                    obj={this.state.dearclient.sensors.imu}
+                                />
+                            </Card>
+                            <Card>
                                 <ThrusterInfo
                                     thrusters={this.state.dearclient.thrusters}
                                     disabled={this.state.dearflask.thrusters.disabled_thrusters}
@@ -152,6 +159,9 @@ class App extends React.Component {
                             <Card title="Desired Force Vector" />
                         </div>
                         <div className="data-column">
+                            <Card>
+                                <ShowObject obj={this.state.dearclient.sensors.esc.temperatures} />
+                            </Card>
                             <Card title="Computer Vision Stuff" />
                             <Card title="CV view window">
                                 <CVview desc={"Purdo good, Purdon't let Eric make messages"} tdist={[0.0, 0.1, 0.2, 0.4, 0.7, 0.8]} />

@@ -105,3 +105,12 @@ ipcMain.on('config-from-win2', (event, configs) => {
         windows[0].webContents.send('config-from-win2', configs);
     }
 });
+
+ipcMain.on('update-info-to', (event, message) => {
+    if (windows[1] != null) {
+        windows[1].webContents.send('update-info-from', message);
+    }
+    if (windows[2] != null) {
+        windows[2].webContents.send('update-info-from', message);
+    }
+});
