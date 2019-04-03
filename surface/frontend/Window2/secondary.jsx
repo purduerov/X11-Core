@@ -10,6 +10,7 @@ import ThrusterScales from '../src/components/ThrusterScales/ThrusterScales.jsx'
 import ForceScales from '../src/components/ForceScales/ForceScales.jsx';
 import ToolView from '../src/components/ToolView/ToolView.jsx';
 import ESCinfo from '../src/components/ESCinfo/ESCinfo.jsx';
+import CalculateCannon from '../src/components/CalculateCannon/CalculateCannon.jsx';
 
 /* These should be done in a component, or the js file for this window
 
@@ -81,7 +82,9 @@ class App extends React.Component {
                     <div className="camera-width full-height center" />
                     <div className="data-width full-height">
                         <div className="data-column">
-                            <Card title="Cannon Calculator" />
+                            <Card title="Cannon Calculator">
+                              <CalculateCannon />
+                            </Card>
                             <Card>
                                 <ToolView
                                     manipulator={this.state.dearflask.manipulator.power}

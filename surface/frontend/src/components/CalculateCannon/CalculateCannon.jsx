@@ -1,7 +1,5 @@
-import React, { Componenet } from 'react';
-import styles from '.CalculateCannon.css';
-const { ipcRenderer } = window.require('electron');
-const math = require('mathjs');
+import React, { Component } from 'react';
+import styles from './CalculateCannon.css';
 
 export default class CalculateCannon extends Component {
   constructor(props) {
@@ -21,14 +19,15 @@ export default class CalculateCannon extends Component {
       var r2 = Number($("#boreRadius").val());
       var r3 = Number($("#wideRadius").val());
       var height = Number($("#length").val());
-
-      var volume = (Math.PI / 3) * (Math.pow(r1,2) + r1 * r3 + Math.pow(r3,2)) * height;
-      volume -= Math.PI * Math.pow(r2,2) * height;
+      var pi = 3.14159265359;
+      var volume = (pi / 3) * (r1 * r1 + r1 * r3 + r3 * r3) * height;
+      volume -= pi * r2 * r2 * height;
+      volume = volume.toFixed(2);
 
       this.setState({
           calc: false
       }, () => {
-          $("#cannonResults").text("The volume is approximately "+data.mag.toFixed(3)+" cm^3");
+          $("#cannonResults").text("The volume is approximately "+volume+" cm^3");
       });
     }
   }
@@ -46,14 +45,18 @@ export default class CalculateCannon extends Component {
       <div className={styles.container}>
         {this.state.calc && <div id="cannonCalcStart">
           <div className={styles.innerRow}>
-            <p>Open end radius</p>
-            <input id="openRadius" defaultValue="6 inches" />
-            <p>Bore Radius</p>
-            <input id="boreRadius" defaultValue="6 inches" />
-            <p>Wide/Closed end radius</p>
-            <input id="wideRadius" defaultValue="thicc as shit" />
-            <p>Length</p>
-            <input id="length" defaultValue="3 inches :(" />
+            <div className={styles.halfLeft} >
+              <p>Open end radius r1 (cm)</p>
+              <input id="openRadius" defaultValue="5.3" />
+              <p>Bore Radius r2 (cm)</p>
+              <input id="boreRadius" defaultValue="2.8" />
+            </div>
+            <div className={styles.halfRight} >
+              <p>Wide/Closed end radius r3 (cm)</p>
+              <input id="wideRadius" defaultValue="7.7" />
+              <p>Length (cm)</p>
+              <input id="length" defaultValue="46" />
+            </div>
           </div>
           <button onClick={this.calcCannon} >Calculate Cannon Volume</button>
         </div>}
