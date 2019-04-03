@@ -79,7 +79,7 @@ def on_loop():
       if inverted_list[i] == 1:
         pwm_values[i] = pwm_values[i] * (-1)
 
-    #assign values to publisher messages for thurst control and status
+    #assign values to publisher messages for thrust control and status
     tcm = final_thrust_msg()
     tcm.hfl = pwm_values[0]
     tcm.hfr = pwm_values[1]
