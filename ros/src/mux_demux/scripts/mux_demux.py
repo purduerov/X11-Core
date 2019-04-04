@@ -8,7 +8,6 @@ import packet_mapper
 import sys
 import copy
 #from threading import Thread, Lock
-from threading import Lock
 import thread
 from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg
 from sensor_msgs.msg import Imu, Temperature
@@ -24,7 +23,7 @@ client_mapper = packet_mapper.packet_mapper(dearclient)
 thrust_pub = None
 auto_pub = None
 
-lock = Lock()
+lock = thread.allocate_lock()
 kill = None
 
 sio = socketio.Server()
@@ -60,9 +59,11 @@ def name_received(msg):
   if not kill:
     lock.acquire()
 
+    print(dearclient)
     names = client_mapper.get_msg_vars(msg)
     for name in names:
       client_mapper.map(name, getattr(msg, name), dearclient)
+    print
     print(dearclient)
 
     lock.release()
