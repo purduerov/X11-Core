@@ -7,7 +7,9 @@ import eventlet
 import packet_mapper
 import sys
 import copy
-from threading import Thread, Lock
+#from threading import Thread, Lock
+from threading import Lock
+import thread
 from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg
 from sensor_msgs.msg import Imu, Temperature
 from std_msgs.msg import Float32
@@ -26,16 +28,13 @@ lock = Lock()
 kill = None
 
 sio = socketio.Server()
-app = socketio.WSGIApp(sio, static_files={
-  '/': {'content_type': 'text/html', 'filename': 'index.html'}
-})
 
 @sio.on('dearRos')
 def accept(data):
   global dearflask
   global dearclient
 
-  while not kill:
+  if not kill:
     lock.acquire()
 
     dearflask = copy.deepcopy(data)
@@ -58,7 +57,7 @@ def accept(data):
 def name_received(msg):
   global dearclient
 
-  while not kill:
+  if not kill:
     lock.acquire()
 
     names = client_mapper.get_msg_vars(msg)
@@ -68,7 +67,11 @@ def name_received(msg):
 
     lock.release()
 
-def start_server():
+def start_server(lol, meme, yeet):
+  app = socketio.WSGIApp(sio, static_files={
+    '/': {'content_type': 'text/html', 'filename': 'index.html'}
+  })
+
   eventlet.wsgi.server(eventlet.listen(('', 5001)), app)
 
 if __name__ == "__main__":
@@ -101,12 +104,11 @@ if __name__ == "__main__":
   auto_pub = rospy.Publisher(ns +'auto_command',
     auto_command_msg, queue_size=10);
 
-  t = Thread(target=start_server, args=())
-  t.start()
+  t = thread.start_new_thread(start_server, (1,2,3))
+  print t
 
   while not rospy.is_shutdown():
     pass
 
   kill = True
-
-  t.join()
+  exit()

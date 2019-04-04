@@ -69,25 +69,26 @@ class packet_mapper:
         return ""
 
 if __name__ == "__main__":
-    with open ('../../../../surface/frontend/src/packets.json') as json_data:
-      packet = json.load(json_data,)
-    #packet = { 'lol': 1, 'meme': { 'id':'1', 'lol': '3', 'data': '2' } }
-    json = { 'one' : { 'two':2, 'three':3}}
+    #with open ('../../../../surface/frontend/src/packets.json') as json_data:
+    #  packet = json.load(json_data,)
+    packet = { 'lol': 1, 'meme': { 'id':'1', 'asdf': '3', 'data': '2' } }
+    #json = { 'one' : { 'two':2, 'three':3}}
     mapper = packet_mapper(packet)
 
     #for data in json['one']:
     #  print data
 
     # This code changes variables within a packet
-    #mapper.map('addr', '6581', packet)
+    mapper.map('lol', '6581', packet)
+    print packet
     #mapper.map('data', '0', packet)
 
     #This code gives you a list of the names of the variables in a message object
 
-    msg = shared_msgs.msg.thrust_command_msg()
-    print
-    lol = zip(msg.__slots__, msg._slot_types)
-    print lol
+    #msg = shared_msgs.msg.thrust_command_msg()
+    #print
+    #lol = zip(msg.__slots__, msg._slot_types)
+    #print lol
     #print
     #print packet
 
