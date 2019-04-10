@@ -17,14 +17,14 @@ class packet_mapper:
                 if type(value).__name__ == 'member_descriptor':
                     names.append(key)
 
-        print 'names: ', names
+        #print 'names: ', names
 
         for name in names:
             path = self._build_path(packet, name)
             if path:
                 self.topic_paths[name] = path
 
-        print 'paths: ', self.topic_paths
+        #print 'paths: ', self.topic_paths
 
     # update packet[path] = value
     def map(self, var, value, packet):

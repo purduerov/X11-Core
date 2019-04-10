@@ -27,6 +27,10 @@ lock = thread.allocate_lock()
 kill = None
 
 sio = socketio.Server()
+app = socketio.WSGIApp(sio, static_files={
+  '/': {'content_type': 'text/html', 'filename': 'index.html'}
+})
+
 
 @sio.on('dearRos')
 def accept(data):
@@ -39,6 +43,7 @@ def accept(data):
     dearflask = copy.deepcopy(data)
 
     #pass back dearclient
+    print dearclient
     sio.emit('dearclient-response', dearclient)
 
     #update thrust and auto
@@ -59,20 +64,15 @@ def name_received(msg):
   if not kill:
     lock.acquire()
 
-    print(dearclient)
     names = client_mapper.get_msg_vars(msg)
     for name in names:
       client_mapper.map(name, getattr(msg, name), dearclient)
-    print
     print(dearclient)
 
     lock.release()
 
-def start_server(lol, meme, yeet):
-  app = socketio.WSGIApp(sio, static_files={
-    '/': {'content_type': 'text/html', 'filename': 'index.html'}
-  })
-
+def start_server():
+  global app
   eventlet.wsgi.server(eventlet.listen(('', 5001)), app)
 
 if __name__ == "__main__":
@@ -105,8 +105,7 @@ if __name__ == "__main__":
   auto_pub = rospy.Publisher(ns +'auto_command',
     auto_command_msg, queue_size=10);
 
-  t = thread.start_new_thread(start_server, (1,2,3))
-  print t
+  t = thread.start_new_thread(start_server, ())
 
   while not rospy.is_shutdown():
     pass
