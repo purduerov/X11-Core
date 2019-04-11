@@ -55,7 +55,7 @@ def draw_center(img, contour):
   cv2.circle(img, (Cx, Cy), 3, (0, 255, 0), -1)
   return [Cx, Cy]
 
-
+################### REMOVE LATER ##########################################################################
 def get_ex_cnts():
   #recognize starting square/circle
 
@@ -96,7 +96,7 @@ def get_ex_cnts():
     circ_cnts.append(circ_cnt)
 
   return sq_cnts, circ_cnts
-
+###########################################################################################################
 
 def match_beginning(img,contour,sq_cnts,circ_cnts):
   #find matches that have a matchShape value of less than .02
@@ -235,5 +235,3 @@ if __name__ == "__main__":
   rospy.Subscriber("/usb_cam/image_raw",Image,process)
 
   rospy.spin()
-
-# vim: set tabstop=2 shiftwidth=2 fileencoding=utf-8 noexpandtab: 
