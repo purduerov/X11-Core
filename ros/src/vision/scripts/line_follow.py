@@ -160,7 +160,11 @@ def traverse_line(img_og,contour,vects):
   cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(curr_thrust_vect[0] + start_point_vector[0], curr_thrust_vect[1] + start_point_vector[1]),(0,255,0),1)
   '''
   #purple line is missing (maybe because it goes out of bounds of view frame???  or is tired of living????)
+
+  #draw current thrust vector
   cv2.line(img_og, (center[0],center[1]),(center[0] + curr_thrust_vect[0], center[1] +  curr_thrust_vect[0]),(0,255,0),1)
+
+  #draw resultant vector
   cv2.line(img_og, (center[0] + curr_thrust_vect[0], center[1] +  curr_thrust_vect[0]),(center[0] + curr_thrust_vect[0] + \
 	   resultant_vect[0], center[1] +  curr_thrust_vect[0] + resultant_vect[0]),(255,0,255),1)
 
