@@ -144,31 +144,25 @@ def traverse_line(img_og,contour,vects):
       center = center_cnt
     else:
       center = center_rect
-
     cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
     
-    start_point_vector = vects.get_vector_start_point()
-    curr_thrust_vect, resultant_vect = vects.get_thrust_vect(start_point_vector, center)
+    vects.get_vector_start_point()
+    thrust_vect, resultant_vect = vects.get_thrust_vect(center)
   else:
-    curr_thrust_vect = np.multiply(vects.prev_vector,-1)
+    thrust_vect = np.multiply(vects.prev_vector,-1)
     resultant_vect = [0, 0]
 
-  ####OUTPUT curr_thrust_vect, as this is the direction in which the thrusters should be pushing    MAGNITUDES ARE CURRENTLY AN ISSUE
-  '''
-  cv2.circle(img_og, (start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
-  cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(center[0],center[1]),(255,0,255),1)
-  cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(curr_thrust_vect[0] + start_point_vector[0], curr_thrust_vect[1] + start_point_vector[1]),(0,255,0),1)
-  '''
-  #purple line is missing (maybe because it goes out of bounds of view frame???  or is tired of living????)
-
-  #draw current thrust vector
-  cv2.line(img_og, (center[0],center[1]),(center[0] + curr_thrust_vect[0], center[1] +  curr_thrust_vect[0]),(0,255,0),1)
-
+  #### MAGNITUDES ARE CURRENTLY AN ISSUE -- Need a base_load thrust
+  #draw previous vector
+  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]), (vects.start_point[0] + Vector.prev_vector[0],vects.start_point[1] + Vector.prev_vector[1]))
+  
   #draw resultant vector
-  cv2.line(img_og, (center[0] + curr_thrust_vect[0], center[1] +  curr_thrust_vect[0]),(center[0] + curr_thrust_vect[0] + \
-	   resultant_vect[0], center[1] +  curr_thrust_vect[0] + resultant_vect[0]),(255,0,255),1)
+  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]),(vects.start_point[0] + resultant_vect[0], vects.start_point[1] +  resultant[0]),(0,255,0),1)
 
-  return curr_thrust_vect, resultant_vect
+  #draw thrust vector
+  cv2.line(img_og, (center[0] + thrust_vect[0], center[1] + thrust_vect[1]),(center[0],center[1]),(255,0,255),1)   # +  thrust_vect[1]),(center[0] + thrust_vect[0] +  resultant_vect[0], center[1] +  thrust_vect[0] + resultant_vect[0])
+
+  return thrust_vect, resultant_vect
 
 #functions that manipulates the data that comes the camera
 def process(data):
@@ -205,12 +199,12 @@ def process(data):
 
     Vector.prev_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
     '''
-    Vector.prev_vector = [1, 1]
+    Vector.prev_vector = [0, 5]
     wall_md_pt = [Vector.x_cam_width / 2, Vector.y_cam_height]
     center = [Vector.x_cam_width / 2, Vector.y_cam_height / 2]
 
     start_point_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
-    curr_thrust_vect, resultant_vect = vects.get_thrust_vect(wall_md_pt, center)
+    thrust_vect, resultant_vect = vects.get_thrust_vect(wall_md_pt, center)
 
     #Output thrust vect as cv2 line
     cv2.circle(img_og,(start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
@@ -218,8 +212,8 @@ def process(data):
 
     View.at_beginning = False
   else:
-    curr_thrust_vect, resultant_vect = traverse_line(img_og,view.cnt,vects)
-    print("curr_thr: [%d, %d], resultant: [%d, %d]" % (curr_thrust_vect[0], curr_thrust_vect[1], resultant_vect[0], resultant_vect[1]))
+    thrust_vect, resultant_vect = traverse_line(img_og,view.cnt,vects)
+    #print("curr_thr: [%d, %d], resultant: [%d, %d]" % (thrust_vect[0], thrust_vect[1], resultant_vect[0], resultant_vect[1]))
 
   #Set resultant vect to prev_vector 
   Vector.prev_vector = resultant_vect
