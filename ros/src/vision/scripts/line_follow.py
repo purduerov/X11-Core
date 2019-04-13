@@ -152,15 +152,12 @@ def traverse_line(img_og,contour,vects):
   else:
     thrust_vect = np.multiply(Vector.prev_vector,-1)
     resultant_vect = [0, 0]
-    print("traverse line else execution")
 
   #### MAGNITUDES ARE CURRENTLY AN ISSUE -- Need a base_load thrust
   #draw previous vector - yellow
   cv2.line(img_og, (vects.start_point[0],vects.start_point[1]), (vects.start_point[0] + Vector.prev_vector[0],vects.start_point[1] + Vector.prev_vector[1]),(18,222,218),6)
-  print("prev_vector: ", Vector.prev_vector)
   #draw resultant vector - orange
   cv2.line(img_og, (vects.start_point[0],vects.start_point[1]),(vects.start_point[0] + resultant_vect[0], vects.start_point[1] +  resultant_vect[1]),(15,125,210),3)
-  print("res_vector: ", vects.resultant_vect)
   #draw thrust vector - red
   cv2.line(img_og, (center[0] - thrust_vect[0], center[1] - thrust_vect[1]),(center[0],center[1]),(0,0,255),1)   
 
@@ -222,11 +219,10 @@ def process(data):
 
   #Set resultant vect to prev_vector 
   Vector.prev_vector = resultant_vect
-  print("Update: prev vector is now ", Vector.prev_vector, "which should be ", resultant_vect)
   
   #show images
-  cv2.imshow("Image",img_og)
   cv2.imshow("Filtered",img)
+  cv2.imshow("Image",img_og)
   cv2.waitKey(3)
 
 
