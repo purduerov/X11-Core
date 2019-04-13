@@ -145,22 +145,21 @@ def traverse_line(img_og,contour,vects):
     else:
       center = center_rect
     cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
-    
+ 
     vects.get_vector_start_point()
     thrust_vect, resultant_vect = vects.get_thrust_vect(center)
   else:
-    thrust_vect = np.multiply(vects.prev_vector,-1)
+    thrust_vect = np.multiply(Vector.prev_vector,-1)
     resultant_vect = [0, 0]
 
   #### MAGNITUDES ARE CURRENTLY AN ISSUE -- Need a base_load thrust
-  #draw previous vector
-  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]), (vects.start_point[0] + Vector.prev_vector[0],vects.start_point[1] + Vector.prev_vector[1]))
-  
-  #draw resultant vector
-  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]),(vects.start_point[0] + resultant_vect[0], vects.start_point[1] +  resultant[0]),(0,255,0),1)
-
-  #draw thrust vector
-  cv2.line(img_og, (center[0] + thrust_vect[0], center[1] + thrust_vect[1]),(center[0],center[1]),(255,0,255),1)   # +  thrust_vect[1]),(center[0] + thrust_vect[0] +  resultant_vect[0], center[1] +  thrust_vect[0] + resultant_vect[0])
+  #draw previous vector - blue
+  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]), (vects.start_point[0] + Vector.prev_vector[0],vects.start_point[1] + Vector.prev_vector[1]),(255,0,0))
+  #draw resultant vector - green
+  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]),(vects.start_point[0] + resultant_vect[0], vects.start_point[1] +  resultant_vect[1]),(0,255,0),1)
+  #draw thrust vector - red
+  cv2.line(img_og, (center[0] - thrust_vect[0], center[1] - thrust_vect[1]),(center[0],center[1]),(0,0,255),1)   
+  # +  thrust_vect[1]),(center[0] + thrust_vect[0] +  resultant_vect[0], center[1] +  thrust_vect[0] + resultant_vect[0])
 
   return thrust_vect, resultant_vect
 
@@ -200,15 +199,10 @@ def process(data):
     Vector.prev_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
     '''
     Vector.prev_vector = [0, 5]
-    wall_md_pt = [Vector.x_cam_width / 2, Vector.y_cam_height]
+    vects.start_point = [Vector.x_cam_width / 2, Vector.y_cam_height]
     center = [Vector.x_cam_width / 2, Vector.y_cam_height / 2]
 
-    start_point_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
-    thrust_vect, resultant_vect = vects.get_thrust_vect(wall_md_pt, center)
-
-    #Output thrust vect as cv2 line
-    cv2.circle(img_og,(start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
-    cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(wall_md_pt[0],wall_md_pt[1]),(150,255,255),1)
+    thrust_vect, resultant_vect = vects.get_thrust_vect(center)
 
     View.at_beginning = False
   else:
