@@ -1,7 +1,7 @@
 [
   {
     "taskNum": 1,
-    "taskDesc": "ENSURING PUBLIC SAFETY – DAM INSPECTION AND REPAIR",
+    "taskDesc": "ENSURING PUBLIC SAFETY",
     "pointTotal": 120,
     "subTasks": [
       {
@@ -108,7 +108,7 @@
         ]
       },
       {
-        "name": "Deploying a secondary micro-ROV to inspect a drain pipe for possible dam failure",
+        "name": "Deploying a secondary micro-ROV to inspect a drain pipe",
         "subSubTasks": [
           {
             "name": "Identifying areas of muddy water flow inside the pipe using",

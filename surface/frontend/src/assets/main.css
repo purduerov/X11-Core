@@ -52,6 +52,18 @@ h1 {
     float: left;
 }
 
+.double-wide-data-column {
+    width: 66.666666%;
+    height: 100%;
+    float: left;
+}
+
+.half-wide-data-column {
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+
 .half-height {
     height: 50% !important;
     float: left;
