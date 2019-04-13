@@ -11,7 +11,8 @@ import math
 bridge = CvBridge()
 
 class View:
-  at_beginning = True 
+  at_beginning = True
+  magick_number = 0; 
   thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
       "blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]}
   def __init__(self,cnt = None, at_beginning = True):
@@ -144,22 +145,24 @@ def traverse_line(img_og,contour,vects):
       center = center_cnt
     else:
       center = center_rect
-    cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
+    cv2.circle(img_og,(center[0],center[1]), 7, (0,0,0), -1)
  
     vects.get_vector_start_point()
     thrust_vect, resultant_vect = vects.get_thrust_vect(center)
   else:
     thrust_vect = np.multiply(Vector.prev_vector,-1)
     resultant_vect = [0, 0]
+    print("traverse line else execution")
 
   #### MAGNITUDES ARE CURRENTLY AN ISSUE -- Need a base_load thrust
-  #draw previous vector - blue
-  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]), (vects.start_point[0] + Vector.prev_vector[0],vects.start_point[1] + Vector.prev_vector[1]),(255,0,0))
-  #draw resultant vector - green
-  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]),(vects.start_point[0] + resultant_vect[0], vects.start_point[1] +  resultant_vect[1]),(0,255,0),1)
+  #draw previous vector - yellow
+  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]), (vects.start_point[0] + Vector.prev_vector[0],vects.start_point[1] + Vector.prev_vector[1]),(18,222,218),6)
+  print("prev_vector: ", Vector.prev_vector)
+  #draw resultant vector - orange
+  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]),(vects.start_point[0] + resultant_vect[0], vects.start_point[1] +  resultant_vect[1]),(15,125,210),3)
+  print("res_vector: ", vects.resultant_vect)
   #draw thrust vector - red
   cv2.line(img_og, (center[0] - thrust_vect[0], center[1] - thrust_vect[1]),(center[0],center[1]),(0,0,255),1)   
-  # +  thrust_vect[1]),(center[0] + thrust_vect[0] +  resultant_vect[0], center[1] +  thrust_vect[0] + resultant_vect[0])
 
   return thrust_vect, resultant_vect
 
@@ -191,6 +194,7 @@ def process(data):
 
   if View.at_beginning:
     print("at beginning")
+    View.magick_number += 1
     '''
     #Code to be run only at the start
     sq_cnts, circ_cnts = get_ex_cnts()
@@ -203,20 +207,28 @@ def process(data):
     center = [Vector.x_cam_width / 2, Vector.y_cam_height / 2]
 
     thrust_vect, resultant_vect = vects.get_thrust_vect(center)
+    if (View.magick_number == 5):
+      View.at_beginning = False
 
-    View.at_beginning = False
+    #draw previous vector - yellow
+    cv2.line(img_og, (vects.start_point[0],vects.start_point[1]), (vects.start_point[0] + Vector.prev_vector[0],vects.start_point[1] + Vector.prev_vector[1]),(18,222,218),7)
+    #draw resultant vector - orange
+    cv2.line(img_og, (vects.start_point[0],vects.start_point[1]),(vects.start_point[0] + resultant_vect[0], vects.start_point[1] +  resultant_vect[1]),(15,125,210),5)
+    #draw thrust vector - red
+    cv2.line(img_og, (center[0] - thrust_vect[0], center[1] - thrust_vect[1]),(center[0],center[1]),(0,0,255),3)
   else:
     thrust_vect, resultant_vect = traverse_line(img_og,view.cnt,vects)
     #print("curr_thr: [%d, %d], resultant: [%d, %d]" % (thrust_vect[0], thrust_vect[1], resultant_vect[0], resultant_vect[1]))
 
   #Set resultant vect to prev_vector 
   Vector.prev_vector = resultant_vect
+  print("Update: prev vector is now ", Vector.prev_vector, "which should be ", resultant_vect)
   
   #show images
   cv2.imshow("Image",img_og)
   cv2.imshow("Filtered",img)
   cv2.waitKey(3)
-  
+
 
 if __name__ == "__main__":
   rospy.init_node('line_follow',anonymous=True)

@@ -25,7 +25,7 @@ class Vector:
         print("right middle")
         start_point = [origin[0] + self.x_cam_width, origin[1] + self.y_cam_height / 2]  
     else:
-      if (unit_vect[1] > 0):
+      if (unit_vect[1] < 0):
         #This origin point is the bottom middle
         print("bottom middle")
         start_point = [origin[0] + self.x_cam_width / 2, origin[1] + self.y_cam_height]
