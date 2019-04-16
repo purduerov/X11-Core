@@ -106,7 +106,7 @@ class App extends React.Component {
     }
 
     changeDisabled(dis) {
-        this.flaskcpy.thrusters.disabled_thrusters = dis;
+        this.flaskcpy.thrusters.disable_thrusters = dis;
     }
 
     render() {
@@ -150,7 +150,7 @@ class App extends React.Component {
                             <Card>
                                 <ThrusterInfo
                                     thrusters={this.state.dearclient.thrusters}
-                                    disabled={this.state.dearflask.thrusters.disabled_thrusters}
+                                    disabled={this.state.dearflask.thrusters.disable_thrusters}
                                     manipulator={this.state.dearflask.manipulator.power}
                                     rend={this.changeDisabled}
                                 />

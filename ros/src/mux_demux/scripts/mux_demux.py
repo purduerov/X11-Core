@@ -13,7 +13,7 @@ from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust
 from sensor_msgs.msg import Imu, Temperature
 from std_msgs.msg import Float32
 
-with open ('../../../../surface/frontend/src/packets.json') as json_data:
+with open ('../surface/frontend/src/packets.json') as json_data:
   data = json.load(json_data,)
 
 dearflask = data['dearflask']
@@ -33,82 +33,86 @@ app = socketio.WSGIApp(sio, static_files={
 
 
 @sio.on('dearRos')
-def accept(data):
-  global dearflask
-  global dearclient
+def accept(sid, data):
+    global dearflask
+    global dearclient
 
-  if not kill:
-    lock.acquire()
+    if not kill:
+        lock.acquire()
 
-    dearflask = copy.deepcopy(data)
+        dearflask = copy.deepcopy(data)
 
-    #pass back dearclient
-    print dearclient
-    sio.emit('dearclient-response', dearclient)
+        #pass back dearclient
+        print dearclient
+        sio.emit('dearclient-response', dearclient)
 
-    #update thrust and auto
-    thrust = thrust_command_msg()
-    auto = auto_commmand_msg()
-    flask_mapper.pam(thrust, dearflask)
-    flask_mapper.pam(auto, dearflask)
-    thrust_pub.publish(thrust)
-    auto_pub.publish(auto)
+        print data
+        #update thrust and auto
+        thrust = thrust_command_msg()
+        auto = auto_command_msg()
+        flask_mapper.pam(thrust, dearflask)
+        flask_mapper.pam(auto, dearflask)
+        thrust_pub.publish(thrust)
+        auto_pub.publish(auto)
 
-    lock.release()
+        lock.release()
+  
+    else:
+        raise eventlet.StopServe
 
 #  return dearflask
 
 def name_received(msg):
-  global dearclient
+    global dearclient
 
-  if not kill:
-    lock.acquire()
+    if not kill:
+        lock.acquire()
 
-    names = client_mapper.get_msg_vars(msg)
-    for name in names:
-      client_mapper.map(name, getattr(msg, name), dearclient)
-    print(dearclient)
+        names = client_mapper.get_msg_vars(msg)
+        for name in names:
+            client_mapper.map(name, getattr(msg, name), dearclient)
+        print(dearclient)
 
-    lock.release()
+        lock.release()
 
 def start_server():
-  global app
-  eventlet.wsgi.server(eventlet.listen(('', 5001)), app)
+    global app
+    eventlet.wsgi.server(eventlet.listen(('', 5001)), app)
 
 if __name__ == "__main__":
-  rospy.init_node('mux_demux')
-  ns = rospy.get_namespace() # This should return /surface
-  
-  # Retrieve data from the ROS System
-  esc_sub = rospy.Subscriber('/rov/esc_single',
-      esc_single_msg, name_received)
+    rospy.init_node('mux_demux')
+    ns = rospy.get_namespace() # This should return /surface
+    
+    # Retrieve data from the ROS System
+    esc_sub = rospy.Subscriber('/rov/esc_single',
+        esc_single_msg, name_received)
 
-  status_sub = rospy.Subscriber('/rov/thrust_status', thrust_status_msg,
-    name_received);
+    status_sub = rospy.Subscriber('/rov/thrust_status', thrust_status_msg,
+        name_received);
 
-  temp_sub = rospy.Subscriber('/rov/temp', Temperature,
-    name_received);
+    temp_sub = rospy.Subscriber('/rov/temp', Temperature,
+        name_received);
 
-  imu_sub = rospy.Subscriber('/rov/imu', Imu,
-    name_received);
+    imu_sub = rospy.Subscriber('/rov/imu', Imu,
+        name_received);
 
-  ph_sub = rospy.Subscriber('/rov/ph', Float32,
-    name_received);
+    ph_sub = rospy.Subscriber('/rov/ph', Float32,
+        name_received);
 
-  depth_sub = rospy.Subscriber('/rov/depth', Float32,
-    name_received);
+    depth_sub = rospy.Subscriber('/rov/depth', Float32,
+        name_received);
 
-  # Publishers out onto the ROS System
-  thrust_pub = rospy.Publisher(ns + 'thrust_command',
-    thrust_command_msg, queue_size=10);
+    # Publishers out onto the ROS System
+    thrust_pub = rospy.Publisher(ns + 'thrust_command',
+        thrust_command_msg, queue_size=10);
 
-  auto_pub = rospy.Publisher(ns +'auto_command',
-    auto_command_msg, queue_size=10);
+    auto_pub = rospy.Publisher(ns +'auto_command',
+        auto_command_msg, queue_size=10);
 
-  t = thread.start_new_thread(start_server, ())
+    t = thread.start_new_thread(start_server, ())
 
-  while not rospy.is_shutdown():
-    pass
+    while not rospy.is_shutdown():
+        pass
 
-  kill = True
-  exit()
+    kill = True
+    exit()

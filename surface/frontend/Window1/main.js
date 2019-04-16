@@ -11,6 +11,7 @@ module.exports = (where, socketHost) => {
 
     // upon new data, save it locally
     socket.on('dearclient-response', (data) => { // Updates the data sent back from the server
+        console.log(data);
 
         ipcRenderer.send('update-info-to', data); //send data to window 2
 
