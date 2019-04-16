@@ -5,6 +5,7 @@ import styles from './main.css';
 import Card from '../src/components/Card/Card.jsx';
 import CameraScreen from '../src/components/CameraScreen/CameraScreen.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
+import PHinfo from '../src/components/PHinfo/PHinfo.jsx'
 import BuddyControlsShow from '../src/components/BuddyControlsShow/BuddyControlsShow.jsx';
 import FreezeGp from '../src/components/FreezeGp/FreezeGp.jsx';
 import betterlayouts from '../src/gamepad/betterlayouts.js';
@@ -12,7 +13,9 @@ import ThrusterInfo from '../src/components/ThrusterInfo/ThrusterInfo.jsx';
 import Gpinfo from '../src/components/Gpinfo/Gpinfo.jsx';
 import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
 import PacketView from '../src/components/PacketView/PacketView.jsx';
+import Timer from '../src/components/Timer/Timer.jsx';
 import CVview from '../src/components/CVview/CVview.jsx';
+import CrackInfo from '../src/components/CrackInfo/CrackInfo.jsx';
 
 const socketHost = 'ws://localhost:5001';
 
@@ -76,10 +79,7 @@ class App extends React.Component {
         this.confcpy = this.state.config;
 
         this.setFreeze = this.setFreeze.bind(this);
-        this.rendTools = this.rendTools.bind(this);
         this.changeDisabled = this.changeDisabled.bind(this);
-        this.changeForceScales = this.changeForceScales.bind(this);
-        this.changeThrustScales = this.changeThrustScales.bind(this);
     }
 
     componentDidMount() {
@@ -105,45 +105,8 @@ class App extends React.Component {
         });
     }
 
-    rendTools(cinvcpy) {
-        this.confcpy.tool_scales = cinvcpy;
-
-        this.setState({
-            config: this.confcpy,
-        });
-    }
-
     changeDisabled(dis) {
         this.flaskcpy.thrusters.disabled_thrusters = dis;
-    }
-
-    changeThrustScales(scales) {
-        this.confcpy.thruster_control = scales;
-
-        this.confcpy.thruster_control.forEach((val, i) => {
-            if (val.invert < 0) {
-                this.flaskcpy.thrusters.inverted_thrusters[i] = -Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]);
-            } else if (val.invert > 0) {
-                this.flaskcpy.thrusters.inverted_thrusters[i] = Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]);
-            } else {
-                console.log('Thruster inversion value is 0... why???');
-            }
-        });
-
-        this.setState({
-            config: this.confcpy,
-        });
-    }
-
-    changeForceScales(scales, inv) {
-        this.confcpy.thrust_scales = scales;
-        this.confcpy.thrust_invert = inv;
-
-        this.setState({
-            config: this.confcpy,
-        });
     }
 
     render() {
@@ -162,9 +125,26 @@ class App extends React.Component {
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card>
+                                <PHinfo />
+                            </Card>
+                            <Card>
+                                <CrackInfo
+                                    length={-27.6}
+                                    crackSquare="D3"
+                                />
+                            </Card>
+                            <Card title="Line Graph Component" />
+                        </div>
+                        <div className="data-column">
+                            <Card>
                                 <FreezeGp
                                     maybeFreeze={this.state.freeze}
                                     rend={this.setFreeze}
+                                />
+                            </Card>
+                            <Card>
+                                <ShowObject
+                                    obj={this.state.dearclient.sensors.imu}
                                 />
                             </Card>
                             <Card>
@@ -178,14 +158,16 @@ class App extends React.Component {
                             <Card title="Desired Force Vector" />
                         </div>
                         <div className="data-column">
+                            <Card>
+                                <ShowObject obj={this.state.dearclient.sensors.esc.temperatures} />
+                            </Card>
                             <Card title="Computer Vision Stuff" />
                             <Card title="CV view window">
                                 <CVview desc={"Purdo good, Purdon't let Eric make messages"} tdist={[0.0, 0.1, 0.2, 0.4, 0.7, 0.8]} />
                             </Card>
-                        </div>
-                        <div className="data-column">
-                            <Card title="IPC Timer (Master?)" />
-                            <Card title="Line Graph Component" />
+                            <Card title="Time">
+                                <Timer />
+                            </Card>
                         </div>
                     </div>
                 </div>

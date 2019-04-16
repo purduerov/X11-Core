@@ -11,9 +11,13 @@ module.exports = (where, socketHost) => {
 
     // upon new data, save it locally
     socket.on('dearclient-response', (data) => { // Updates the data sent back from the server
+
+        ipcRenderer.send('update-info-to', data); //send data to window 2
+
         where.setState({
             dearclient: data,
         });
+
     });
 
     // send new data
@@ -28,9 +32,27 @@ module.exports = (where, socketHost) => {
 
     ipcRenderer.on('buddy-controls-to-win-1', (event, data) => {
         where.setState({
-            directions: data
+            directions: data,
         });
     });
+
+    ipcRenderer.on('config-from-win2', (event, data) => {
+        var flaskcpy = where.flaskcpy;
+        flaskcpy.thrusters.inverted_thrusters = data.invertThrust;
+
+        where.setState({
+            config: data.config,
+            dearflask: flaskcpy,
+        });
+    });
+    /*
+    this.bigCopy = where.dearclient;
+    setInterval(() => { //update window 2 info
+      where.setState({
+        clientStuff = this.bigCopy
+      });
+      ipcRenderer.send('update-info-to', this.bigCopy)
+    }, 50); */
 
 
     // updating the gamepad

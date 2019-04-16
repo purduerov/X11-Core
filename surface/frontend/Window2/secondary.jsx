@@ -10,6 +10,7 @@ import ThrusterScales from '../src/components/ThrusterScales/ThrusterScales.jsx'
 import ForceScales from '../src/components/ForceScales/ForceScales.jsx';
 import ToolView from '../src/components/ToolView/ToolView.jsx';
 import ESCinfo from '../src/components/ESCinfo/ESCinfo.jsx';
+import ShowObject from '../src/components/ShowObject/ShowObject.jsx'
 
 /* These should be done in a component, or the js file for this window
 
@@ -62,13 +63,56 @@ class App extends React.Component {
         this.flaskcpy = this.state.dearflask;
         this.clientcpy = this.state.dearclient;
         this.confcpy = this.state.config;
+
+        this.rendTools = this.rendTools.bind(this);
+        this.changeForceScales = this.changeForceScales.bind(this);
+        this.changeThrustScales = this.changeThrustScales.bind(this);
     }
 
     componentDidMount() {
         var signals = require('./secondary.js');
         window.react = this;
+        signals(this, null);
+    }
 
-        signals(this);
+    rendTools(cinvcpy) {
+        this.confcpy.tool_scales = cinvcpy;
+
+        this.setState({
+            config: this.confcpy,
+        });
+    }
+
+    changeThrustScales(scales) {
+        this.confcpy.thruster_control = scales;
+
+        this.confcpy.thruster_control.forEach((val, i) => {
+            if (val.invert < 0) {
+                this.flaskcpy.thrusters.inverted_thrusters[i] = -Math.abs(
+                    this.flaskcpy.thrusters.inverted_thrusters[i]
+                );
+            } else if (val.invert > 0) {
+                this.flaskcpy.thrusters.inverted_thrusters[i] = Math.abs(
+                    this.flaskcpy.thrusters.inverted_thrusters[i]
+                );
+            } else {
+                console.log('Thruster inversion value is 0... why???');
+            }
+        });
+
+        this.setState({
+            config: this.confcpy,
+            dearflask: this.flaskcpy
+        });
+    }
+
+    changeForceScales(scales, inv) {
+        this.confcpy.thrust_scales = scales;
+        this.confcpy.thrust_invert = inv;
+
+        this.setState({
+            config: this.confcpy,
+        });
     }
 
     render() {
@@ -93,6 +137,9 @@ class App extends React.Component {
                                 />
                             </Card>
                             <Card title="Task List View" />
+                            <Card>
+                                <ShowObject obj={this.state.dearclient.sensors.esc.temperatures} />
+                            </Card>
                         </div>
                         <div className="data-column">
                             <Card title="Directional Control">
