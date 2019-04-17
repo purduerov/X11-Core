@@ -14,18 +14,18 @@ def message_received(msg):
 
 if __name__ == "__main__":
     rospy.init_node('i2c_node')
-    imu_pub = rospy.Publisher('imu_data', imu_msg, qeue_size = 1)
-    imu_pub.rate(IMU_PUB_RATE)
-    temp_pub = rospy.Publisher('temp_data', temp_msg, qeue_size = 1)
-    depth_pub = rospy.Publisher('depth_data', depth_msg, qeue_size = 1)
-    try:
-        imu_sens = BNO055()
-        temp_sens = TYS01()
-        depth_sens = ms5837()
-    except:
-        #add mock classes to return 0 and continue and alert pilots
-        pass
+    imu_pub = rospy.Publisher('imu_data', imu_msg, queue_size = 1)
+    rate = rospy.Rate(IMU_PUB_RATE)
+    temp_pub = rospy.Publisher('temp_data', temp_msg, queue_size = 1)
+    depth_pub = rospy.Publisher('depth_data', depth_msg, queue_size = 1)
+    #try:
+    imu_sens = BNO055()
+    temp_sens = TYS01()
+    depth_sens = ms5837()
     temp_sens.init()
+   # except:
+        #add mock classes to return 0 and continue and alert pilots
+   #     pass
     while not rospy.is_shutdown():
         # using imu rate to poll the temp sensor as well beacuse IMU updates faster
         if imu_sens.update():
@@ -49,4 +49,4 @@ if __name__ == "__main__":
             depth_message = depth_msg()
             depth_message.depth = {depth_sense.depth()}
             depth_pub.publish(depth_message)
-            r.sleep()
+    rate.sleep()
