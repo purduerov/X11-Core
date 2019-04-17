@@ -22,6 +22,7 @@ flask_mapper = packet_mapper.packet_mapper(dearflask)
 client_mapper = packet_mapper.packet_mapper(dearclient)
 thrust_pub = None
 auto_pub = None
+tools_pub = None
 
 lock = thread.allocate_lock()
 kill = None
@@ -50,11 +51,14 @@ def accept(sid, data):
         #update thrust and auto
         thrust = thrust_command_msg()
         auto = auto_command_msg()
+        tools = tools_command_msg()
         flask_mapper.pam(thrust, dearflask)
         flask_mapper.pam(auto, dearflask)
+        flask_mapper.pam(tools, dearflask)
         # print("Publishing:\n{}".format(thrust))
         thrust_pub.publish(thrust)
         auto_pub.publish(auto)
+        tools_pub.publish(tools)
 
         lock.release()
   
@@ -105,10 +109,13 @@ if __name__ == "__main__":
 
     # Publishers out onto the ROS System
     thrust_pub = rospy.Publisher(ns + 'thrust_command',
-        thrust_command_msg, queue_size=10);
+        thrust_command_msg, queue_size=10)
 
     auto_pub = rospy.Publisher(ns +'auto_command',
-        auto_command_msg, queue_size=10);
+        auto_command_msg, queue_size=10)
+
+    tools_pub = rospy.Publisher(ns + 'tools_command',
+        tools_command_msg, queue_size=10)
 
     t = thread.start_new_thread(start_server, ())
 
