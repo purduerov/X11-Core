@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const spawn = require('child_process').spawn;
@@ -84,4 +84,33 @@ app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     createWindow();
+});
+
+ipcMain.on('timer-parameters', (event, message) => {
+    for (let i = 0; i < windows.length; i++) {
+        if (windows[i] != null) {
+            windows[i].webContents.send('timer-parameters-from-main', message);
+        }
+    }
+});
+
+ipcMain.on('buddy-controls-from-win-3', (event, message) => {
+    if (windows[0] != null) {
+        windows[0].webContents.send('buddy-controls-to-win-1', message);
+    }
+});
+
+ipcMain.on('config-from-win2', (event, configs) => {
+    if (windows[0] != null) {
+        windows[0].webContents.send('config-from-win2', configs);
+    }
+});
+
+ipcMain.on('update-info-to', (event, message) => {
+    if (windows[1] != null) {
+        windows[1].webContents.send('update-info-from', message);
+    }
+    if (windows[2] != null) {
+        windows[2].webContents.send('update-info-from', message);
+    }
 });

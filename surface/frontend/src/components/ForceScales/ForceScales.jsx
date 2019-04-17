@@ -19,8 +19,8 @@ export default class ForceScale extends Component {
         // console.log(this.props.scales[key]);
         var scalescpy = this.props.scales; // props aren't
         var invcpy = this.props.invert;
-        scalescpy[key] = val;
-        invcpy[key] = inv;
+        scalescpy[key] = Number(val);
+        invcpy[key] = Number(inv);
         // scalescpy[key].invert = inv;
         this.props.rend(scalescpy, invcpy);
     }

@@ -1,0 +1,32 @@
+.modalWrapper {
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  background: white;
+  padding: 15px 20px 15px;
+  z-index: 1000;
+}
+
+.modalHeader {
+  height: 40px;
+  padding: 5px 20px;
+  text-align: right;
+}
+
+.modalHeader h5 {
+  color: #212529;
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+
+.closeModalBtn {
+  cursor: pointer;
+  float: right;
+  margin: 0px;
+}
+
+.grid {
+  display: block;
+  margin: 0 auto;
+}
