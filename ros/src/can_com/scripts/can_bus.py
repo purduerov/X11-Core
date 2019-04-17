@@ -46,7 +46,7 @@ if __name__ == "__main__":
     global can_bus
     rospy.init_node('can_node')
 
-    channel = 'vcan0'
+    channel = 'can0'
     if len(sys.argv) == 2:
         channel = sys.argv[1]
     can_bus = can.interface.Bus(channel=channel, bustype='socketcan')
