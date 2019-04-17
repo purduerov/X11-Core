@@ -24,6 +24,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = require("../src/packets.json");
+        this.state.gp = require('../src/gamepad/bettergamepad.js');
 
         this.state.CannonVolume = 0; //cm^3
         this.state.directions = { x: 0, y: 0 };
@@ -68,7 +69,7 @@ class App extends React.Component {
         this.clientcpy = this.state.dearclient;
         this.confcpy = this.state.config;
 
-        this.setVolume = this.setVolume.bind(this); 
+        this.setVolume = this.setVolume.bind(this);
     }
 
     componentDidMount() {
@@ -138,6 +139,11 @@ class App extends React.Component {
                                 />
                             </Card>
                             <Card title="Other Sensor Info" />
+                            <Card>
+                              <Gpinfo
+                                gp={this.state.gp}
+                              />
+                            </Card>
                         </div>
                     </div>
                 </div>
