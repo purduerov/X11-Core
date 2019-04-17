@@ -43,15 +43,16 @@ def accept(sid, data):
         dearflask = copy.deepcopy(data)
 
         #pass back dearclient
-        print dearclient
+        # print dearclient
         sio.emit('dearclient-response', dearclient)
 
-        print data
+        # print data
         #update thrust and auto
         thrust = thrust_command_msg()
         auto = auto_command_msg()
         flask_mapper.pam(thrust, dearflask)
         flask_mapper.pam(auto, dearflask)
+        # print("Publishing:\n{}".format(thrust))
         thrust_pub.publish(thrust)
         auto_pub.publish(auto)
 

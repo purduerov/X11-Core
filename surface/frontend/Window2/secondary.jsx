@@ -88,12 +88,12 @@ class App extends React.Component {
 
         this.confcpy.thruster_control.forEach((val, i) => {
             if (val.invert < 0) {
-                this.flaskcpy.thrusters.inverted_thrusters[i] = -Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]
+                this.flaskcpy.thrusters.inverted[i] = -Math.abs(
+                    this.flaskcpy.thrusters.inverted[i]
                 );
             } else if (val.invert > 0) {
-                this.flaskcpy.thrusters.inverted_thrusters[i] = Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]
+                this.flaskcpy.thrusters.inverted[i] = Math.abs(
+                    this.flaskcpy.thrusters.inverted[i]
                 );
             } else {
                 console.log('Thruster inversion value is 0... why???');

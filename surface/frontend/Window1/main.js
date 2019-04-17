@@ -11,7 +11,6 @@ module.exports = (where, socketHost) => {
 
     // upon new data, save it locally
     socket.on('dearclient-response', (data) => { // Updates the data sent back from the server
-        console.log(data);
 
         ipcRenderer.send('update-info-to', data); //send data to window 2
 
@@ -39,7 +38,7 @@ module.exports = (where, socketHost) => {
 
     ipcRenderer.on('config-from-win2', (event, data) => {
         var flaskcpy = where.flaskcpy;
-        flaskcpy.thrusters.inverted_thrusters = data.invertThrust;
+        flaskcpy.thrusters.inverted = data.invertThrust;
 
         where.setState({
             config: data.config,
