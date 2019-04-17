@@ -11,6 +11,7 @@ import ForceScales from '../src/components/ForceScales/ForceScales.jsx';
 import ToolView from '../src/components/ToolView/ToolView.jsx';
 import ESCinfo from '../src/components/ESCinfo/ESCinfo.jsx';
 import CalculateCannon from '../src/components/CalculateCannon/CalculateCannon.jsx';
+import CalculateThrust from '../src/components/CalculateThrust/CalculateThrust.jsx';
 
 /* These should be done in a component, or the js file for this window
 
@@ -24,6 +25,9 @@ class App extends React.Component {
         super(props);
         this.state = require("../src/packets.json");
 
+        this.state.CannonVolume = 0; //cm^3
+        this.state.directions = { x: 0, y: 0 };
+        this.state.freeze = 0;
         this.state.config = {
             thrust_scales: {
                 master: 50,
@@ -63,6 +67,8 @@ class App extends React.Component {
         this.flaskcpy = this.state.dearflask;
         this.clientcpy = this.state.dearclient;
         this.confcpy = this.state.config;
+
+        this.setVolume = this.setVolume.bind(this); 
     }
 
     componentDidMount() {
@@ -70,6 +76,12 @@ class App extends React.Component {
         window.react = this;
 
         signals(this);
+    }
+
+    setVolume(value) {
+      this.setState({
+        CannonVolume: value,
+      });
     }
 
     render() {
@@ -83,7 +95,12 @@ class App extends React.Component {
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card title="Cannon Calculator">
-                              <CalculateCannon />
+                              <CalculateCannon
+                                rend={this.setVolume}
+                              />
+                              <CalculateThrust
+                                volume={this.state.CannonVolume}
+                              />
                             </Card>
                             <Card>
                                 <ToolView

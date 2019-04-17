@@ -24,6 +24,8 @@ export default class CalculateCannon extends Component {
       volume -= pi * r2 * r2 * height;
       volume = volume.toFixed(2);
 
+      this.props.rend(volume);
+
       this.setState({
           calc: false
       }, () => {
