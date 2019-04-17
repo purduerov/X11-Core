@@ -70,6 +70,24 @@ class App extends React.Component {
                     close: 1,
                     invert: 1,
                 },
+                groutTrout: {
+                    master: 0.25,
+                    open: 1,
+                    close: 1,
+                    invert: 1,
+                },
+                liftBag: {
+                    master: 0.25,
+                    open: 1,
+                    close: 1,
+                    invert: 1,
+                },
+                marker: {
+                    master: 0.25,
+                    open: 1,
+                    close: 1,
+                    invert: 1,
+                },
             },
         };
 

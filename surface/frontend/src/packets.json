@@ -41,6 +41,15 @@
         "manipulator": {
             "power": 0
         },
+        "groutTrout": {
+            "power": 0
+        },
+        "liftBag": {
+            "power": 0
+        },
+        "marker": {
+            "power": 0
+        },
         "cameras": {},
         "leds": {
             "bluetooth_led": false,

@@ -56,6 +56,24 @@ class App extends React.Component {
                     close: 1,
                     invert: 1,
                 },
+                groutTrout: {
+                    master: 0.25,
+                    open: 1,
+                    close: 1,
+                    invert: 1,
+                },
+                liftBag: {
+                    master: 0.25,
+                    open: 1,
+                    close: 1,
+                    invert: 1,
+                },
+                marker: {
+                    master: 0.25,
+                    open: 1,
+                    close: 1,
+                    invert: 1,
+                },
             },
         };
 
@@ -129,9 +147,10 @@ class App extends React.Component {
                             <Card>
                                 <ToolView
                                     manipulator={this.state.dearflask.manipulator.power}
+                                    groutTrout={this.state.dearflask.groutTrout.power}
+                                    liftBag={this.state.dearflask.liftBag.power}
+                                    marker={this.state.dearflask.marker.power}
                                     servo={this.state.dearflask.maincam_angle}
-                                    transmitter={this.state.dearflask.transmitter}
-                                    magnet={this.state.dearflask.magnet}
                                     conf={this.state.config.tool_scales}
                                     rend={this.rendTools}
                                 />
