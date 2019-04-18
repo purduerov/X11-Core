@@ -2,8 +2,30 @@
 import rospy
 from shared_msgs.msg import can_msg
 
+TOOLS_BOARD_ID = 0x204
+
+MANIPULATOR_BIT = 0b0
+GROUT_TROUT_BIT = 0b0
+LIFT_BAG_BIT = 0b0
+MARKER_BIT = 0b0
+
+pub = None
+sub = None
+
 def message_received(msg):
-  # This runs on a seperate thread from the pub
+  data_list = [0] * 8
+
+  data_list[-1] = data_list[-1] | (msg.manipulator * MANIPULATOR_BIT)
+  data_list[-1] = data_list[-1] | (msg.groutTrout * GROUT_TROUT_BIT)
+  data_list[-1] = data_list[-1] | (msg.liftBag * LIFT_BAG_BIT)
+  data_list[-1] = data_list[-1] | (msg.marker * MARKER_BIT)
+  data = bytearray(data_list)
+
+  cmsg = can_msg()
+  cmsg.id = TOOLS_BOARD_ID
+  cmsg.data = data
+  pub.publish(cmsg)
+    
   pass
 
 if __name__ == "__main__":
@@ -16,11 +38,7 @@ if __name__ == "__main__":
   sub = rospy.Subscriber('tool_control', can_msg,
       message_received)
 
-  rate = rospy.Rate(10) # 10hz
-  # TODO: I2C related activities
   while not rospy.is_shutdown():
-    sample_message = can_msg()
-    pub.publish(sample_message)
-    rate.sleep()
+      rospy.spin()
     
 

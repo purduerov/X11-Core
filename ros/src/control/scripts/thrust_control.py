@@ -62,6 +62,7 @@ def on_loop():
         #reset the watchdog timer
         curr_time = rospy.get_rostime()
         last_packet_time = curr_time.secs + curr_time.nsecs * 10 ** -9
+
     for i in range(6):
       if(is_timed_out):
           desired_thrust_final[i] = 0.0
@@ -79,16 +80,19 @@ def on_loop():
       if inverted_list[i] == 1:
         pwm_values[i] = pwm_values[i] * (-1)
 
-    #assign values to publisher messages for thrust control and status
+    #assign values to publisher messages for thurst control and status
     tcm = final_thrust_msg()
-    tcm.hfl = pwm_values[0]
-    tcm.hfr = pwm_values[1]
-    tcm.hbr = pwm_values[2]
-    tcm.hbl = pwm_values[3]
-    tcm.vfl = pwm_values[4]
-    tcm.vfr = pwm_values[5]
-    tcm.vbr = pwm_values[6]
-    tcm.vbl = pwm_values[7]
+    # val = float of range(-1, 1)
+    # if int8: (val * 127.5) - 0.5 will give range -128 to 127
+    # if uint8: (val + 1) * 127.5 will give 0 to 255
+    tcm.hfl = int((pwm_values[0] + 1) * 127.5)
+    tcm.hfr = int((pwm_values[1] + 1) * 127.5)
+    tcm.hbl = int((pwm_values[2] + 1) * 127.5)
+    tcm.hbr = int((pwm_values[3] + 1) * 127.5)
+    tcm.vfl = int((pwm_values[4] + 1) * 127.5)
+    tcm.vfr = int((pwm_values[5] + 1) * 127.5)
+    tcm.vbl = int((pwm_values[6] + 1) * 127.5)
+    tcm.vbr = int((pwm_values[7] + 1) * 127.5)
 
     tsm = thrust_status_msg()
     tsm.status = pwm_values

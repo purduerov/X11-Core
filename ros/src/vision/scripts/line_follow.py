@@ -11,7 +11,8 @@ import math
 bridge = CvBridge()
 
 class View:
-  at_beginning = True 
+  at_beginning = True
+  magick_number = 0; 
   thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
       "blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]}
   def __init__(self,cnt = None, at_beginning = True):
@@ -55,7 +56,7 @@ def draw_center(img, contour):
   cv2.circle(img, (Cx, Cy), 3, (0, 255, 0), -1)
   return [Cx, Cy]
 
-
+################### REMOVE LATER ##########################################################################
 def get_ex_cnts():
   #recognize starting square/circle
 
@@ -96,7 +97,7 @@ def get_ex_cnts():
     circ_cnts.append(circ_cnt)
 
   return sq_cnts, circ_cnts
-
+###########################################################################################################
 
 def match_beginning(img,contour,sq_cnts,circ_cnts):
   #find matches that have a matchShape value of less than .02
@@ -138,35 +139,29 @@ def traverse_line(img_og,contour,vects):
     cv2.drawContours(img_og,[contour],0,(0,255,0),3)
     center_rect = draw_rect(img_og, contour)
     center_cnt = draw_center(img_og, contour)
-    #cv2.line(img_og,(center_rect[0],center_rect[1]),(center_cnt[0],center_cnt[1]), (0,0,255),1)
 
     #find moment
     if cv2.isContourConvex(contour):
       center = center_cnt
     else:
       center = center_rect
-
-    cv2.circle(img_og,(center[0],center[1]), 5, (0,0,0), -1)
-    
-    start_point_vector = vects.get_vector_start_point()
-    curr_thrust_vect, resultant_vect = vects.get_thrust_vect(start_point_vector, center)
-
-    ####OUTPUT curr_thrust_vect, as this is the direction in which the thrusters should be pushing    MAGNITUDES ARE CURRENTLY AN ISSUE
-    '''
-    cv2.circle(img_og, (start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
-    cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(center[0],center[1]),(255,0,255),1)
-    cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(curr_thrust_vect[0] + start_point_vector[0], curr_thrust_vect[1] + start_point_vector[1]),(0,255,0),1)
-    '''
-    #purple line is missing (maybe because it goes out of bounds of view frame???  or is tired of living????)
-    cv2.line(img_og, (curr_thrust_vect[0],curr_thrust_vect[1]),(curr_thrust_vect[0] + resultant_vect[0] ,curr_thrust_vect[1] + resultant_vect[1]),(255,0,255),1)
-    cv2.line(img_og, (center[0],center[1]),(center[0] + curr_thrust_vect[0], center[1] +  curr_thrust_vect[0]),(0,255,0),1)
-
+    cv2.circle(img_og,(center[0],center[1]), 7, (0,0,0), -1)
+ 
+    vects.get_vector_start_point()
+    thrust_vect, resultant_vect = vects.get_thrust_vect(center)
   else:
-    curr_thrust_vect = np.multiply(vects.prev_vector,-1)
+    thrust_vect = np.multiply(Vector.prev_vector,-1)
     resultant_vect = [0, 0]
 
-  return curr_thrust_vect, resultant_vect
+  #### MAGNITUDES ARE CURRENTLY AN ISSUE -- Need a base_load thrust
+  #draw previous vector - yellow
+  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]), (vects.start_point[0] + Vector.prev_vector[0],vects.start_point[1] + Vector.prev_vector[1]),(18,222,218),6)
+  #draw resultant vector - orange
+  cv2.line(img_og, (vects.start_point[0],vects.start_point[1]),(vects.start_point[0] + resultant_vect[0], vects.start_point[1] +  resultant_vect[1]),(15,125,210),3)
+  #draw thrust vector - red
+  cv2.line(img_og, (center[0] - thrust_vect[0], center[1] - thrust_vect[1]),(center[0],center[1]),(0,0,255),1)   
 
+  return thrust_vect, resultant_vect
 
 #functions that manipulates the data that comes the camera
 def process(data):
@@ -194,8 +189,9 @@ def process(data):
   view = View(contour)
   vects = Vector()
 
-  if (View.at_beginning):
+  if View.at_beginning:
     print("at beginning")
+    View.magick_number += 1
     '''
     #Code to be run only at the start
     sq_cnts, circ_cnts = get_ex_cnts()
@@ -203,35 +199,35 @@ def process(data):
 
     Vector.prev_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
     '''
-    Vector.prev_vector = [1, 1]
-    wall_md_pt = [Vector.x_cam_width / 2, Vector.y_cam_height]
+    Vector.prev_vector = [0, 5]
+    vects.start_point = [Vector.x_cam_width / 2, Vector.y_cam_height]
     center = [Vector.x_cam_width / 2, Vector.y_cam_height / 2]
 
-    start_point_vector = [center[0] - wall_md_pt[0],center[1] - wall_md_pt[1]]
-    curr_thrust_vect, resultant_vect = vects.get_thrust_vect(wall_md_pt, center)
+    thrust_vect, resultant_vect = vects.get_thrust_vect(center)
+    if (View.magick_number == 5):
+      View.at_beginning = False
 
-    #Output thrust vect as cv2 line
-    cv2.circle(img_og,(start_point_vector[0],start_point_vector[1]), 3, (0,0,255), -1)
-    cv2.line(img_og, (start_point_vector[0],start_point_vector[1]),(wall_md_pt[0],wall_md_pt[1]),(150,255,255),1)
-
-    View.at_beginning = False
+    #draw previous vector - yellow
+    cv2.line(img_og, (vects.start_point[0],vects.start_point[1]), (vects.start_point[0] + Vector.prev_vector[0],vects.start_point[1] + Vector.prev_vector[1]),(18,222,218),7)
+    #draw resultant vector - orange
+    cv2.line(img_og, (vects.start_point[0],vects.start_point[1]),(vects.start_point[0] + resultant_vect[0], vects.start_point[1] +  resultant_vect[1]),(15,125,210),5)
+    #draw thrust vector - red
+    cv2.line(img_og, (center[0] - thrust_vect[0], center[1] - thrust_vect[1]),(center[0],center[1]),(0,0,255),3)
   else:
-    curr_thrust_vect, resultant_vect = traverse_line(img_og,view.cnt,vects)
-    print("[%d, %d], [%d, %d]" % (curr_thrust_vect[0], curr_thrust_vect[1], resultant_vect[0], resultant_vect[1]))
+    thrust_vect, resultant_vect = traverse_line(img_og,view.cnt,vects)
+    #print("curr_thr: [%d, %d], resultant: [%d, %d]" % (thrust_vect[0], thrust_vect[1], resultant_vect[0], resultant_vect[1]))
 
   #Set resultant vect to prev_vector 
   Vector.prev_vector = resultant_vect
   
   #show images
-  cv2.imshow("Image",img_og)
   cv2.imshow("Filtered",img)
+  cv2.imshow("Image",img_og)
   cv2.waitKey(3)
-  
+
 
 if __name__ == "__main__":
   rospy.init_node('line_follow',anonymous=True)
   rospy.Subscriber("/usb_cam/image_raw",Image,process)
 
   rospy.spin()
-
-# vim: set tabstop=2 shiftwidth=2 fileencoding=utf-8 noexpandtab: 

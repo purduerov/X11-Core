@@ -5,7 +5,7 @@ from shared_msgs.msg import can_msg, final_thrust_msg
 #TODO Get the ID and position of the thrusters
 # Currently testing values are put in such that there are two boards each with four thrusters
 global can_pub
-can_ids = [201, 201, 203, 202, 202, 203, 203, 202] # can IDs
+can_ids = [513, 513, 515, 514, 514, 515, 515, 514] # can IDs
 can_pos = [0, 3, 2, 0, 3, 1, 0, 2] # positions in data packet
 
 can_pow = [] # power of thrusters
@@ -47,10 +47,12 @@ def message_received(msg):
     # Make list of the thruster's power in order of position
     curr_pow = []
     for i in sortedIndices:
-        curr_pow.append(int(((can_pow[i] + 100) * 256) / 201))
-    print curr_pow
+        curr_pow.append(can_pow[i]) # Just append if alread 0-255
 
     # Make 64 bit data message
+    # Ian thinks this can be sped up by bit-shifting the incoming number,
+    # and then a bit-wise | (or) comparison
+    #   ex: 0xf400 | 0x00a900 ==> 0xf4a900
     curr_data = 0
     shift = 0
     for i in range(len(curr_pow)):
@@ -61,6 +63,7 @@ def message_received(msg):
         curr_data = curr_data | curr_pow[i]
         shift += 1
         print str(hex(curr_data))
+
     for x in range(8 - shift):
         curr_data = curr_data << 8
         print str(hex(curr_data))

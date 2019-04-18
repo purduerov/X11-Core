@@ -24,7 +24,7 @@ def topic_message_received(msg):
         shift -= 8
         data_list.append((msg.data >> shift) % 256)
     data = bytearray(data_list)
-    #rospy.loginfo('Topic Message Received: ' + str(msg.id) + ':' + str(list(data)))
+    rospy.loginfo('Topic Message Received: ' + str(msg.id) + ':' + str(list(data)))
     can_tx = can.Message(arbitration_id=msg.id, data=data, extended_id=False)
     can_bus.send(can_tx)
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     global can_bus
     rospy.init_node('can_node')
 
-    channel = 'vcan0'
+    channel = 'can0'
     if len(sys.argv) == 2:
         channel = sys.argv[1]
     can_bus = can.interface.Bus(channel=channel, bustype='socketcan')

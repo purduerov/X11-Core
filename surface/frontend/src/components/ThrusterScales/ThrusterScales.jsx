@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import SliderControl from '../SliderControl/SliderControl.jsx';
 import styles from './ThrusterScales.css';
 
-let that;
-
 /*
     <SliderControl min='0' max='100' key={'thrust0'} indx={0} val={this.state.scales[0]} inv={this.state.inv[0]} rend={this.rendData.bind(this)} name={"Thruster 0"} />
 */
@@ -15,8 +13,6 @@ export default class ThrusterScales extends Component {
 
         this.rendLeftScales = this.rendLeftScales.bind(this);
         this.rendRightScales = this.rendRightScales.bind(this);
-
-        that = this;
     }
 
     rendData(val, inv, i) {
@@ -34,13 +30,13 @@ export default class ThrusterScales extends Component {
 
     rendLeftScales() {
         return [0, 1, 2, 3].map((val, index) => (
-            <SliderControl min="0" max="100" key={`thrust${val}`} indx={val} power={that.state.scales[val].power} invert={that.state.scales[val].invert} rend={that.rendData.bind(that)} name={`Thruster ${val + 1}`} />
+            <SliderControl min={0} max={100} key={`thrust${val}`} indx={val} power={this.state.scales[val].power} invert={this.state.scales[val].invert} rend={this.rendData.bind(this)} name={`Thruster ${val + 1}`} />
         ));
     }
 
     rendRightScales() {
         return [4, 5, 6, 7].map((val, index) => (
-            <SliderControl min="0" max="100" key={`thrust${val}`} indx={val} power={that.state.scales[val].power} invert={that.state.scales[val].invert} rend={that.rendData.bind(that)} name={`Thruster ${val + 1}`} />
+            <SliderControl min={0} max={100} key={`thrust${val}`} indx={val} power={this.state.scales[val].power} invert={this.state.scales[val].invert} rend={this.rendData.bind(this)} name={`Thruster ${val + 1}`} />
         ));
     }
 
