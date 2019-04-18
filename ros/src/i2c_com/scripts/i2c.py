@@ -22,7 +22,7 @@ if __name__ == "__main__":
     imu_sens = BNO055()
     #temp_sens = TSYS01()
     #depth_sens = MS5837()
-    temp_sens.init()
+    #temp_sens.init()
    # except:
         #add mock classes to return 0 and continue and alert pilots
    #     pass
@@ -33,7 +33,7 @@ if __name__ == "__main__":
             # imu sensor update
 
             out_message = imu_msg()
-            out_message.gyro = [imu_sens.gyro_x(), imu_sens.gyro_y(), imu_sens.gyro_z()]
+            out_message.gyro = [imu_sens.pitch(), imu_sens.yaw(), imu_sens.roll()]
             out_message.accel = [imu_sens.acceleration_x(), imu_sens.acceleration_y(), imu_sens.acceleration_z()]
             imu_pub.publish(out_message)
 
@@ -49,4 +49,4 @@ if __name__ == "__main__":
             #depth_message = depth_msg()
             #depth_message.depth = {depth_sense.depth()}
             #depth_pub.publish(depth_message)
-    rate.sleep()
+        rate.sleep()
