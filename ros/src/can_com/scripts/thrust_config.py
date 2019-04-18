@@ -3,9 +3,9 @@ import sys
 import can
 import time
 
-IDS = [513, 514, 515]
+IDS = [513, 515] # READD 514!!!
 POS_RANGE = 4
-DEFAULT_POWER = 200
+DEFAULT_POWER = 140
 ZERO_POWER = 127
 DELAY=5
 
@@ -21,12 +21,12 @@ if __name__ == "__main__":
     can_bus = can.interface.Bus(channel=channel, bustype='socketcan')
 
     # initialize the thrusters
-    data=bytearray([0]*8);
-    IDS = [514]
-    for i in IDS:
-        can_tx = can.Message(arbitration_id=i, data=data, extended_id=False)
-        can_bus.send(can_tx)
-        time.sleep(DELAY)
+    #data=bytearray([0]*8);
+    #IDS = [514]
+    #for i in IDS:
+    #    can_tx = can.Message(arbitration_id=i, data=data, extended_id=False)
+    #    can_bus.send(can_tx)
+    #    time.sleep(DELAY)
 
     for i in IDS:
         for p in range(POS_RANGE):
