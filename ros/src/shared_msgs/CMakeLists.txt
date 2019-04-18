@@ -57,6 +57,7 @@ add_message_files(
    depth_msg.msg
    temp_msg.msg
    thrust_status_msg.msg
+   tools_command_msg.msg
  )
 
 ## Generate services in the 'srv' folder

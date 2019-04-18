@@ -7,14 +7,28 @@ import eventlet
 import packet_mapper
 import sys
 import copy
+import os
 #from threading import Thread, Lock
 import thread
-from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg
+from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg, tools_command_msg
 from sensor_msgs.msg import Imu, Temperature
 from std_msgs.msg import Float32
 
-with open ('../surface/frontend/src/packets.json') as json_data:
-  data = json.load(json_data,)
+print os.getcwd()
+
+try:
+  with open ('../../surface/frontend/src/packets.json') as json_data:
+    data = json.load(json_data,)
+except:
+  try:
+    with open ('../../../../surface/frontend/src/packets.json') as json_data:
+      data = json.load(json_data,)
+  except:
+    with open ('../X11-Core/surface/frontend/src/packets.json') as json_data:
+      data = json.load(json_data,)
+
+  
+
 
 dearflask = data['dearflask']
 dearclient = data['dearclient']
