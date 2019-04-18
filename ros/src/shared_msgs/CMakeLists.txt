@@ -53,6 +53,9 @@ add_message_files(
    final_thrust_msg.msg
    can_msg.msg
    i2c_msg.msg
+   imu_msg.msg
+   depth_msg.msg
+   temp_msg.msg
    thrust_status_msg.msg
  )
 
