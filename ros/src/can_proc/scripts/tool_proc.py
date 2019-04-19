@@ -1,6 +1,6 @@
 #! /usr/bin/python
 import rospy
-from shared_msgs.msg import can_msg
+from shared_msgs.msg import can_msg, tools_command_msg
 
 TOOLS_BOARD_ID = 0x204
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
   pub = rospy.Publisher('can_tx', can_msg,
       queue_size= 100)
 
-  sub = rospy.Subscriber('tool_control', can_msg,
+  sub = rospy.Subscriber('tools_command', tools_command_msg,
       message_received)
 
   while not rospy.is_shutdown():
