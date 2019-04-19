@@ -38,17 +38,11 @@
                 1
             ]
         },
-        "manipulator": {
-            "power": 0
-        },
-        "groutTrout": {
-            "power": 0
-        },
-        "liftBag": {
-            "power": 0
-        },
-        "marker": {
-            "power": 0
+        "tools": {
+            "manipulator": 0,
+            "groutTrout": 0,
+            "liftBag": 0,
+            "marker": 0
         },
         "cameras": {},
         "leds": {

@@ -169,7 +169,7 @@ class App extends React.Component {
                                 <ThrusterInfo
                                     thrusters={this.state.dearclient.thrusters}
                                     disabled={this.state.dearflask.thrusters.disable_thrusters}
-                                    manipulator={this.state.dearflask.manipulator.power}
+                                    manipulator={this.state.dearflask.tools.manipulator}
                                     rend={this.changeDisabled}
                                 />
                             </Card>

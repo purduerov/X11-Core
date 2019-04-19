@@ -83,15 +83,15 @@ var bind = {
                 func() {
                     var stuff = react.state.config.tool_scales.groutTrout;
                     // console.log(-react.gp.buttons.x.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
-                    // console.log(react.flaskcpy.groutTrout.power)
-                    react.flaskcpy.groutTrout.power = react.gp.buttons.x.curVal * stuff.master * stuff.close * stuff.invert;
+                    // console.log(react.flaskcpy.tools.groutTrout)
+                    react.flaskcpy.tools.groutTrout = react.gp.buttons.x.curVal * stuff.master * stuff.close * stuff.invert;
                 },
             },
             released: {
                 func() {
                     var stuff = react.state.config.tool_scales.groutTrout;
-                    if (react.flaskcpy.groutTrout.power * stuff.invert > 0) {
-                        react.flaskcpy.groutTrout.power = 0;
+                    if (react.flaskcpy.tools.groutTrout * stuff.invert > 0) {
+                        react.flaskcpy.tools.groutTrout = 0;
                     }
                 },
             },
@@ -101,15 +101,15 @@ var bind = {
                 func() {
                     var stuff = react.state.config.tool_scales.marker;
                     // console.log(-react.gp.buttons.y.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
-                    // console.log(react.flaskcpy.marker.power)
-                    react.flaskcpy.marker.power = react.gp.buttons.y.curVal * stuff.master * stuff.close * stuff.invert;
+                    // console.log(react.flaskcpy.tools.marker)
+                    react.flaskcpy.tools.marker = react.gp.buttons.y.curVal * stuff.master * stuff.close * stuff.invert;
                 },
             },
             released: {
                 func() {
                     var stuff = react.state.config.tool_scales.marker;
-                    if (react.flaskcpy.marker.power * stuff.invert > 0) {
-                        react.flaskcpy.marker.power = 0;
+                    if (react.flaskcpy.tools.marker * stuff.invert > 0) {
+                        react.flaskcpy.tools.marker = 0;
                     }
                 },
             },
@@ -118,14 +118,14 @@ var bind = {
             pressed: {
                 func() {
                     var stuff = react.state.config.tool_scales.manipulator;
-                    react.flaskcpy.manipulator.power = react.gp.buttons.a.curVal * stuff.master * stuff.open * stuff.invert;
+                    react.flaskcpy.tools.manipulator = react.gp.buttons.a.curVal * stuff.master * stuff.open * stuff.invert;
                 },
             },
             released: {
                 func() {
                     var stuff = react.state.config.tool_scales.manipulator;
-                    if (react.flaskcpy.manipulator.power * stuff.invert > 0) {
-                        react.flaskcpy.manipulator.power = 0;
+                    if (react.flaskcpy.tools.manipulator * stuff.invert > 0) {
+                        react.flaskcpy.tools.manipulator = 0;
                     }
                 },
             },
@@ -135,15 +135,15 @@ var bind = {
                 func() {
                     var stuff = react.state.config.tool_scales.manipulator;
                     // console.log(-react.gp.buttons.lb.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
-                    // console.log(react.flaskcpy.manipulator.power)
-                    react.flaskcpy.manipulator.power = -react.gp.buttons.b.curVal * stuff.master * stuff.close * stuff.invert;
+                    // console.log(react.flaskcpy.tools.manipulator)
+                    react.flaskcpy.tools.manipulator = -react.gp.buttons.b.curVal * stuff.master * stuff.close * stuff.invert;
                 },
             },
             released: {
                 func() {
                     var stuff = react.state.config.tool_scales.manipulator;
-                    if (react.flaskcpy.manipulator.power * stuff.invert < 0) {
-                        react.flaskcpy.manipulator.power = 0;
+                    if (react.flaskcpy.tools.manipulator * stuff.invert < 0) {
+                        react.flaskcpy.tools.manipulator = 0;
                     }
                 },
             },
@@ -153,17 +153,17 @@ var bind = {
                 func() {
                     var stuff = react.state.config.tool_scales.liftBag;
                     // console.log(-react.gp.buttons.lb.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
-                    // console.log(react.flaskcpy.liftBag.power)
+                    // console.log(react.flaskcpy.tools.liftBag)
                     if(react.gp.buttons.right.curVal > 0) {
-                        react.flaskcpy.liftBag.power = react.gp.buttons.start.curVal * stuff.master * stuff.close * stuff.invert;
+                        react.flaskcpy.tools.liftBag = react.gp.buttons.start.curVal * stuff.master * stuff.close * stuff.invert;
                     }
                 },
             },
             released: {
                 func() {
                     var stuff = react.state.config.tool_scales.liftBag;
-                    if (react.flaskcpy.liftBag.power * stuff.invert > 0) {
-                        react.flaskcpy.liftBag.power = 0;
+                    if (react.flaskcpy.tools.liftBag * stuff.invert > 0) {
+                        react.flaskcpy.tools.liftBag = 0;
                     }
                 },
             },
@@ -173,17 +173,17 @@ var bind = {
                 func() {
                     var stuff = react.state.config.tool_scales.liftBag;
                     // console.log(-react.gp.buttons.lb.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
-                    // console.log(react.flaskcpy.liftBag.power)
+                    // console.log(react.flaskcpy.tools.liftBag)
                     if(react.gp.buttons.start.curVal > 0) {
-                        react.flaskcpy.liftBag.power = react.gp.buttons.right.curVal * stuff.master * stuff.close * stuff.invert;
+                        react.flaskcpy.tools.liftBag = react.gp.buttons.right.curVal * stuff.master * stuff.close * stuff.invert;
                     }
                 },
             },
             released: {
                 func() {
                     var stuff = react.state.config.tool_scales.liftBag;
-                    if (react.flaskcpy.liftBag.power * stuff.invert > 0) {
-                        react.flaskcpy.liftBag.power = 0;
+                    if (react.flaskcpy.tools.liftBag * stuff.invert > 0) {
+                        react.flaskcpy.tools.liftBag = 0;
                     }
                 },
             },
