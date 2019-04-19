@@ -4,10 +4,15 @@ from shared_msgs.msg import can_msg
 
 TOOLS_BOARD_ID = 0x204
 
-MANIPULATOR_BIT = 0b0
-GROUT_TROUT_BIT = 0b0
-LIFT_BAG_BIT = 0b0
-MARKER_BIT = 0b0
+MANIPULATOR_OPEN_BIT = 0b10000000
+MANIPULATOR_CLOSE_BIT = 0b1000
+GROUT_TROUT_OPEN_BIT = 0b10
+GROUT_TROUT_CLOSE_BIT = 0b100000
+#LIFT_BAG_OPEN_BIT = 0b0
+#LIFT_BAG_CLOSE_BIT = 0b0
+MARKER_OPEN_BIT = 0b10000
+MARKER_CLOSE_BIT = 0b1
+
 
 pub = None
 sub = None
@@ -15,11 +20,17 @@ sub = None
 def message_received(msg):
   data_list = [0] * 8
 
-  data_list[-1] = data_list[-1] | (msg.manipulator * MANIPULATOR_BIT)
-  data_list[-1] = data_list[-1] | (msg.groutTrout * GROUT_TROUT_BIT)
-  data_list[-1] = data_list[-1] | (msg.liftBag * LIFT_BAG_BIT)
-  data_list[-1] = data_list[-1] | (msg.marker * MARKER_BIT)
+  data_list[-1] = data_list[-1] | (msg.manipulator * MANIPULATOR_OPEN_BIT)
+  data_list[-1] = data_list[-1] | ((not msg.manipulator) * MANIPULATOR_CLOSE_BIT)
+  data_list[-1] = data_list[-1] | (msg.groutTrout * GROUT_TROUT_OPEN_BIT)
+  data_list[-1] = data_list[-1] | ((not msg.groutTrout) * GROUT_TROUT_CLOSE_BIT)
+  #data_list[-1] = data_list[-1] | (msg.liftBag * LIFT_BAG_OPEN_BIT)
+  #data_list[-1] = data_list[-1] | ((not msg.liftBag) * LIFT_BAG_CLOSE_BIT)
+  data_list[-1] = data_list[-1] | (msg.marker * MARKER_OPEN_BIT)
+  data_list[-1] = data_list[-1] | ((not msg.marker) * MARKER_CLOSE_BIT)
   data = bytearray(data_list)
+
+  print data_list
 
   cmsg = can_msg()
   cmsg.id = TOOLS_BOARD_ID
