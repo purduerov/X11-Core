@@ -14,7 +14,7 @@ class View:
   at_beginning = True
   magick_number = 0; 
   thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
-      "blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]}
+      "blue": [(182/2,10 * 2.56,12 * 2.56),(265/2,100 * 2.56,100 * 2.56)]}
   def __init__(self,cnt = None, at_beginning = True):
     self.cnt = cnt
   def compare_cnts(self,ex_cnt):
@@ -176,9 +176,9 @@ def process(data):
   img = cv2.GaussianBlur(img,(5,5),0)
  
   #red
-  #img = cv2.inRange(img,thresh_rngs["blue"][0],thresh_rngs["blue"][1])
+  #img = cv2.inRange(img,View.thresh_rngs["red"][0],View.thresh_rngs["red"][1])
   #blue
-  img = cv2.inRange(img,(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
+  img = cv2.inRange(img,View.thresh_rngs["blue"][0],View.thresh_rngs["blue"][1])
 
   #erode and dilate image
   img =  cv2.erode(img,np.ones((5,5)))

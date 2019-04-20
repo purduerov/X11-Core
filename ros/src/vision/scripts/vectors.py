@@ -15,7 +15,7 @@ class Vector:
     origin = [0, 0]
     prev_mag = m.sqrt((self.prev_vector[0])**2 + (self.prev_vector[1]**2))
     unit_vect = [self.prev_vector[0]/prev_mag, self.prev_vector[1]/prev_mag]
-    if(abs(unit_vect[0]) > """0.85 * """abs(unit_vect[1])):
+    if(abs(unit_vect[0]) > abs(unit_vect[1])):
       if (unit_vect[0] > 0):
         #This origin point is the left middle
         print("left middle")
