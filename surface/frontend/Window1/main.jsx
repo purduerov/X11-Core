@@ -29,12 +29,16 @@ class App extends React.Component {
         this.state = require("../src/packets.json");
         this.state.gp = require('../src/gamepad/bettergamepad.js');
 
-        this.state.gp = require ("../src/gamepad/bettergamepad.js");
-        this.gp = require('../src/gamepad/bettergamepad.js');
+        this.gp = require('../src/gamepad/bettergamepad.js'); //
 
         this.state.CannonVolume = 0; //cm^3
         this.state.directions = { x: 0, y: 0 };
         this.state.freeze = 0;
+        this.state.tools = {
+            grout_trout: {
+                power: 0,
+              },
+        };
         this.state.config = {
             thrust_scales: {
                 master: 50,
@@ -186,6 +190,11 @@ class App extends React.Component {
                         <div className="data-column">
                             <Card title="IPC Timer (Master?)" />
                             <Card title="Line Graph Component" />
+                            <Card>
+                              <Gpinfo
+                                gp={this.state.gp}
+                              />
+                            </Card>
                         </div>
                     </div>
                 </div>

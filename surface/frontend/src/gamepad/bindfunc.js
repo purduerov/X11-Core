@@ -112,6 +112,18 @@ var bind = {
                 },
             },
         },
+        y: { //grout trout
+            pressed: {
+              func() {
+                react.flaskcpy.tools.grout_trout.power = 1;
+              }
+            },
+            released: {
+              func() {
+                react.flaskcpy.tools.grout_trout.power = 0;
+              }
+            }
+        },
         right: { // obs leveler power right increment
             pressed: {
                 func() {

@@ -139,11 +139,6 @@ class App extends React.Component {
                                 />
                             </Card>
                             <Card title="Other Sensor Info" />
-                            <Card>
-                              <Gpinfo
-                                gp={this.state.gp}
-                              />
-                            </Card>
                         </div>
                     </div>
                 </div>
