@@ -1,7 +1,7 @@
 <launch>
     <group ns="rov">
         <node name="can_node" pkg="can_com" type="can_bus.py"/>
-        <node name="thrust_proc" pkg="can_proc" type="thrust_proc.py"/>
+        <node name="thrust_proc" pkg="can_proc" type="thrust_proc.py" output="screen"/>
         <node name="tool_proc" pkg="can_proc" type="tool_proc.py"/>
 
         <node name="i2c_node" pkg="i2c_com" type="i2c.py"/>

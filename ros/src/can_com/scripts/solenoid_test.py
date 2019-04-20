@@ -7,7 +7,7 @@ IDS = [516]
 POS_RANGE = 4
 DEFAULT_POWER = 200
 ZERO_POWER = 127
-DELAY=0.1
+DELAY=0.2
 
 
 # This is a test script intended to simplify identification of hardware thruster

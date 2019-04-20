@@ -34,17 +34,25 @@ def message_received(msg):
   max_board = max(can_ids)
 
   for cid in range(base_board, max_board + 1):
-    data_list = [0] * 8
+    data_list = 0
     for i in range(8):
       if can_ids[i] == cid:
-        data_list[can_pos[i]] = can_pow[i]
+        data_list += can_pow[i]
+      print(data_list)
+      print(data_list & 0xff)
+      data_list = data_list << 8
+    data_list = data_list >> 8
     #print str(cid) + ' : ' + str(data_list)
-    data = bytearray(data_list)
+    #data = bytearray(data_list)
+    print("||")
+    for i in range(8):
+        print("{}".format((data_list >> 8*i) & 0xff))
+    print("{}\n{}".format(cid, type(cid)))
 
     # Publish Message
     new_msg = can_msg()
     new_msg.id = cid
-    new_msg.data = data
+    new_msg.data = data_list
     can_pub.publish(new_msg)
 
   #TODO Translate message to esc_single_msg
