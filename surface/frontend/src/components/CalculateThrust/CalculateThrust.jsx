@@ -20,7 +20,7 @@ export default class CalculateThrust extends Component {
       var fBuoyancy = waterMass * 9.7991; //F = mg
       var objectDensity = Number($("#specGrav").val()); //kg/m^3
       var objectWeight = objectDensity * volume * 9.7991; //kg/m^3 * m^3 * g to get N
-      var apparent = objectWeight - fBuoyancy;
+      var apparent = fBuoyancy - objectWeight;
       apparent = apparent.toFixed(3);
 
 
