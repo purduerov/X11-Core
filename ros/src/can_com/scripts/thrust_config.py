@@ -3,12 +3,12 @@ import sys
 import can
 import time
 
-IDS = [513, 514, 515] # READD 514!!!
+IDS = [513, 514, 515]
 POS_RANGE = 4
 DEFAULT_POWER = 140
 POWER_DELTA = 30
 ZERO_POWER = 127
-DELAY=1
+DELAY=5
 
 
 # This is a test script intended to simplify identification of hardware thruster
@@ -55,20 +55,20 @@ if __name__ == "__main__":
             can_bus.send(can_tx)
             
             time.sleep(DELAY)
-
-            # then forwards
-            data_list = list()
-            data_list = [0,0,0,0]                             # adds zeros to last 4 unused positions
-            [data_list.append(ZERO_POWER) for _ in range(p)]                          # adds ZERO POWER buffers before target pos
-            data_list.append(ZERO_POWER+POWER_DELTA)                                     # adds DEFAULT POWER at target pos
-            [data_list.append(ZERO_POWER) for _ in range(POS_RANGE - p - 1)]    # adds ZERO POWER buffers after target pos
-            data = bytearray(data_list)
-            print str(i) + ' : ' + str(list(data))
-
-            can_tx = can.Message(arbitration_id=i, data=data, extended_id=False)
-            can_bus.send(can_tx)
-
-            time.sleep(DELAY)
+#
+#            # then forwards
+#            data_list = list()
+#            data_list = [0,0,0,0]                             # adds zeros to last 4 unused positions
+#            [data_list.append(ZERO_POWER) for _ in range(p)]                          # adds ZERO POWER buffers before target pos
+#            data_list.append(ZERO_POWER+POWER_DELTA)                                     # adds DEFAULT POWER at target pos
+#            [data_list.append(ZERO_POWER) for _ in range(POS_RANGE - p - 1)]    # adds ZERO POWER buffers after target pos
+#            data = bytearray(data_list)
+#            print str(i) + ' : ' + str(list(data))
+#
+#            can_tx = can.Message(arbitration_id=i, data=data, extended_id=False)
+#            can_bus.send(can_tx)
+#
+#            time.sleep(DELAY)
 
         data_list = list()
         [data_list.append(0) for _ in range(4)]

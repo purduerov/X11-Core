@@ -8,6 +8,12 @@ global can_pub
 can_ids = [0x201, 0x201, 0x203, 0x202, 0x202, 0x203, 0x203, 0x202] # can IDs
 can_pos = [    5,     6,     7,     5,     6,     4,     5,     7] # positions in data packet
 
+can_better_map = {
+        0x201: [None, 0, 1, None],
+        0x202: [None, 3, 4, 7],
+        0x203: [5, 6, None, 2]
+        }
+
 can_pow = [] # power of thrusters
 
 def message_received(msg):
@@ -35,19 +41,21 @@ def message_received(msg):
 
   for cid in range(base_board, max_board + 1):
     data_list = 0
-    for i in range(8):
-      if can_ids[i] == cid:
-        data_list += can_pow[i]
-      print(data_list)
-      print(data_list & 0xff)
-      data_list = data_list << 8
+    cur = can_better_map[cid]
+
+    for el in cur:
+        if el is not None:
+            data_list += can_pow[el]
+        else:
+            data_list += 127
+
+        data_list = data_list << 8
     data_list = data_list >> 8
-    #print str(cid) + ' : ' + str(data_list)
-    #data = bytearray(data_list)
-    print("||")
+    
+    print("|{}|".format(cid))
     for i in range(8):
         print("{}".format((data_list >> 8*i) & 0xff))
-    print("{}\n{}".format(cid, type(cid)))
+    print("----")
 
     # Publish Message
     new_msg = can_msg()
