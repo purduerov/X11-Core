@@ -6,7 +6,7 @@ from shared_msgs.msg import can_msg, final_thrust_msg
 # Currently testing values are put in such that there are two boards each with four thrusters
 global can_pub
 can_ids = [0x201, 0x201, 0x203, 0x202, 0x202, 0x203, 0x203, 0x202] # can IDs
-can_pos = [5, 6, 7, 0, 3, 4, 5, 2] # positions in data packet
+can_pos = [5, 6, 7, 5, 6, 4, 5, 7] # positions in data packet
 
 can_pow = [] # power of thrusters
 
@@ -42,12 +42,12 @@ def message_received(msg):
       print(data_list & 0xff)
       data_list = data_list << 8
     data_list = data_list >> 8
-    #print str(cid) + ' : ' + str(data_list)
+    print str(cid) + ' : ' + str(data_list)
     #data = bytearray(data_list)
-    print("||")
-    for i in range(8):
-        print("{}".format((data_list >> 8*i) & 0xff))
-    print("{}\n{}".format(cid, type(cid)))
+    #print("||")
+    #for i in range(8):
+    #    print("{}".format((data_list >> 8*i) & 0xff))
+    #print("{}\n{}".format(cid, type(cid)))
 
     # Publish Message
     new_msg = can_msg()

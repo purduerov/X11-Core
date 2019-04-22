@@ -34,7 +34,7 @@ def message_received(msg):
 
   cmsg = can_msg()
   cmsg.id = TOOLS_BOARD_ID
-  cmsg.data = data
+  cmsg.data = data_list[-1]
   pub.publish(cmsg)
     
   pass
