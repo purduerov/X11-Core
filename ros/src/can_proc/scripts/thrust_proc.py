@@ -2,7 +2,6 @@
 import rospy
 from shared_msgs.msg import can_msg, final_thrust_msg
 
-#TODO Get the ID and position of the thrusters
 # Currently testing values are put in such that there are two boards each with four thrusters
 global can_pub
 can_ids = [0x201, 0x201, 0x203, 0x202, 0x202, 0x203, 0x203, 0x202] # can IDs
