@@ -6,7 +6,7 @@ from shared_msgs.msg import can_msg, final_thrust_msg
 # Currently testing values are put in such that there are two boards each with four thrusters
 global can_pub
 can_ids = [0x201, 0x201, 0x203, 0x202, 0x202, 0x203, 0x203, 0x202] # can IDs
-can_pos = [5, 6, 7, 0, 3, 4, 5, 2] # positions in data packet
+can_pos = [    5,     6,     7,     5,     6,     4,     5,     7] # positions in data packet
 
 can_pow = [] # power of thrusters
 
