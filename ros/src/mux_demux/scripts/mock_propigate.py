@@ -23,7 +23,7 @@ if __name__ == "__main__":
     thrust_pub = rospy.Publisher(ns + 'thrust_command',
       thrust_command_msg, queue_size=10)
 
-    rate = rospy.Rate(10) # 10hz
+    rate = rospy.Rate(50) # 50hz
     # TODO: I2C related activities
     while not rospy.is_shutdown():
       thrust_pub.publish(mock)
