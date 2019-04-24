@@ -18,14 +18,14 @@ if __name__ == "__main__":
     rate = rospy.Rate(IMU_PUB_RATE)
     temp_pub = rospy.Publisher('temp_data', temp_msg, queue_size = 1)
     depth_pub = rospy.Publisher('depth_data', depth_msg, queue_size = 1)
-    #try:
-    imu_sens = BNO055()
-    #temp_sens = TSYS01()
-    #depth_sens = MS5837()
-    #temp_sens.init()
-   # except:
+    try:
+        imu_sens = BNO055()
+        temp_sens = TSYS01()
+        depth_sens = MS5837()
+        temp_sens.init()
+    except:
         #add mock classes to return 0 and continue and alert pilots
-   #     pass
+        pass
     while not rospy.is_shutdown():
         # using imu rate to poll the temp sensor as well beacuse IMU updates faster
         if imu_sens.update():
@@ -39,14 +39,14 @@ if __name__ == "__main__":
 
             # read the temp in C and send it to a ros
 
-            #temp_message = temp_msg()
-            #temp_message.temperature = {temp_sens.temperature()}
-            #temp_pub.publish(temp_message)
+            temp_message = temp_msg()
+            temp_message.temperature = {temp_sens.temperature()}
+            temp_pub.publish(temp_message)
 
             #depth sensor updating
 
-            #depth_sense.update()
-            #depth_message = depth_msg()
-            #depth_message.depth = {depth_sense.depth()}
-            #depth_pub.publish(depth_message)
+            depth_sense.update()
+            depth_message = depth_msg()
+            depth_message.depth = {depth_sense.depth()}
+            depth_pub.publish(depth_message)
         rate.sleep()
