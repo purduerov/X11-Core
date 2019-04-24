@@ -8,10 +8,11 @@ import Complex_1
 
 desired_a = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 desired_p = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+desired_p_unramped = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 locked_dims_list = [False, False, False, False, False, False]
 disabled_list = [False, False, False, False, False, False, False, False]
 inverted_list = [0, 0, 0, 0, 0, 0, 0, 0]
-
+MAX_CHANGE = .1;
 #watch dog stuff
 last_packet_time = 0.0
 is_timed_out = False
@@ -37,12 +38,24 @@ def _pilot_command(comm):
   global inverted_list #inverted thrusters
   global new_pilot_data
   print 'new_pilot_data'
-  desired_p = comm.desired_thrust
+  desired_p_unramped = comm.desired_thrust
+  for i in range(0,6):
+      ramp(i)
   disabled_list = comm.disable_thrusters
   inverted_list = comm.inverted
   new_pilot_data = True
   on_loop()
 
+
+def ramp(index):
+    if (abs(desired_p_unramped[index] - desired_p[index]) > MAX_CHANGE):
+        if (desired_p_unramped[index] - desired_p[index] > 0):
+            desired_p[index] += MAX_CHANGE
+        else:
+            desired_p[index] -= MAX_CHANGE
+        return
+    else:
+        desired_p[index] = desired_p_unramped[index]
 def on_loop():
     global new_pilot_data
     global new_auto_data
