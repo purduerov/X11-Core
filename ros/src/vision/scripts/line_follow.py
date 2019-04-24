@@ -141,10 +141,11 @@ def traverse_line(img_og,contour,vects):
     center_cnt = draw_center(img_og, contour)
 
     #find moment
-    if cv2.isContourConvex(contour):
+    '''if cv2.isContourConvex(contour):
       center = center_cnt
     else:
-      center = center_rect
+      center = center_rect'''
+    center = center_cnt
     cv2.circle(img_og,(center[0],center[1]), 7, (0,0,0), -1)
  
     vects.get_vector_start_point()
