@@ -116,27 +116,13 @@ var bind = {
                     react.flaskcpy.tools.manipulator = react.gp.buttons.a.curVal;
                 },
             },
-            released: {
-                func() {
-                    if (react.flaskcpy.tools.manipulator > 0) {
-                        react.flaskcpy.tools.manipulator = 0;
-                    }
-                },
-            },
         },
         b: { // close manipulator
             pressed: {
                 func() {
                     // console.log(-react.gp.buttons.lb.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
                     // console.log(react.flaskcpy.tools.manipulator)
-                    react.flaskcpy.tools.manipulator = -react.gp.buttons.b.curVal;
-                },
-            },
-            released: {
-                func() {
-                    if (react.flaskcpy.tools.manipulator < 0) {
-                        react.flaskcpy.tools.manipulator = 0;
-                    }
+                    react.flaskcpy.tools.manipulator = 0;
                 },
             },
         },
