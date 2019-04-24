@@ -146,10 +146,10 @@ class App extends React.Component {
                             <Card title="Cannon Calculator" />
                             <Card>
                                 <ToolView
-                                    manipulator={this.state.dearflask.manipulator.power}
-                                    groutTrout={this.state.dearflask.groutTrout.power}
-                                    liftBag={this.state.dearflask.liftBag.power}
-                                    marker={this.state.dearflask.marker.power}
+                                    manipulator={this.state.dearflask.tools.manipulator}
+                                    groutTrout={this.state.dearflask.tools.groutTrout}
+                                    liftBag={this.state.dearflask.tools.liftBag}
+                                    marker={this.state.dearflask.tools.marker}
                                     servo={this.state.dearflask.maincam_angle}
                                     conf={this.state.config.tool_scales}
                                     rend={this.rendTools}
