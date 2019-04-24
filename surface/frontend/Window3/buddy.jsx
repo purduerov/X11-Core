@@ -45,14 +45,6 @@ class App extends React.Component {
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
             ],
-            tool_scales: {
-                manipulator: {
-                    master: 0.25,
-                    open: 1,
-                    close: 1,
-                    invert: 1,
-                },
-            },
         };
 
 
