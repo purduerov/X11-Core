@@ -8,7 +8,7 @@ export default class ToolView extends Component {
         super(props);
 
         this.state = { conf: props.conf };
-        this.axis = ['manipulator', 'servo'];
+        this.axis = ['manipulator', 'groutTrout', 'liftBag', 'marker', 'servo'];
 
         this.rendTool = this.rendTool.bind(this);
         this.reRender = this.reRender.bind(this);
@@ -27,20 +27,23 @@ export default class ToolView extends Component {
     }
 
     rendTool() {
-        return this.axis.map((val, index) => (
-            <li key={`axis${val}`}>
-                {this.state.conf[val] == undefined && (
-                    <p className={styles.lowMargin}>
-                        {val}
-:
-                        {' '}
-                        {typeof this.props[val] === 'boolean' ? (this.props[val] ? 1 : 0) : this.props[val].toFixed(2)}
-                    </p>
-                )}
-                {this.state.conf[val] != undefined
-          && <SliderControl min="0" max="50" key={val} indx={val} power={this.state.conf[val].master * 100} invert={this.state.conf[val].invert} rend={this.reRender} name={val} />}
-            </li>
-        ));
+        return this.axis.map((val, index) => {
+            return (
+                <li key={`axis${val}`}>
+                    {this.state.conf[val] === undefined && (
+                        <p className={styles.lowMargin}>
+                            {val}
+    :
+                            {' '}
+                            {typeof this.props[val] === 'boolean' ? (this.props[val] ? 1 : 0) : this.props[val].toFixed(2)}
+                        </p>
+                    )}
+                    {this.state.conf[val] !== undefined
+                    && <SliderControl min="0" max="50" key={val} indx={val} power={this.state.conf[val].master * 100} invert={this.state.conf[val].invert} rend={this.reRender} name={val} />}
+                    <hr/>
+                </li>
+            )
+        });
     }
 
     render() {

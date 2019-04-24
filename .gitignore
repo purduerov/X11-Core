@@ -114,6 +114,7 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# bad Node
 node_modules/
 package-lock.json
 

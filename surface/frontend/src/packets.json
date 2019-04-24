@@ -9,7 +9,7 @@
                 0,
                 0
             ],
-            "dims_locked": [
+            "stabilization_dim": [
                 0,
                 0,
                 0,
@@ -17,7 +17,7 @@
                 0,
                 0
             ],
-            "disabled_thrusters": [
+            "disable_thrusters": [
                 false,
                 false,
                 false,
@@ -27,7 +27,7 @@
                 false,
                 false
             ],
-            "inverted_thrusters": [
+            "inverted": [
                 1,
                 1,
                 1,
@@ -38,8 +38,11 @@
                 1
             ]
         },
-        "manipulator": {
-            "power": 0
+        "tools": {
+            "manipulator": 0,
+            "groutTrout": 0,
+            "liftBag": 0,
+            "marker": 0
         },
         "cameras": {},
         "leds": {

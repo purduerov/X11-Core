@@ -26,7 +26,10 @@ def topic_message_received(msg):
     data = bytearray(data_list)
     rospy.loginfo('Topic Message Received: ' + str(msg.id) + ':' + str(list(data)))
     can_tx = can.Message(arbitration_id=msg.id, data=data, extended_id=False)
-    can_bus.send(can_tx)
+    try:
+        can_bus.send(can_tx, timeout=0.00001)
+    except can.CanError as cerr:
+        pass
 
 # Publisher: Called when can bus message is received
 def bus_message_received(can_rx):
@@ -38,7 +41,7 @@ def bus_message_received(can_rx):
     for i in data_list:
         shift -= 8
         data = data + (i << shift)
-    #rospy.loginfo('Can Message Received: ' + str(can_rx.arbitration_id) + ':' + str(list(can_rx.data)))
+    rospy.loginfo('Can Message Received: ' + str(can_rx.arbitration_id) + ':' + str(list(can_rx.data)))
     can_rx = can_msg(can_rx.arbitration_id, data)
     pub.publish(can_rx)
 
@@ -46,7 +49,7 @@ if __name__ == "__main__":
     global can_bus
     rospy.init_node('can_node')
 
-    channel = 'vcan0'
+    channel = 'can0'
     if len(sys.argv) == 2:
         channel = sys.argv[1]
     can_bus = can.interface.Bus(channel=channel, bustype='socketcan')
