@@ -37,6 +37,7 @@ def _pilot_command(comm):
   global disabled_list #disabled thrusters
   global inverted_list #inverted thrusters
   global new_pilot_data
+  global desired_p_unramped
   print 'new_pilot_data'
   desired_p_unramped = comm.desired_thrust
   for i in range(0,6):
