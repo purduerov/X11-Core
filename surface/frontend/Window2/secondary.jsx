@@ -118,17 +118,6 @@ class App extends React.Component {
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card title="Cannon Calculator" />
-                            <Card>
-                                <ToolView
-                                    manipulator={this.state.dearflask.tools.manipulator}
-                                    groutTrout={this.state.dearflask.tools.groutTrout}
-                                    liftBag={this.state.dearflask.tools.liftBag}
-                                    marker={this.state.dearflask.tools.marker}
-                                    servo={this.state.dearflask.maincam_angle}
-                                    conf={this.state.config.tool_scales}
-                                    rend={this.rendTools}
-                                />
-                            </Card>
                             <Card title="Task List View" />
                             <Card>
                                 <ShowObject obj={this.state.dearclient.sensors.esc.temperatures} />
