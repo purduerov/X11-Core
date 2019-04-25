@@ -6,15 +6,55 @@ import std_msgs.msg
 from sensor_msgs.msg import Image
 import numpy as np
 from vectors import Vector
-import math
+import math as m
 
 bridge = CvBridge()
+
+class Vector:
+  prev_vector = []
+  x_cam_width = 640
+  y_cam_height = 480
+  def __init__(self,thrust_vect = [], resultant_vect = [], start_point = []):
+    self.thrust_vect = thrust_vect
+    self.resultant_vect = resultant_vect  
+    self.start_point =  start_point 
+
+  def get_vector_start_point(self):
+    origin = [0, 0]
+    prev_mag = m.sqrt((self.prev_vector[0])**2 + (self.prev_vector[1]**2))
+    unit_vect = [self.prev_vector[0]/prev_mag, self.prev_vector[1]/prev_mag]
+    if(abs(unit_vect[0]) > abs(unit_vect[1])):
+      if (unit_vect[0] > 0):
+        #This origin point is the left middle
+        print("left middle")
+        start_point = [origin[0], origin[1] + self.y_cam_height / 2]
+      else:
+        #This origin point is the right middle
+        print("right middle")
+        start_point = [origin[0] + self.x_cam_width, origin[1] + self.y_cam_height / 2]  
+    else:
+      if (unit_vect[1] < 0):
+        #This origin point is the bottom middle
+        print("bottom middle")
+        start_point = [origin[0] + self.x_cam_width / 2, origin[1] + self.y_cam_height]
+      else:
+        #This origin point is the top middle
+        start_point = [origin[0] + self.x_cam_width / 2, origin[1]] 
+        print("top middle")
+
+    self.start_point = start_point
+
+  def get_thrust_vect(self, center):
+    self.resultant_vect = [center[0] - self.start_point[0], center[1] - self.start_point[1]]
+    self.thrust_vect = [self.resultant_vect[0] - self.prev_vector[0], self.resultant_vect[1] - self.prev_vector[1]] 
+    
+    return self.thrust_vect, self.resultant_vect  
 
 class View:
   at_beginning = True
   magick_number = 0; 
   thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
-      "blue": [(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)]}
+      "blue": [(182/2,10 * 2.56,12 * 2.56),(265/2,100 * 2.56,100 * 2.56)]}
   def __init__(self,cnt = None, at_beginning = True):
     self.cnt = cnt
   def compare_cnts(self,ex_cnt):
@@ -141,10 +181,11 @@ def traverse_line(img_og,contour,vects):
     center_cnt = draw_center(img_og, contour)
 
     #find moment
-    if cv2.isContourConvex(contour):
+    '''if cv2.isContourConvex(contour):
       center = center_cnt
     else:
-      center = center_rect
+      center = center_rect'''
+    center = center_cnt
     cv2.circle(img_og,(center[0],center[1]), 7, (0,0,0), -1)
  
     vects.get_vector_start_point()
@@ -176,9 +217,9 @@ def process(data):
   img = cv2.GaussianBlur(img,(5,5),0)
  
   #red
-  #img = cv2.inRange(img,thresh_rngs["blue"][0],thresh_rngs["blue"][1])
+  #img = cv2.inRange(img,View.thresh_rngs["red"][0],View.thresh_rngs["red"][1])
   #blue
-  img = cv2.inRange(img,(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56))
+  img = cv2.inRange(img,View.thresh_rngs["blue"][0],View.thresh_rngs["blue"][1])
 
   #erode and dilate image
   img =  cv2.erode(img,np.ones((5,5)))
