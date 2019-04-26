@@ -28,15 +28,24 @@
                 false
             ],
             "inverted": [
-                1,
-                1,
-                1,
-                1,
-                1,
-                1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
                 1,
                 1
-            ]
+            ],
+            "inv_6dof" : {
+                "master": 1,
+                "velX": 1,
+                "velY": 1,
+                "velZ": -1,
+                "pitch": 1,
+                "roll": -1,
+                "yaw": 1
+            }
         },
         "tools": {
             "manipulator": 0,

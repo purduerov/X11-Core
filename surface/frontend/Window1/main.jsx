@@ -48,22 +48,18 @@ class App extends React.Component {
                 roll: 100,
                 yaw: 100,
             },
-            thrust_invert: {
-                master: 1,
-                velX: 1,
-                velY: 1,
-                velZ: 1,
-                pitch: 1,
-                roll: 1,
-                yaw: 1,
-            },
+            thrust_invert: this.state.dearflask.thrusters.inv_6dof,
             thruster_control: [ // invert is -1/1 for easy multiplication
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
-                { power: 100, invert: -1 }, { power: 100, invert: 1 },
+                { power: 100, invert: 1 }, { power: 100, invert: 1 },
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
             ],
         };
+
+        this.state.config.thruster_control.map((cur, index, arr) => {
+            arr[index].invert = this.state.dearflask.thrusters.inverted[index];
+        });
 
 
         this.flaskcpy = this.state.dearflask;
