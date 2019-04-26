@@ -25,17 +25,20 @@ class Complex():
     This is now set up so that the number of thrusters on the ROV can be changed by solely changing the sizes of the
     position, COM, and rotation matrices.
     """
-    # X11 Thruster locations and center of mass relative to an arbitrary(?) point converted from inches to meters
+    # X11 Thruster locations and center of mass relative to an arbitrary point converted from inches to meters
+    # origin is set based of the frame. 2019 it is the center of the rectangle formed by the centers of the verticle
+    # thrusters and set as the floor of the z axis is the bottom of the ROV when sitting on flat surface
+    # center is 7 in. from the side of the ROV and the midpoint between the verticle thrusters 
     # Each column is X, Y, Z: X is forward/back, Y is left/right, Z is up/down
     X11_THRUSTERS = np.matrix([
-        [6.7593, 6.7593, -6.7593, -6.7593, 7.6887, 7.6887, -7.6887, -7.6887],
-		[-6.625, 6.625, 6.625, -6.625, -3.75, 3.75, 3.75, -3.75],
-        [-0.5809, -0.5809, -0.5809, -0.5809, 4.8840, 4.8840, 4.8840, 4.8840]
+        [ 6.75,  6.75, -6.75, -6.75,  4,     4,    -4,    -4   ],
+        [-6.25,  6.25,  6.25, -6.25, -7,     7,     7,    -7   ],
+        [ 5.58,  5.58,  5.58,  5.58, 12.45, 12.45, 12.45, 12.45]
     ]) * 0.0254
 
     X = 0
     Y = 0
-    Z = 0
+    Z = 7.41
 
     X11_COM = np.matrix([
         [X, X, X, X, X, X, X, X],
@@ -281,10 +284,12 @@ if __name__ == '__main__':
     np.set_printoptions(linewidth=150, suppress=True)
     print('MATRIX')
     pp.pprint(c.matrix)
+    print('\nCENTER OF MASS')
+    pp.pprint(c.X11_COM)
     print('\nPSEUDO-INVERSE MATRIX')
     pp.pprint(c.pseudo_inverse_matrix)
     print('\nRESULT 8D VECTOR')
-    pp.pprint(c.calculate(np.array([1, 0, 0, 0, 0, 0]), [0, 0, 1, 0, 0, 0, 0, 0], False))
+    pp.pprint(c.calculate(np.array([1, 0, 0, 0, 0, 0]), [0, 0, 0, 0, 0, 0, 0, 0], False))
     print('\nTHRUST')
     pp.pprint(c.thrust)
     print('POWER')
