@@ -10,7 +10,7 @@ var cvspawns = {};
 var cvref = {};
 
 // TODO: webpack.config.js needs to be configured to work with multiple input files
-const files = ['frontend/Window1/main.html', 'frontend/Window2/secondary.html', 'frontend/Window3/buddy.html'];
+const files = ['frontend/Window1/main.html', 'frontend/Window2/secondary.html']; //, 'frontend/Window3/buddy.html'];
 
 const windows = [null, null, null];
 
