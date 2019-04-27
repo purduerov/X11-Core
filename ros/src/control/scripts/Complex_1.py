@@ -36,9 +36,15 @@ class Complex():
         [ 5.58,  5.58,  5.58,  5.58, 12.45, 12.45, 12.45, 12.45]
     ]) * 0.0254
 
+    # Software's best guess COM based on absolutely nothing:
     X = 0
     Y = 0
     Z = 7.41
+
+    # Mechanical defined COM by Romir and Rafay:
+    #X =  0.056
+    #Y = -0.1256
+    #Z =  5.198
 
     X11_COM = np.matrix([
         [X, X, X, X, X, X, X, X],
