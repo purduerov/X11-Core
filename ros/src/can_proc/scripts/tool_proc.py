@@ -4,15 +4,22 @@ from shared_msgs.msg import can_msg, tools_command_msg
 
 TOOLS_BOARD_ID = 0x204
 
-MANIPULATOR_OPEN_BIT = 0b10000000
-MANIPULATOR_CLOSE_BIT = 0b1000
-GROUT_TROUT_OPEN_BIT = 0b10
-GROUT_TROUT_CLOSE_BIT = 0b100000
-#LIFT_BAG_OPEN_BIT = 0b0
-#LIFT_BAG_CLOSE_BIT = 0b0
-MARKER_OPEN_BIT = 0b10000
-MARKER_CLOSE_BIT = 0b1
+MANIPULATOR_OPEN_BIT = 0b1
+MANIPULATOR_CLOSE_BIT = 0b1000000
+GROUT_TROUT_OPEN_BIT = 0b10000
+GROUT_TROUT_CLOSE_BIT = 0b10
+LIFT_BAG_OPEN_BIT = 0b100
+LIFT_BAG_CLOSE_BIT = 0b100000
+MARKER_OPEN_BIT = 0b10000000
+MARKER_CLOSE_BIT = 0b1000
 
+# Scott switched hoses, since only PM wasn't working
+"""
+MANIPULATOR_OPEN_BIT = 0b100
+MANIPULATOR_CLOSE_BIT = 0b100000
+LIFT_BAG_OPEN_BIT = 0b1
+LIFT_BAG_CLOSE_BIT = 0b1000000
+"""
 
 pub = None
 sub = None
@@ -24,8 +31,8 @@ def message_received(msg):
   data_list[-1] = data_list[-1] | ((not msg.manipulator) * MANIPULATOR_CLOSE_BIT)
   data_list[-1] = data_list[-1] | (msg.groutTrout * GROUT_TROUT_OPEN_BIT)
   data_list[-1] = data_list[-1] | ((not msg.groutTrout) * GROUT_TROUT_CLOSE_BIT)
-  #data_list[-1] = data_list[-1] | (msg.liftBag * LIFT_BAG_OPEN_BIT)
-  #data_list[-1] = data_list[-1] | ((not msg.liftBag) * LIFT_BAG_CLOSE_BIT)
+  data_list[-1] = data_list[-1] | (msg.liftBag * LIFT_BAG_OPEN_BIT)
+  data_list[-1] = data_list[-1] | ((not msg.liftBag) * LIFT_BAG_CLOSE_BIT)
   data_list[-1] = data_list[-1] | (msg.marker * MARKER_OPEN_BIT)
   data_list[-1] = data_list[-1] | ((not msg.marker) * MARKER_CLOSE_BIT)
   data = bytearray(data_list)
@@ -46,7 +53,7 @@ if __name__ == "__main__":
   pub = rospy.Publisher('can_tx', can_msg,
       queue_size= 100)
 
-  sub = rospy.Subscriber('tools_command', tools_command_msg,
+  sub = rospy.Subscriber('/surface/tools_command', tools_command_msg,
       message_received)
 
   while not rospy.is_shutdown():
