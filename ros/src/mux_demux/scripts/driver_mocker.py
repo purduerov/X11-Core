@@ -66,7 +66,7 @@ if __name__ == "__main__":
             'ABS_Z': {"indx": 2, "weight": -.5, "scale": 1024.0}
     }
 
-    rate = rospy.Rate(1000) # 10hz
+    rate = rospy.Rate(10) # 10hz
 
     # TODO: I2C related activities
     while not rospy.is_shutdown():
