@@ -83,7 +83,7 @@ if __name__ == "__main__":
   sub = rospy.Subscriber('/surface/tools_command', tools_command_msg,
       message_received)
 
-  rate = rospy.Rate(5) # 20hz
+  rate = rospy.Rate(5) # 5hz
 
   while not rospy.is_shutdown():
       if changed:

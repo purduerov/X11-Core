@@ -63,7 +63,7 @@ if __name__ == "__main__":
     rospy.loginfo('Started \'can_node\' on channel: ' + channel)
 
 
-    rate = rospy.Rate(40) # 30hz
+    rate = rospy.Rate(40) # 40hz
     # Performs publishing on can bus read
     while not rospy.is_shutdown():
         for can_rx in can_bus:
