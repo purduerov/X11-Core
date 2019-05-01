@@ -12,18 +12,17 @@ module.exports = (where, socketHost) => {
     // upon new data, save it locally
     socket.on('dearclient-response', (data) => { // Updates the data sent back from the server
 
-        ipcRenderer.send('update-info-to', data); //send data to window 2
+        ipcRenderer.send('update-info-to', data); // send data to window 2
 
         where.setState({
             dearclient: data,
         });
-
     });
 
     // send new data
     setInterval(() => { // Sends a message down to the server with updated surface info
         socket.emit('dearRos', where.state.dearflask);
-    }, 50);
+    }, 200);
 
 
     /*
