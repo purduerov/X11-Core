@@ -70,7 +70,8 @@ if __name__ == "__main__":
             bus_message_received(can_rx)
         
         try: # pop from left/beginning of queue
-            can_bus.send(can_queue.popleft(), timeout=0.00001)
+            if len(can_queue):
+                can_bus.send(can_queue.popleft(), timeout=0.00001)
         except can.CanError as cerr:
             print("There was a CAN sending error")
             pass
