@@ -96,7 +96,11 @@ def name_received(msg):
 
 def start_server():
     global app
-    eventlet.wsgi.server(eventlet.listen(('', 5001)), app)
+    while True:
+        try:
+            eventlet.wsgi.server(eventlet.listen(('', 5001)), app)
+        except:
+            print 'restarting server'
 
 if __name__ == "__main__":
     rospy.init_node('mux_demux')

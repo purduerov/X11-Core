@@ -45,8 +45,8 @@ if __name__ == "__main__":
 
             #depth sensor updating
 
-            depth_sense.update()
-            depth_message = depth_msg()
-            depth_message.depth = {depth_sense.depth()}
-            depth_pub.publish(depth_message)
+           # depth_sense.update()
+            #depth_message = depth_msg()
+            #depth_message.depth = {depth_sense.depth()}
+           # depth_pub.publish(depth_message)
         rate.sleep()
