@@ -27,6 +27,7 @@ def topic_message_received(msg):
     rospy.loginfo('Topic Message Received: ' + str(msg.id) + ':' + str(list(data)))
     can_tx = can.Message(arbitration_id=msg.id, data=data, extended_id=False)
     try:
+        print(can_tx)
         can_bus.send(can_tx, timeout=0.00001)
     except can.CanError as cerr:
         pass
