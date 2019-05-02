@@ -13,9 +13,11 @@ from collections import deque
 #           can_bus reads the pi CAN line (or vcan) and writes contents to can_rx topic.
 
 global can_bus
-global can_queue = deque() # slightly more efficient than list append/pop
+global can_queue
 global pub
 global sub
+
+can_queue = deque() # slightly more efficient than list append/pop
 
 # Subscriber: Called when topic message is received
 def topic_message_received(msg):
@@ -27,10 +29,11 @@ def topic_message_received(msg):
         shift -= 8
         data_list.append((msg.data >> shift) % 256)
     data = bytearray(data_list)
-    rospy.loginfo('Topic Message Received: ' + str(msg.id) + ':' + str(list(data)))
+    #rospy.loginfo('Topic Message Received: ' + str(msg.id) + ':' + str(list(data)))
     can_tx = can.Message(arbitration_id=msg.id, data=data, extended_id=False)
-
+    
     can_queue.append(can_tx) # append to right/end of queue
+    rospy.loginfo("Queue grew, to {} items long".format(len(can_queue)))
 
 # Publisher: Called when can bus message is received
 def bus_message_received(can_rx):
@@ -67,13 +70,18 @@ if __name__ == "__main__":
     # Performs publishing on can bus read
     while not rospy.is_shutdown():
         for can_rx in can_bus:
+            rospy.loginfo("Please help")
             bus_message_received(can_rx)
+        rospy.loginfo("Helped")
         
         try: # pop from left/beginning of queue
+            rospy.loginfo("Can queue members: {}".format(len(can_queue)))
             if len(can_queue):
-                can_bus.send(can_queue.popleft(), timeout=0.00001)
+                out = can_queue.popleft()
+                rospy.loginfo(out)
+                can_bus.send(out, timeout=0.00001)
         except can.CanError as cerr:
-            print("There was a CAN sending error")
+            rospy.loginfo("There was a CAN sending error")
             pass
 
         rate.sleep()

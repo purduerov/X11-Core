@@ -74,26 +74,26 @@ def message_received(msg):
       
 
 if __name__ == "__main__":
-  rospy.init_node('tool_proc', anonymous=True)
-  
-  # Publish to the CAN hardware transmitter
-  pub = rospy.Publisher('can_tx', can_msg,
-      queue_size= 100)
+    rospy.init_node('tool_proc', anonymous=True)
+        
+    # Publish to the CAN hardware transmitter
+    pub = rospy.Publisher('can_tx', can_msg,
+        queue_size= 100)
 
-  sub = rospy.Subscriber('/surface/tools_command', tools_command_msg,
-      message_received)
+    sub = rospy.Subscriber('/surface/tools_command', tools_command_msg,
+        message_received)
 
-  rate = rospy.Rate(5) # 5hz
+    rate = rospy.Rate(5) # 5hz
 
-  while not rospy.is_shutdown():
-      if changed:
-          if not pseudo_lock:
-              changed = False
-        pub.publish(cmsg_pm)
-        pub.publish(cmsg_gt)
-        pub.publish(cmsg_lb)
-        pub.publish(cmsg_mk)
-      rate.sleep()
-      #rospy.spin()
+    while not rospy.is_shutdown():
+        if changed:
+            if not pseudo_lock:
+                changed = False
+            pub.publish(cmsg_pm)
+            pub.publish(cmsg_gt)
+            pub.publish(cmsg_lb)
+            pub.publish(cmsg_mk)
+        rate.sleep()
+        #rospy.spin()
     
 
