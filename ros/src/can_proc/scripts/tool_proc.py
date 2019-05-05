@@ -14,6 +14,7 @@ LIFT_BAG_CLOSE_BIT =      0x20
 MARKER_OPEN_BIT =         0x80
 MARKER_CLOSE_BIT =        0x08
 
+cmsg = can_msg()
 cmsg_pm = can_msg()
 cmsg_gt = can_msg()
 cmsg_lb = can_msg()
@@ -40,8 +41,6 @@ sub = None
 
 def message_received(msg):
     global cmsg_pm, cmsg_gt, cmsg_lb, cmsg_mk
-    global changed, pseudo_lock
-    pseudo_lock = True # Don't think ROS needs this, but just in case
     # data_list = [0] * 8
 
     pm = (msg.manipulator * MANIPULATOR_OPEN_BIT) | ((not msg.manipulator) * MANIPULATOR_CLOSE_BIT)
@@ -50,12 +49,31 @@ def message_received(msg):
     mk = (msg.marker * MARKER_OPEN_BIT) | ((not msg.marker) * MARKER_CLOSE_BIT)
 
     # If already changed, or if any new message isn't the same as last time
-    changed = changed or cmsg_pm.data != pm or cmsg_gt.data != gt or cmsg_lb.data != lb or cmsg_mk.data != mk
+    # changed = changed or cmsg_pm.data != pm or cmsg_gt.data != gt or cmsg_lb.data != lb or cmsg_mk.data != mk
 
     cmsg_pm.data = pm
     cmsg_gt.data = gt
     cmsg_lb.data = lb
     cmsg_mk.data = mk
+
+    # If we're doing this, we're getting rid of the rate
+    # Pilots likely have a hard time beating 5 to 10 Hz...
+    # We'll deal with spamming later
+    if cmsg_pm.data != pm:
+        cmsg_pm.data = pm
+        pub.publish(cmsg_pm)
+    
+    if cmsg_gt.data != gt:
+        cmsg_gt.data = gt
+        pub.publish(cmsg_gt)
+    
+    if cmsg_lb.data != lb:
+        cmsg_lb.data = lb
+        pub.publish(cmsg_lb)
+    
+    if cmsg_mk.data != mk:
+        cmsg_mk.data = mk
+        pub.publish(cmsg_mk)
 
     #data_list[-1] = data_list[-1] | (msg.manipulator * MANIPULATOR_OPEN_BIT)
     #data_list[-1] = data_list[-1] | ((not msg.manipulator) * MANIPULATOR_CLOSE_BIT)
@@ -70,7 +88,6 @@ def message_received(msg):
     #print data_list
 
     #cmsg.data = data_list[-1]
-    pseudo_lock = False # Don't think ROS needs this, but just in case
       
 
 if __name__ == "__main__":
@@ -83,17 +100,10 @@ if __name__ == "__main__":
   sub = rospy.Subscriber('/surface/tools_command', tools_command_msg,
       message_received)
 
-  rate = rospy.Rate(5) # 5hz
+  #rate = rospy.Rate(5) # 5hz
 
   while not rospy.is_shutdown():
-      if changed:
-          if not pseudo_lock:
-              changed = False
-        pub.publish(cmsg_pm)
-        pub.publish(cmsg_gt)
-        pub.publish(cmsg_lb)
-        pub.publish(cmsg_mk)
-      rate.sleep()
-      #rospy.spin()
+      #rate.sleep()
+      rospy.spin()
     
 
