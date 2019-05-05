@@ -6,4 +6,7 @@ source ~/X11-Core/ros/devel/setup.bash
 
 mjpg_streamer -o "output_http.so -w ./www" -i "input_raspicam.so" > ~/mjpeg.log &
 
+./reset_can.py &
+
 roslaunch ~/X11-Core/ros/launch/run_rov.launch 
+killall reset_can.py
