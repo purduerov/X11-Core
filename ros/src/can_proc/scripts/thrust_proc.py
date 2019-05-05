@@ -2,6 +2,8 @@
 import rospy
 from shared_msgs.msg import can_msg, final_thrust_msg
 
+VALUE_DIFF = 1
+
 # Currently testing values are put in such that there are two boards each with four thrusters
 global can_pub
 can_ids = [0x201, 0x201, 0x203, 0x202, 0x202, 0x203, 0x203, 0x202] # can IDs
@@ -58,10 +60,12 @@ def message_received(msg):
         data_list = data_list << 8
     data_list = data_list >> 8
     
+    """
     print("|{}|".format(cid))
     for i in range(8):
         print("{}".format((data_list >> 8*i) & 0xff))
     print("----")
+    """
 
     # Publish Message
     new_msg = can_msg()
@@ -80,16 +84,24 @@ def message_received(msg):
 def checkChange(new_msg):
     global can_last
 
+    print("{}:".format(new_msg.id))
     if can_last[new_msg.id] is None:
+        print("New message, true")
+        can_last[new_msg.id] = new_msg
         return True
+
     else:
         test = new_msg.data
         comp = can_last[new_msg.id].data
         for i in range(4):
-            if abs( ((test >> 8*i) & 0xff) - ((comp >> 8*i) & 0xff) ) > 1:
+            a = abs( ((test >> 8*i) & 0xff) - ((comp >> 8*i) & 0xff) )
+           
+            if a > VALUE_DIFF:
                 can_last[new_msg.id] = new_msg
+                print("  changed")
                 return True
-            
+
+        print("  not changed")
         return False
 
 if __name__ == "__main__":

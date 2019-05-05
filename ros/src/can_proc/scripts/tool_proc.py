@@ -5,14 +5,14 @@ from shared_msgs.msg import can_msg, tools_command_msg
 
 TOOLS_BOARD_ID = 0x204
 
-MANIPULATOR_OPEN_BIT =    0x01
+MANIPULATOR_OPEN_BIT =    0x04
 MANIPULATOR_CLOSE_BIT =   0x40
-GROUT_TROUT_OPEN_BIT =    0x10
-GROUT_TROUT_CLOSE_BIT =   0x02
-LIFT_BAG_OPEN_BIT =       0x04
-LIFT_BAG_CLOSE_BIT =      0x20
 MARKER_OPEN_BIT =         0x80
 MARKER_CLOSE_BIT =        0x08
+GROUT_TROUT_OPEN_BIT =    0x10
+GROUT_TROUT_CLOSE_BIT =   0x01
+LIFT_BAG_OPEN_BIT =       0x02
+LIFT_BAG_CLOSE_BIT =      0x20
 
 cmsg = can_msg()
 cmsg_pm = can_msg()
