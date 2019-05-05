@@ -17,15 +17,23 @@ from std_msgs.msg import Float32
 print os.getcwd()
 
 try:
-  with open ('../../surface/frontend/src/packets.json') as json_data:
+  with open ('../surface/frontend/src/packets.json') as json_data:
     data = json.load(json_data,)
 except:
   try:
-    with open ('../../../../surface/frontend/src/packets.json') as json_data:
+    with open ('../../surface/frontend/src/packets.json') as json_data:
       data = json.load(json_data,)
   except:
-    with open ('../X11-Core/surface/frontend/src/packets.json') as json_data:
-      data = json.load(json_data,)
+    try:
+        with open ('../../../../surface/frontend/src/packets.json') as json_data:
+            data = json.load(json_data,)
+    except:
+        try:
+            with open ('../X11-Core/surface/frontend/src/packets.json') as json_data:
+                data = json.load(json_data,)
+        except:
+            with open ('../Documents/GitHub/X11-Core/surface/frontend/src/packets.json') as json_data:
+                data = json.load(json_data,)
 
   
 
@@ -69,7 +77,7 @@ def accept(sid, data):
         flask_mapper.pam(thrust, dearflask)
         flask_mapper.pam(auto, dearflask)
         flask_mapper.pam(tools, dearflask)
-        # print("Publishing:\n{}".format(thrust))
+        print("Publishing:\n{}".format(thrust))
         thrust_pub.publish(thrust)
         auto_pub.publish(auto)
         tools_pub.publish(tools)
@@ -90,7 +98,7 @@ def name_received(msg):
         names = client_mapper.get_msg_vars(msg)
         for name in names:
             client_mapper.map(name, getattr(msg, name), dearclient)
-        print(dearclient)
+        # print(dearclient)
 
         lock.release()
 

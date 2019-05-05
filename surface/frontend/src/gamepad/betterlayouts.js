@@ -39,7 +39,7 @@ global.layouts = {
     },
 
     LinuxRock: {
-        idMatch: ['Performance Designed Products Rock Candy Gamepad for Xbox 360 (Vendor:'],
+        idMatch: ['Performance Designed Products Rock Candy Gamepad for Xbox 360 (Vendor:', 'BDA XB1 Classic Controller (Vendor:'],
         buttons: [
             { indx: 0, name: 'a', pressed: 1, notpressed: 0, where: 'buttons' },
             { indx: 1, name: 'b', pressed: 1, notpressed: 0, where: 'buttons' },
