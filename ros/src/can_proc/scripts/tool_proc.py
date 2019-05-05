@@ -48,14 +48,6 @@ def message_received(msg):
     lb = (msg.liftBag * LIFT_BAG_OPEN_BIT) | ((not msg.liftBag) * LIFT_BAG_CLOSE_BIT)
     mk = (msg.marker * MARKER_OPEN_BIT) | ((not msg.marker) * MARKER_CLOSE_BIT)
 
-    # If already changed, or if any new message isn't the same as last time
-    # changed = changed or cmsg_pm.data != pm or cmsg_gt.data != gt or cmsg_lb.data != lb or cmsg_mk.data != mk
-
-    cmsg_pm.data = pm
-    cmsg_gt.data = gt
-    cmsg_lb.data = lb
-    cmsg_mk.data = mk
-
     # If we're doing this, we're getting rid of the rate
     # Pilots likely have a hard time beating 5 to 10 Hz...
     # We'll deal with spamming later

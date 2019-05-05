@@ -14,12 +14,19 @@ can_better_map = {
         }
 
 can_pow = [] # power of thrusters
+can_last = {
+        0x201: None,
+        0x202: None,
+        0x203: None
+        }
 
 def message_received(msg):
   global can_pub
   global can_ids
   global can_pos
   global can_pow
+  global can_last
+  global can_better_map
 
   rospy.loginfo('message received')
 
@@ -60,12 +67,30 @@ def message_received(msg):
     new_msg = can_msg()
     new_msg.id = cid
     new_msg.data = data_list
-    can_pub.publish(new_msg)
+
+    if checkChange(new_msg):
+        can_pub.publish(new_msg)
+    
 
   #TODO Translate message to esc_single_msg
   #sample_message = esc_single_msg()
   #esc_pub.publish(sample_message)
   pass
+
+def checkChange(new_msg):
+    global can_last
+
+    if can_last[new_msg.id] is None:
+        return True
+    else:
+        test = new_msg.data
+        comp = can_last[new_msg.id].data
+        for i in range(4):
+            if abs( ((test >> 8*i) & 0xff) - ((comp >> 8*i) & 0xff) ) > 1:
+                can_last[new_msg.id] = new_msg
+                return True
+            
+        return False
 
 if __name__ == "__main__":
   rospy.init_node('thrust_proc')
