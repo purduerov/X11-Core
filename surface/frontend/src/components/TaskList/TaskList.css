@@ -25,6 +25,8 @@
 
 .subTaskContainer {
   margin-top: 20px;
+  height: 500px;
+  overflow: scroll;
 }
 
 .subTask {
@@ -33,4 +35,5 @@
   margin-bottom: 5px;
   padding: 5px;
   cursor: pointer;
+  transition: 0.4s;
 }

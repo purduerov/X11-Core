@@ -2,6 +2,7 @@
   {
     "taskNum": 1,
     "taskDesc": "ENSURING PUBLIC SAFETY",
+    "pointsEarned": 0,
     "pointTotal": 120,
     "subTasks": [
       {
@@ -135,6 +136,7 @@
   {
     "taskNum": 2,
     "taskDesc": "MAINTAINING HEALTHY WATERWAYS",
+    "pointsEarned": 0,
     "pointTotal": 90,
     "subTasks": [
       {
@@ -204,7 +206,7 @@
           }
         ]
       },
-      { 
+      {
         "name": "Transporting and releasing trout fry",
         "criteria": "EACH_MAX_2",
         "score": 5
@@ -229,6 +231,7 @@
   {
     "taskNum": 3,
     "taskDesc": "PRESERVING HISTORY",
+    "pointsEarned": 0,
     "pointTotal": 90,
     "subTasks": [
       {

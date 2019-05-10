@@ -8,25 +8,31 @@ export default class TaskList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: 1
+      activeTab: 1,
+      tasks: TaskManifest
     };
 
     this.switchTab = this.switchTab.bind(this);
-  }
-
-  getTask(activeTab) {
-    return TaskManifest.find(({ taskNum }) => taskNum === activeTab);
+    this.pointsEarned = this.pointsEarned.bind(this);
   }
 
   switchTab(tabNum) {
     return () => this.setState({ activeTab: tabNum });
   }
+
+  pointsEarned(taskNum, addPoints) {
+    const tasks = this.state.tasks;
+    tasks[taskNum - 1].pointsEarned += addPoints;
+    this.setState({ tasks });
+  }
+
   render() {
+    const funcs = { pointsEarned: this.pointsEarned };
     return (
-      <div>
+      <div className={styles.container}>
         <Nav active={this.state.activeTab} switchTab={this.switchTab} />
         <div className={styles.body}>
-          <Task task={this.getTask(this.state.activeTab)}/>
+          <Task task={this.state.tasks[this.state.activeTab - 1]} funcs />
         </div>
       </div>
     );

@@ -1,14 +1,9 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import styles from "./TaskList.css";
-import SubTask from "./SubTask.jsx";
+import React, { Component } from 'react';
+import styles from './TaskList.css';
 
 export default class Task extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      pointsEarned: 0
-    };
   }
 
   render() {
@@ -19,26 +14,13 @@ export default class Task extends Component {
         </div>
 
         <div className={styles.stats}>
-          {`${this.state.pointsEarned} out of ${
+          {`${this.props.task.pointsEarned} out of ${
             this.props.task.pointTotal
           } points earned`}
         </div>
 
-        <div className={styles.subTaskContainer}>
-          {this.props.task.subTasks.map((sT, idx) => (
-            <SubTask key={idx} subTask={sT} />
-          ))}
-        </div>
+        <div className={styles.subTaskContainer}>{/* <SubTask /> */}</div>
       </div>
     );
   }
 }
-
-Task.propTypes = {
-  task: PropTypes.shape({
-    taskNum: PropTypes.number.isRequired,
-    taskDesc: PropTypes.string.isRequired,
-    pointTotal: PropTypes.number.isRequired,
-    subTasks: PropTypes.arrayOf(PropTypes.object).isRequired
-  }).isRequired
-};
