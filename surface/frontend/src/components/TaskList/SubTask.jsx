@@ -5,24 +5,20 @@ import styles from "./TaskList.css";
 export default class SubTask extends Component {
   constructor(props) {
     super(props);
-    this.togglePanel = this.togglePanel.bind(this);
   }
-
-  // togglePanel() {
-  //   const currentState = this.state.panelStyle.display;
-  //   this.setState({
-  //     panelStyle: {
-  //       display: currentState === "none" ? "block" : "none"
-  //     }
-  //   });
-  // }
 
   render() {
     return (
       <div>
-        <div className={styles.subTask} onClick={this.props.togglePanel(this.props.subTask.idx)}>
+        <div
+          className={styles.subTask}
+          onClick={this.props.funcs.toggleSubtaskDisplay(this.props.sTNum)}
+        >
           {this.props.subTask.name}
-          <div className={styles.panel} style={this.props.subTask.panelStyle}>
+          <div
+            className={styles.panel}
+            style={{ display: this.props.subTask.display }}
+          >
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in
             convallis quam. Praesent venenatis augue at quam fringilla mollis.
             Donec facilisis sapien felis, at bibendum lectus malesuada vitae.
@@ -34,19 +30,3 @@ export default class SubTask extends Component {
     );
   }
 }
-
-SubTask.propTypes = {
-  subTask: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    subSubTasks: PropTypes.arrayOf(PropTypes.object),
-    criteria: PropTypes.oneOfType([
-      PropTypes.oneOf(["EACH_MAX_2", "EACH_MAX_4"]),
-      PropTypes.object // could be null
-    ]),
-    score: PropTypes.number,
-    panelStyle: PropTypes.shape({
-      display: PropTypes.string.isRequired,
-      overflow: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired
-};

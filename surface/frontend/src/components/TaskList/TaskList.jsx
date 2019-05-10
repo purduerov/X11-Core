@@ -14,6 +14,7 @@ export default class TaskList extends Component {
 
     this.switchTab = this.switchTab.bind(this);
     this.pointsEarned = this.pointsEarned.bind(this);
+    this.toggleSubtaskDisplay = this.toggleSubtaskDisplay.bind(this);
   }
 
   switchTab(tabNum) {
@@ -26,13 +27,27 @@ export default class TaskList extends Component {
     this.setState({ tasks });
   }
 
+  toggleSubtaskDisplay(taskNum, sTNum) {
+    let tasks = this.state.tasks;
+    const display = tasks[taskNum - 1].subTasks[sTNum].display;
+    tasks[taskNum - 1].subTasks[sTNum].display =
+      display === "none" ? "block" : "none";
+    this.setState({ tasks });
+  }
+
   render() {
-    const funcs = { pointsEarned: this.pointsEarned };
+    const funcs = {
+      pointsEarned: this.pointsEarned,
+      toggleSubtaskDisplay: this.toggleSubtaskDisplay
+    };
     return (
       <div className={styles.container}>
         <Nav active={this.state.activeTab} switchTab={this.switchTab} />
         <div className={styles.body}>
-          <Task task={this.state.tasks[this.state.activeTab - 1]} funcs />
+          <Task
+            task={this.state.tasks[this.state.activeTab - 1]}
+            funcs={funcs}
+          />
         </div>
       </div>
     );

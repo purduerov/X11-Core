@@ -7,6 +7,7 @@
     "subTasks": [
       {
         "name": "Inspecting the foundation of the dam",
+        "display": "none",
         "subSubTasks": [
           {
             "name": "Following a transect line to inspect the foundation",
@@ -90,11 +91,13 @@
       },
       {
         "name": "Inserting grout into the voids underneath the dam",
+        "display": "none",
         "criteria": null,
         "score": 10
       },
       {
         "name": "Inspecting and repairing a trash rack",
+        "display": "none",
         "subSubTasks": [
           {
             "name": "Removing the damaged screen of the trash rack",
@@ -110,6 +113,7 @@
       },
       {
         "name": "Deploying a secondary micro-ROV to inspect a drain pipe",
+        "display": "none",
         "subSubTasks": [
           {
             "name": "Identifying areas of muddy water flow inside the pipe using",
@@ -141,6 +145,7 @@
     "subTasks": [
       {
         "name": "Monitoring water quality",
+        "display": "none",
         "subSubtasks": [
           {
             "name": "Measuring the water temperature",
@@ -180,6 +185,7 @@
       },
       {
         "name": "Determining habitat diversity",
+        "display": "none",
         "subSubtasks": [
           {
             "name": "Lifting a rock from the bottom",
@@ -208,11 +214,13 @@
       },
       {
         "name": "Transporting and releasing trout fry",
+        "display": "none",
         "criteria": "EACH_MAX_2",
         "score": 5
       },
       {
         "name": "Restoring fish habitat",
+        "display": "none",
         "subSubtasks": [
           {
             "name": "Removing a degraded rubber tire",
@@ -236,11 +244,13 @@
     "subTasks": [
       {
         "name": "Determining the lift capability of the ROV",
+        "display": "none",
         "criteria": null,
         "score": 5
       },
       {
         "name": "Calculating the Volume of the cannon",
+        "display": "none",
         "subSubTasks": [
           {
             "name": "Length Measurement",
@@ -303,6 +313,7 @@
       },
       {
         "name": "Determining the ROV's ability to lift the cannon",
+        "display": "none",
         "subSubTasks": [
           {
             "name": "Finding the cannon’s casting mark to determine its composition",
@@ -323,11 +334,13 @@
       },
       {
         "name": "Lifting the cannon to the surface, side of the pool",
+        "display": "none",
         "criteria": null,
         "score": 20
       },
       {
         "name": "Identifying and marking the location of cannon shells on the bottom",
+        "display": "none",
         "criteria": "EACH_MAX_4",
         "score": 5
       }
