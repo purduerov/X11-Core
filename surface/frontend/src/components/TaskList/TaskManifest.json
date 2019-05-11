@@ -116,7 +116,7 @@
         "display": "none",
         "subSubTasks": [
           {
-            "name": "Identifying areas of muddy water flow inside the pipe using",
+            "name": "Identifying areas of muddy water flow inside the pipe",
             "criteria": [
               {
                 "name": "Only fiber-optic connection to micro-ROV",

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styles from "./TaskList.css";
+import SubSubTask from "./SubSubTask.jsx";
 
 export default class SubTask extends Component {
   constructor(props) {
@@ -9,24 +10,39 @@ export default class SubTask extends Component {
 
   render() {
     return (
-      <div>
-        <div
-          className={styles.subTask}
-          onClick={this.props.funcs.toggleSubtaskDisplay(this.props.sTNum)}
-        >
-          {this.props.subTask.name}
-          <div
-            className={styles.panel}
-            style={{ display: this.props.subTask.display }}
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in
-            convallis quam. Praesent venenatis augue at quam fringilla mollis.
-            Donec facilisis sapien felis, at bibendum lectus malesuada vitae.
-            Maecenas sed faucibus tellus, in pretium turpis. Ut mattis felis a
-            purus congue fringilla.
-          </div>
-        </div>
-      </div>
+      <SubTaskHeader {...this.props}>
+        <SubSubTasksRender {...this.props} />
+      </SubTaskHeader>
     );
+  }
+}
+
+function SubTaskHeader(props) {
+  return (
+    <div
+      className={styles.subTask}
+      onClick={props.funcs.toggleSubtaskDisplay(props.sTNum)}
+    >
+      <span className={styles.openClose}>
+        {props.subTask.display === "block" ? "-" : "+"}
+      </span>
+      {""}
+      <span>{props.subTask.name}</span>
+      <div className={styles.panel} style={{ display: props.subTask.display }}>
+        {props.children}
+      </div>
+    </div>
+  );
+}
+
+function SubSubTasksRender(props) {
+  let sST;
+  if ((sST = props.subTask.subSubTasks)) {
+    const sSTArray = sST.map((val, idx) => (
+      <SubSubTask key={idx} subSubTask={val} />
+    ));
+    return <div>{sSTArray}</div>;
+  } else {
+    return "";
   }
 }

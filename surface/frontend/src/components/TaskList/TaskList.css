@@ -1,5 +1,5 @@
 .textPrimary {
-  color: #009687
+  color: #009687;
 }
 .textPrimary:hover {
   color: #066158;
@@ -36,4 +36,19 @@
   padding: 5px;
   cursor: pointer;
   transition: 0.4s;
+}
+
+.subTask > span {
+  display: inline-block;
+}
+
+.openClose {
+  width: 20px;
+}
+
+.subSubTask {
+  padding: 5px;
+  margin-top: 10px;
+  background: #242424;
+  border-radius: 5px;
 }
