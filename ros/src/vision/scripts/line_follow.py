@@ -5,11 +5,22 @@ from cv_bridge import CvBridge, CvBridgeError   #converts between ROS Image mess
 import std_msgs.msg
 from sensor_msgs.msg import Image
 import numpy as np
-from vectors import Vector
 import math as m
+from enum import Enum
 
 bridge = CvBridge()
 
+class Corner(Enum):
+  LOOKING = 0
+  FOLLOWING = 1
+  EXITING = 2
+
+# class StartPoint(Enum):
+#   UP = 0
+#   RIGHT = 1
+#   DOWN = 2
+#   LEFT = 3
+  
 class Vector:
   prev_vector = []
   x_cam_width = 640
@@ -19,6 +30,15 @@ class Vector:
     self.resultant_vect = resultant_vect  
     self.start_point =  start_point 
 
+  def get_corner_detect(self):
+    #This function returns enums for 1 of four directions if a corner is detected, and another separate enum for no corner detected
+
+    if(not corner_detected):
+      return Corner.NO_CORNER
+    else:
+      #Decision-making for which corner to output.
+        
+    
   def get_vector_start_point(self):
     origin = [0, 0]
     prev_mag = m.sqrt((self.prev_vector[0])**2 + (self.prev_vector[1]**2))
@@ -52,7 +72,7 @@ class Vector:
 
 class View:
   at_beginning = True
-  magick_number = 0; 
+  beginning_frames_seen = 0; 
   thresh_rngs = { "red": [(0/2,150,115),(35/2,255,255)],
       "blue": [(182/2,10 * 2.56,12 * 2.56),(265/2,100 * 2.56,100 * 2.56)]}
   def __init__(self,cnt = None, at_beginning = True):
@@ -96,50 +116,8 @@ def draw_center(img, contour):
   cv2.circle(img, (Cx, Cy), 3, (0, 255, 0), -1)
   return [Cx, Cy]
 
-################### REMOVE LATER ##########################################################################
-def get_ex_cnts():
-  #recognize starting square/circle
-
-  #****FIND A WAY TO ONLY DECLARE THES EX IMAGAES ONCE AND THEN PASS AS NEEDED*******
-  squares = [cv2.imread('sq_bl.jpeg',1),cv2.imread('sq_ang_bl.png',1),cv2.imread('sq_noise_bl.png',1)]
-  circles = [cv2.imread('circ_bl.png',1),cv2.imread('circ_ang_bl.png',1),cv2.imread('circ_noise_bl.png',1)]
-  
-  sq_thresh = []
-  circ_thresh = []
-  #need to do some thresholding in here
-  for img in range(len(squares)):
-    #Convert to HSV
-    squares[img] = cv2.cvtColor(squares[img],cv2.COLOR_BGR2HSV)
-    #threshold for blue
-    sq_thresh.append(cv2.inRange(squares[img],(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)))
-    #filter out noise
-    sq_thresh[img] = cv2.erode(sq_thresh[img],np.ones((5,5)))
-    sq_thresh[img] = cv2.dilate(sq_thresh[img],np.ones((10,10)))
-    
-  for img in range(len(circles)):
-    #Convert to HSV
-    circles[img] = cv2.cvtColor(circles[img],cv2.COLOR_BGR2HSV)
-    #threshold for blue
-    circ_thresh.append(cv2.inRange(circles[img],(182/2,20 * 2.56,20 * 2.56),(225/2,100 * 2.56,100 * 2.56)))
-    
-    #filter out noise
-    circ_thresh[img] = cv2.erode(circ_thresh[img],np.ones((5,5)))
-    circ_thresh[img] = cv2.dilate(circ_thresh[img],np.ones((10,10)))
-
-  sq_cnts = []
-  circ_cnts = []
-  #getting contours for each image
-  for sq, circ in zip(sq_thresh, circ_thresh):
-    im, sq_cnt, hierarchy = cv2.findContours(sq,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
-    im, circ_cnt, hierarchy = cv2.findContours(circ,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
-
-    sq_cnts.append(sq_cnt)
-    circ_cnts.append(circ_cnt)
-
-  return sq_cnts, circ_cnts
-###########################################################################################################
-
 def match_beginning(img,contour,sq_cnts,circ_cnts):
+  '''
   #find matches that have a matchShape value of less than .02
   match = []
   view = View(contour)
@@ -172,6 +150,8 @@ def match_beginning(img,contour,sq_cnts,circ_cnts):
       wall_md_pt = pt
 
   return wall_md_pt, center, init_shape, view  
+  '''
+  return None
 
 
 def traverse_line(img_og,contour,vects):
@@ -181,11 +161,10 @@ def traverse_line(img_og,contour,vects):
     center_cnt = draw_center(img_og, contour)
 
     #find moment
-    '''if cv2.isContourConvex(contour):
+    if cv2.isContourConvex(contour):
       center = center_cnt
     else:
-      center = center_rect'''
-    center = center_cnt
+      center = center_rect
     cv2.circle(img_og,(center[0],center[1]), 7, (0,0,0), -1)
  
     vects.get_vector_start_point()
@@ -232,7 +211,7 @@ def process(data):
 
   if View.at_beginning:
     print("at beginning")
-    View.magick_number += 1
+    View.beginning_frames_seen += 1
     '''
     #Code to be run only at the start
     sq_cnts, circ_cnts = get_ex_cnts()
@@ -245,7 +224,7 @@ def process(data):
     center = [Vector.x_cam_width / 2, Vector.y_cam_height / 2]
 
     thrust_vect, resultant_vect = vects.get_thrust_vect(center)
-    if (View.magick_number == 5):
+    if (View.beginning_frames_seen == 5):
       View.at_beginning = False
 
     #draw previous vector - yellow
@@ -257,11 +236,19 @@ def process(data):
   else:
     thrust_vect, resultant_vect = traverse_line(img_og,view.cnt,vects)
     #print("curr_thr: [%d, %d], resultant: [%d, %d]" % (thrust_vect[0], thrust_vect[1], resultant_vect[0], resultant_vect[1]))
+      
+    #Publish unit thrust vector
+    thrust_mag = m.sqrt((thrust_vect(center)[0])**2 + (thrust_vect(center)[1])**2)
+    unit_thrust_vect = [thrust_vect[0]/prev_mag, thrust_vect[1]/thrust_mag]
+
+    pub = rospy.Publisher("thrust_output_topic",String,queue_size=10)
+    pub.publish(String(unit_thrust_vect))
+
 
   #Set resultant vect to prev_vector 
   Vector.prev_vector = resultant_vect
   
-  #show images
+  #Show images
   cv2.imshow("Filtered",img)
   cv2.imshow("Image",img_og)
   cv2.waitKey(3)
