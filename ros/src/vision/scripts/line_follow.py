@@ -2,7 +2,7 @@
 import rospy
 import cv2      #OpenCV
 from cv_bridge import CvBridge, CvBridgeError   #converts between ROS Image messages and OpenCV images
-import std_msgs.msg
+from std_msgs.msg import String
 from sensor_msgs.msg import Image
 import numpy as np
 import math as m
