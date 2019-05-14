@@ -14,14 +14,23 @@ bridge = CvBridge()
 def find_corners(img):
   gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
   edges = cv2.Canny(gray, 50, 200, 3)
-  lines = cv2.HoughLinesP(edges, 1, np.pi/180, 100, 100, 10)
+  lines = cv2.HoughLines(edges, 1, np.pi/180, 220)
 
-  for l in lines:
-    print(l[0])
-    cv2.line(img, (l[0][0],l[0][1]), (l[0][2],l[0][3]), (0,0,255), 2)
-    cv2.line(edges, (l[0][0],l[0][1]), (l[0][2],l[0][3]), (0,0,255), 2)
+  for line in lines:
+    rho = line[0][0]
+    theta = line[0][1]
 
-  cv2.imshow("Edges",edges)
+    a = np.cos(theta)
+    b = np.sin(theta)
+    x0 = a * rho
+    y0 = b * rho
+    x1 = int(x0 + 1000*(-b))
+    y1 = int(y0 + 1000*(a))
+    x2 = int(x0 - 1000*(-b))
+    y2 = int(y0 - 1000*(a))
+
+    cv2.line(img, (x1,y1), (x2,y2), (0,0,255), 2)
+
   return None
 
 if __name__ == "__main__":
