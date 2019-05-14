@@ -33,7 +33,7 @@ def get_line(x1,y1,x2,y2):
 def get_intersection_pt(l1,l2):
   if l1.a * l2.b == l2.a * l1.b:
     try:
-      raise ValueError("Lines have the same slope")   #clean this up whenever, learning how to raise exceptions
+      raise ValueError("Lines have the same slope")   #Clean this up whenever, learning how to raise exceptions
     except ValueError as e:
       print("Value Error: %s" % (e))
       return None
@@ -47,13 +47,13 @@ def get_intersection_pt(l1,l2):
 
   return (x, y)
 
-  
-
 def find_corners(img):
+  #Convert img to grayscale and do Canny edge det. on img to get Hough lines
   gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
   edges = cv2.Canny(gray, 50, 200, 3)
   lines = cv2.HoughLines(edges, 1, np.pi/180, 220)
   
+  #Draw and create equations of lines if at least 4 lines (corner detected)
   line_eqns = [] 
   try:
     if len(lines) >= 4:
@@ -76,6 +76,7 @@ def find_corners(img):
     print("No lines found above set threshold")
     return None
 
+  #Get all intersection points of lines (exclude points off of screen or lines that are parallel)
   intersec_pts = []
   for i in range(len(line_eqns)):
     for j in range(i + 1, len(line_eqns)):
@@ -83,7 +84,7 @@ def find_corners(img):
       if pt != None and pt[0] <= x_cam_width and pt[1] <= y_cam_height:
         intersec_pts.append(pt)
 
-  #Decide which intersection point is the corner (right now just getting middle of 4)
+  #Decide which intersection point is the corner (right now just getting middle of points)
   x_sum = 0
   y_sum = 0
   for pt in intersec_pts:
