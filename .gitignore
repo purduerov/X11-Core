@@ -126,3 +126,4 @@ package-lock.json
 
 # jetbrains
 .idea/
+.DS_Store
