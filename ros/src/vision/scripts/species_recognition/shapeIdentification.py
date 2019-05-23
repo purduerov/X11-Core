@@ -8,6 +8,7 @@ orig_img = cv2.imread("images/species1.jpg")
 cap = cv2.VideoCapture(0)
 
 
+""" Program to match shapes"""
 def match_shapes(orig_img):
     # Read in the images for matching
     species = ["species_" + name for name in ["A", "B", "C", "D"]]
@@ -22,13 +23,11 @@ def match_shapes(orig_img):
     cv2.imshow("Binarized Img", img)
     cv2.waitKey(1)
 
-    # TODO Will need to process the real image coming in from the camera
     img = cv2.erode(img, blockKernel)
     img = cv2.dilate(img, blockKernel)
 
     # Find contour for shape images that we already have
     for shape_img in shape_images:
-        # TODO will need to erode these shapes too? To make matchign better?
         _, binary_img = cv2.threshold(shape_img.copy(), 200, 255, cv2.THRESH_BINARY_INV)
         contours = cv2.findContours(binary_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         contours = grab_contours(contours)
@@ -63,7 +62,6 @@ def match_shapes(orig_img):
         if not probable_species[1]:
             break
 
-        # TODO threshold the distance so we don't accidentally grab garbage
 
         moments = cv2.moments(potential_shape)
         shape_centerX = int((moments["m10"] / moments["m00"]))
