@@ -7,6 +7,12 @@ from sensor_msgs.msg import Image
 import numpy as np
 import math as m
 from enum import Enum
+from find_corners import find_corners
+
+
+
+""" This code reads an image in over a ROS topic and attempts to output a thrust vector according to the position of
+the line"""
 
 bridge = CvBridge()
 
@@ -30,15 +36,14 @@ class Vector:
     self.resultant_vect = resultant_vect  
     self.start_point =  start_point 
 
-  def get_corner_detect(self):
-    #This function returns enums for 1 of four directions if a corner is detected, and another separate enum for no corner detected
-
-    if(not corner_detected):
+""" Function attempts to locate a corner if there is one. If no corner is detected it returns"""
+  def get_corner_detect(self, img):
+    corner_detected = find_corners(img)
+    if not corner_detected:
       return Corner.NO_CORNER
     else:
-      #Decision-making for which corner to output.
-      pass
-        
+        return corner_detected
+
     
   def get_vector_start_point(self):
     origin = [0, 0]
@@ -67,9 +72,8 @@ class Vector:
 
   def get_thrust_vect(self, center):
     self.resultant_vect = [center[0] - self.start_point[0], center[1] - self.start_point[1]]
-    self.thrust_vect = [self.resultant_vect[0] - self.prev_vector[0], self.resultant_vect[1] - self.prev_vector[1]] 
-    
-    return self.thrust_vect, self.resultant_vect  
+    self.thrust_vect = [self.resultant_vect[0] - self.prev_vector[0], self.resultant_vect[1] - self.prev_vector[1]]
+    return self.thrust_vect, self.resultant_vect
 
 class View:
   at_beginning = True

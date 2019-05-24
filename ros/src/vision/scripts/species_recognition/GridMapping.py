@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from imutils import grab_contours
 
+# Sample input to exercise code
 cap = cv2.VideoCapture("images/lineFollow1.mp4")
 
 # State names
@@ -12,6 +13,7 @@ PRECROSS_B = "precrossB"
 IDLE = "idle"
 
 
+# State memory
 last_state_horizontal = None
 last_state_vertical = None
 
@@ -54,6 +56,7 @@ def update_state(frame, oldX, oldY):
 
     _, gridMask = cv2.threshold(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), 25, 255, cv2.THRESH_BINARY_INV)
 
+    # Clean out noise from teh image
     kernel = np.ones((3, 3))
     gridMask = cv2.erode(gridMask, kernel)
     gridMask = cv2.dilate(gridMask, kernel)
@@ -63,6 +66,7 @@ def update_state(frame, oldX, oldY):
     if weak_lines is None:
         return curr_x, curr_y
 
+    # Remove duplicate detections from the detected lines
     lines = find_strong_lines(weak_lines[:, 0, :], thresh=int(frame.shape[0]* .3))
 
     # Go through each of the lines and determine if the line is the cross bands
@@ -113,6 +117,7 @@ def update_state(frame, oldX, oldY):
                 curr_x = oldX + 1
             last_state_vertical = current_state if current_state is not None else last_state_vertical
 
+        # Line is horizontal
         elif theta > np.pi/4:
             y_intercept = rho
 

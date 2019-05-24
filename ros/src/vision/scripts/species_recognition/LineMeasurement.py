@@ -3,7 +3,10 @@ import numpy as np
 
 from imutils import grab_contours
 
+""" Detects corners in an image and a blue line. The program uses the known distance between corners to determine
+the length of the line"""
 
+# Read in a test image
 orig_img = cv2.imread("images/sampleLine1.png")
 
 hsvImage = cv2.cvtColor(orig_img, cv2.COLOR_BGR2HSV)
@@ -21,6 +24,8 @@ lines = cv2.HoughLines(lineMask, 1, np.pi/180, 200)
 
 y_intercepts = []
 x_intercepts = []
+
+# Go through each of the detected lines for measurement
 for rho, theta in lines[:, 0, :]:
     a = np.cos(theta)
     b = np.sin(theta)
