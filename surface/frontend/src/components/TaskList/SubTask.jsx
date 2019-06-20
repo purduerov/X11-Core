@@ -14,12 +14,16 @@ export default class SubTask extends Component {
   }
 
   render() {
+    const funcs = { toggleCheckbox: this.toggleCheckbox };
+    let sST, sSTArray;
+    if ((sST = this.props.subTask.subSubTasks)) {
+      sSTArray = sST.map((val, idx) => (
+        <SubSubTask key={idx} sstNum={idx} subSubTask={val} funcs={funcs} />
+      ));
+    }
     return (
       <SubTaskHeader toggleCheckbox={this.toggleCheckbox} {...this.props}>
-        <SubSubTasksRender
-          funcs={{ toggleCheckbox: this.toggleCheckbox }}
-          {...this.props}
-        />
+        <div>{sSTArray ? sSTArray : ""}</div>
       </SubTaskHeader>
     );
   }
@@ -65,17 +69,5 @@ function PlusMinus(props) {
     );
   } else {
     return <span className={styles.openCloseSpacer} />;
-  }
-}
-
-function SubSubTasksRender(props) {
-  let sST;
-  if ((sST = props.subTask.subSubTasks)) {
-    const sSTArray = sST.map((val, idx) => (
-      <SubSubTask key={idx} sstNum={idx} subSubTask={val} />
-    ));
-    return <div>{sSTArray}</div>;
-  } else {
-    return "";
   }
 }

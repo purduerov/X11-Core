@@ -37,7 +37,6 @@ export default class TaskList extends Component {
   }
 
   toggleCheckbox(taskNum, stNum, sstNum) {
-    // console.log(`Function Success at ${taskNum} ${stNum} ${sstNum}`);
     if (sstNum !== null) {
       let tasks = this.state.tasks;
       const current =

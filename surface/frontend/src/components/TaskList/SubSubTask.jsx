@@ -13,7 +13,11 @@ export default class SubSubTask extends Component {
             {this.props.subSubTask.name}
           </span>
           <span className={styles.subSubTaskInput}>
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={this.props.subSubTask.checked}
+              onChange={this.props.funcs.toggleCheckbox(this.props.sstNum)}
+            />
           </span>
         </div>
       </div>
