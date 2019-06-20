@@ -173,14 +173,14 @@ var bind = {
             pressed: {
                 func() {
                     if(react.gp.buttons.up.curVal > 0) {
-                        react.flaskcpy.tools.servo = 1;
+                        react.flaskcpy.servo = 1;
                     }
                 },
             },
             released: {
                 func() {
-                    if(react.flaskcpy.tools.servo != 0) {
-                        react.flaskcpy.tools.servo = 0;
+                    if(react.flaskcpy.servo != 0) {
+                        react.flaskcpy.servo = 0;
                     }
                 },
             },
@@ -189,14 +189,14 @@ var bind = {
             pressed: {
                 func() {
                     if(react.gp.buttons.down.curVal > 0) {
-                        react.flaskcpy.tools.servo = -1;
+                        react.flaskcpy.servo = -1;
                     }
                 },
             },
             released: {
                 func() {
-                    if(react.gp.tools.servo != 0) {
-                        react.flaskcpy.tools.servo = 0;
+                    if(react.gp.servo != 0) {
+                        react.flaskcpy.servo = 0;
                     }
                 },
             },

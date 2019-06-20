@@ -10,7 +10,7 @@ import copy
 import os
 #from threading import Thread, Lock
 import thread
-from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg, tools_command_msg
+from shared_msgs.msg import can_msg, auto_command_msg, thrust_status_msg, thrust_command_msg, esc_single_msg, tools_command_msg, servo_command_msg
 from sensor_msgs.msg import Imu, Temperature
 from std_msgs.msg import Float32
 
@@ -24,8 +24,8 @@ except:
     with open ('../../../../surface/frontend/src/packets.json') as json_data:
       data = json.load(json_data,)
   except:
-    with open ('../X11-Core/surface/frontend/src/packets.json') as json_data:
-      data = json.load(json_data,)
+        with open ('../X11-Core/surface/frontend/src/packets.json') as json_data:
+            data = json.load(json_data,)
 
   
 
@@ -66,13 +66,16 @@ def accept(sid, data):
         thrust = thrust_command_msg()
         auto = auto_command_msg()
         tools = tools_command_msg()
+        servo = servo_command_msg()
         flask_mapper.pam(thrust, dearflask)
         flask_mapper.pam(auto, dearflask)
         flask_mapper.pam(tools, dearflask)
+        flask_mapper.pam(servo, dearflask)
         # print("Publishing:\n{}".format(thrust))
         thrust_pub.publish(thrust)
         auto_pub.publish(auto)
         tools_pub.publish(tools)
+        servo_pub.publish(servo)
 
         lock.release()
   
@@ -134,6 +137,9 @@ if __name__ == "__main__":
 
     tools_pub = rospy.Publisher(ns + 'tools_command',
         tools_command_msg, queue_size=10)
+
+    servo_pub = rospy.Publisher(ns + 'servo_command',
+        servo_command_msg, queue_size=10)
 
     t = thread.start_new_thread(start_server, ())
 
