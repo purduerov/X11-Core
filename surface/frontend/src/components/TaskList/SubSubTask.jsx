@@ -8,7 +8,14 @@ export default class SubSubTask extends Component {
   render() {
     return (
       <div>
-        <div className={styles.subSubTask}>{this.props.subSubTask.name}</div>
+        <div className={styles.subSubTask}>
+          <span className={styles.subSubTaskName}>
+            {this.props.subSubTask.name}
+          </span>
+          <span className={styles.subSubTaskInput}>
+            <input type="checkbox" />
+          </span>
+        </div>
       </div>
     );
   }

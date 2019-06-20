@@ -15,6 +15,7 @@ export default class TaskList extends Component {
     this.switchTab = this.switchTab.bind(this);
     this.pointsEarned = this.pointsEarned.bind(this);
     this.toggleSubtaskDisplay = this.toggleSubtaskDisplay.bind(this);
+    this.toggleCheckbox = this.toggleCheckbox.bind(this);
   }
 
   switchTab(tabNum) {
@@ -27,18 +28,35 @@ export default class TaskList extends Component {
     this.setState({ tasks });
   }
 
-  toggleSubtaskDisplay(taskNum, sTNum) {
+  toggleSubtaskDisplay(taskNum, stNum) {
     let tasks = this.state.tasks;
-    const display = tasks[taskNum - 1].subTasks[sTNum].display;
-    tasks[taskNum - 1].subTasks[sTNum].display =
+    const display = tasks[taskNum - 1].subTasks[stNum].display;
+    tasks[taskNum - 1].subTasks[stNum].display =
       display === "none" ? "block" : "none";
     this.setState({ tasks });
+  }
+
+  toggleCheckbox(taskNum, stNum, sstNum) {
+    // console.log(`Function Success at ${taskNum} ${stNum} ${sstNum}`);
+    if (sstNum !== null) {
+      let tasks = this.state.tasks;
+      const current =
+        tasks[taskNum - 1].subTasks[stNum].subSubTasks[sstNum].checked;
+      tasks[taskNum - 1].subTasks[stNum].subSubTasks[sstNum].checked = !current;
+      this.setState({ tasks });
+    } else {
+      let tasks = this.state.tasks;
+      const current = tasks[taskNum - 1].subTasks[stNum].checked;
+      tasks[taskNum - 1].subTasks[stNum].checked = !current;
+      this.setState({ tasks });
+    }
   }
 
   render() {
     const funcs = {
       pointsEarned: this.pointsEarned,
-      toggleSubtaskDisplay: this.toggleSubtaskDisplay
+      toggleSubtaskDisplay: this.toggleSubtaskDisplay,
+      toggleCheckbox: this.toggleCheckbox
     };
     return (
       <div className={styles.container}>
