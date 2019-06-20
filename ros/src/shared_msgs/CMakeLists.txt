@@ -58,6 +58,7 @@ add_message_files(
    temp_msg.msg
    thrust_status_msg.msg
    tools_command_msg.msg
+   servo_command_msg.msg
  )
 
 ## Generate services in the 'srv' folder
