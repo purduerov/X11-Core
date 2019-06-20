@@ -34,30 +34,18 @@ class App extends React.Component {
                 roll: 100,
                 yaw: 100,
             },
-            thrust_invert: {
-                master: 1,
-                velX: 1,
-                velY: 1,
-                velZ: 1,
-                pitch: 1,
-                roll: 1,
-                yaw: 1,
-            },
+            thrust_invert: this.state.dearflask.thrusters.inv_6dof,
             thruster_control: [ // invert is -1/1 for easy multiplication
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
                 { power: 100, invert: -1 }, { power: 100, invert: 1 },
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
             ],
-            tool_scales: {
-                manipulator: {
-                    master: 0.25,
-                    open: 1,
-                    close: 1,
-                    invert: 1,
-                },
-            },
         };
+
+        this.state.config.thruster_control.map((cur, index, arr) => {
+            arr[index].invert = this.state.dearflask.thrusters.inverted[index];
+        });
 
 
         this.flaskcpy = this.state.dearflask;
@@ -88,12 +76,12 @@ class App extends React.Component {
 
         this.confcpy.thruster_control.forEach((val, i) => {
             if (val.invert < 0) {
-                this.flaskcpy.thrusters.inverted_thrusters[i] = -Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]
+                this.flaskcpy.thrusters.inverted[i] = -Math.abs(
+                    this.flaskcpy.thrusters.inverted[i]
                 );
             } else if (val.invert > 0) {
-                this.flaskcpy.thrusters.inverted_thrusters[i] = Math.abs(
-                    this.flaskcpy.thrusters.inverted_thrusters[i]
+                this.flaskcpy.thrusters.inverted[i] = Math.abs(
+                    this.flaskcpy.thrusters.inverted[i]
                 );
             } else {
                 console.log('Thruster inversion value is 0... why???');
@@ -126,16 +114,6 @@ class App extends React.Component {
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card title="Cannon Calculator" />
-                            <Card>
-                                <ToolView
-                                    manipulator={this.state.dearflask.manipulator.power}
-                                    servo={this.state.dearflask.maincam_angle}
-                                    transmitter={this.state.dearflask.transmitter}
-                                    magnet={this.state.dearflask.magnet}
-                                    conf={this.state.config.tool_scales}
-                                    rend={this.rendTools}
-                                />
-                            </Card>
                             <Card title="Task List View" />
                             <Card>
                                 <ShowObject obj={this.state.dearclient.sensors.esc.temperatures} />

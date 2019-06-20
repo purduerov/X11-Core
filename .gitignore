@@ -1,6 +1,7 @@
 # ROV Specific Ignores
 mjpg-streamer/
 lint*.txt
+CATKIN_IGNORE
 elec_finals/
 
 # Byte-compiled / optimized / DLL files
@@ -125,3 +126,4 @@ package-lock.json
 
 # jetbrains
 .idea/
+.DS_Store

@@ -1,0 +1,22 @@
+######################################################
+Proven Robotics 2019
+Computer Vision documentation
+######################################################
+
+Our computer vision systems this year are split across four different programs. First there is the LineFollowing
+program and its subfiles. There is also a GridMapping program, a Line Measurement program, and a shape identification
+program for species recognition
+
+
+GridMapping.py: This file tracks the position of the ROV in a grid
+LineMeasurement.py: This file determines the lenght of an input line
+shapeIdentification.py: This file performs species recognition, differentiating species A->D
+line_follow.py: This program calculates the desired control vector for line following.
+
+Helper Files:
+find_corners.py: This file is used in line_follow.py
+
+
+
+
+

@@ -38,7 +38,7 @@ module.exports = (where, socketHost) => {
 
     ipcRenderer.on('config-from-win2', (event, data) => {
         var flaskcpy = where.flaskcpy;
-        flaskcpy.thrusters.inverted_thrusters = data.invertThrust;
+        flaskcpy.thrusters.inverted = data.invertThrust;
 
         where.setState({
             config: data.config,
