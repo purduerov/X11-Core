@@ -12,14 +12,14 @@ from pprint import pprint as pp
 ## The indexis of the thrusters
 ## Change this to configure the output
 mappings = {
-    "HFR": 0,
-    "HFL": 1,
-    "HBL": 2,
-    "HBR": 3,
-    "VFR": 4,
-    "VFL": 5,
-    "VBL": 6,
-    "VBR": 7,
+    "HFL": 0,
+    "HFR": 1,
+    "HBR": 2,
+    "HBL": 3,
+    "VFL": 4,
+    "VFR": 5,
+    "VBR": 6,
+    "VBL": 7,
 }
 
 ## The weights of each direction's influence
@@ -29,7 +29,7 @@ weights = {
     "Y": .40,
     "Z": .30,
     "Roll": .125,
-    "Pitch": .20,
+    "Pitch": .40,
     "Yaw": .20
 }
 
