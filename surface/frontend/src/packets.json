@@ -51,7 +51,8 @@
             "manipulator": 0,
             "groutTrout": 0,
             "liftBag": 0,
-            "marker": 0
+            "marker": 0,
+            "servo": 0
         },
         "cameras": {},
         "leds": {

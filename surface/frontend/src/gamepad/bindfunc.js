@@ -162,20 +162,52 @@ var bind = {
                 },
             },
         },
-        up: { // rotate main camera up
+        /*up: { // rotate main camera up
             pressed: {
                 func() {
                     react.flaskcpy.maincam_angle += 2.5;
                 },
             },
+        }, */
+        up: {
+            pressed: {
+                func() {
+                    if(react.gp.buttons.up.curVal > 0) {
+                        react.flaskcpy.tools.servo = 1;
+                    }
+                },
+            },
+            released: {
+                func() {
+                    if(react.flaskcpy.tools.servo != 0) {
+                        react.flaskcpy.tools.servo = 0;
+                    }
+                },
+            },
         },
-        down: { // rotate main camera down
+        down: {
+            pressed: {
+                func() {
+                    if(react.gp.buttons.down.curVal > 0) {
+                        react.flaskcpy.tools.servo = -1;
+                    }
+                },
+            },
+            released: {
+                func() {
+                    if(react.gp.tools.servo != 0) {
+                        react.flaskcpy.tools.servo = 0;
+                    }
+                },
+            },
+        },
+        /*down: { // rotate main camera down
             pressed: {
                 func() {
                     react.flaskcpy.maincam_angle -= 2.5;
                 },
             },
-        },
+        },*/
         lpress: {
             pressed: {
                 func() {
