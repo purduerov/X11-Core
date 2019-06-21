@@ -162,6 +162,22 @@ var bind = {
                 },
             },
         },
+        left: {
+            pressed: {
+                func() {
+                    if(react.gp.buttons.y.curVal > 0) {
+                        react.flaskcpy.tools.marker = react.gp.buttons.left.curVal;
+                    }
+                },
+            },
+            released: {
+                func() {
+                    if(react.flaskcpy.tools.marker != 0) {
+                        react.flaskcpy.tools.marker = 0;
+                    }
+                },
+            },
+        },
         /*up: { // rotate main camera up
             pressed: {
                 func() {
