@@ -1,0 +1,76 @@
+.textPrimary {
+  color: #009687;
+}
+.textPrimary:hover {
+  color: #066158;
+}
+
+.titleContainer {
+  width: 60%;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.title {
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.stats {
+  display: inline-block;
+  width: 40%;
+  text-align: right;
+}
+
+.subTaskContainer {
+  margin-top: 20px;
+  height: 300px;
+  overflow: scroll;
+}
+
+.subTask {
+  border: 1px solid #009687;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  padding: 5px;
+  transition: 0.4s;
+}
+
+.subTask > span {
+  display: inline-block;
+}
+
+.subTaskName {
+  width: 90%;
+}
+
+.subTaskCheck {
+  width: 5%;
+  text-align: right;
+}
+
+.openClose {
+  width: 5%;
+  cursor: pointer;
+}
+
+.openCloseSpacer {
+  width: 5%;
+}
+
+.subSubTask {
+  padding: 6px 0px 6px 6px;
+  margin-top: 10px;
+  background: #242424;
+  border-radius: 5px;
+}
+
+.subSubTask > span {
+  display: inline-block;
+}
+.subSubTaskName {
+  width: 95%;
+}
+.subSubTaskInput {
+  width: 5%;
+}

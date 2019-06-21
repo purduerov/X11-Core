@@ -1,0 +1,384 @@
+[
+  {
+    "taskNum": 1,
+    "taskDesc": "ENSURING PUBLIC SAFETY",
+    "pointsEarned": 0,
+    "pointTotal": 120,
+    "subTasks": [
+      {
+        "name": "Inspecting the foundation of the dam",
+        "display": "none",
+        "checked": false,
+        "subSubTasks": [
+          {
+            "name": "Following a transect line to inspect the foundation",
+            "checked": false,
+            "criteria": [
+              {
+                "name": "autonomous inspection",
+                "score": 25
+              },
+              {
+                "name": "manual inspection",
+                "score": 5
+              }
+            ]
+          },
+          {
+            "name": "Locating and gathering information about the crack length",
+            "checked": false,
+            "options": [
+              {
+                "name": "Autonomous determination of length of crack concurrent with autonomous line following",
+                "criteria": [
+                  {
+                    "name": "Length within 1 cm of true length",
+                    "score": 25
+                  },
+                  {
+                    "name": "Length between 1.1 and 2 cm of true length",
+                    "score": 10
+                  },
+                  {
+                    "name": "Length not within 2.1 cm of true length",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "name": "Locating and autonomous determination of length of crack with manual control",
+                "criteria": [
+                  {
+                    "name": "Length within 1 cm of true length",
+                    "score": 15
+                  },
+                  {
+                    "name": "Length between 1.1 and 2 cm of true length",
+                    "score": 5
+                  },
+                  {
+                    "name": "Length not within 2.1 cm of true length",
+                    "score": 0
+                  }
+                ]
+              },
+              {
+                "name": "Manual locating and determination of length of crack",
+                "criteria": [
+                  {
+                    "name": "Length within 1 cm of true length",
+                    "score": 5
+                  },
+                  {
+                    "name": "Length not within 1.1 cm of true length",
+                    "score": 0
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Mapping the locations of the crack",
+            "checked": false,
+            "criteria": [
+              {
+                "name": "Autonomous mapping on video display",
+                "score": 10
+              },
+              {
+                "name": "Mapping cracks on paper grid",
+                "score": 5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Inserting grout into the voids underneath the dam",
+        "display": "none",
+        "checked": false,
+        "criteria": null,
+        "score": 10
+      },
+      {
+        "name": "Inspecting and repairing a trash rack",
+        "display": "none",
+        "checked": false,
+        "subSubTasks": [
+          {
+            "name": "Removing the damaged screen of the trash rack",
+            "checked": false,
+            "criteria": null,
+            "score": 5
+          },
+          {
+            "name": "Installing a new screen",
+            "checked": false,
+            "criteria": null,
+            "score": 10
+          }
+        ]
+      },
+      {
+        "name": "Deploying a secondary micro-ROV to inspect a drain pipe",
+        "display": "none",
+        "checked": false,
+        "subSubTasks": [
+          {
+            "name": "Identifying areas of muddy water flow inside the pipe",
+            "checked": false,
+            "criteria": [
+              {
+                "name": "Only fiber-optic connection to micro-ROV",
+                "score": 30
+              },
+              {
+                "name": "Copper wiring connection to micro-ROV",
+                "score": 20
+              }
+            ]
+          },
+          {
+            "name": "Docking the micro-ROV to the primary ROV",
+            "checked": false,
+            "criteria": null,
+            "score": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "taskNum": 2,
+    "taskDesc": "MAINTAINING HEALTHY WATERWAYS",
+    "pointsEarned": 0,
+    "pointTotal": 90,
+    "subTasks": [
+      {
+        "name": "Monitoring water quality",
+        "display": "none",
+        "checked": false,
+        "subSubtasks": [
+          {
+            "name": "Measuring the water temperature",
+            "checked": false,
+            "criteria": [
+              {
+                "name": "Temperature measurement is within 2C of benchmark",
+                "score": 10
+              },
+              {
+                "name": "Temperature measurement is between 2.01C and 4C of benchmark",
+                "score": 5
+              },
+              {
+                "name": "Temperature measurement is not within 4C of benchmark",
+                "score": 0
+              }
+            ]
+          },
+          {
+            "name": "Measuring the pH of a sample",
+            "checked": false,
+            "criteria": [
+              {
+                "name": "pH is within 0.5 pH of benchmark",
+                "score": 15
+              },
+              {
+                "name": "pH is between 0.51 and 1.0 of benchmark",
+                "score": 5
+              },
+              {
+                "name": "pH is not within 1.0 of benchmark",
+                "score": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Determining habitat diversity",
+        "display": "none",
+        "checked": false,
+        "subSubtasks": [
+          {
+            "name": "Lifting a rock from the bottom",
+            "checked": false,
+            "criteria": null,
+            "score": 5
+          },
+          {
+            "name": "Examining the benthic species underneath the rock",
+            "checked": false,
+            "criteria": [
+              {
+                "name": "Using a handbook to determine the number and type of benthic species",
+                "score": 5
+              },
+              {
+                "name": "Using image recognition to determine the number and type of benthic species",
+                "score": 25
+              }
+            ]
+          },
+          {
+            "name": "Recording the date, time, temperature, pH, and species diversity on a data sheet",
+            "checked": false,
+            "criteria": null,
+            "score": 5
+          }
+        ]
+      },
+      {
+        "name": "Transporting and releasing trout fry",
+        "display": "none",
+        "checked": false,
+        "criteria": "EACH_MAX_2",
+        "score": 5
+      },
+      {
+        "name": "Restoring fish habitat",
+        "display": "none",
+        "checked": false,
+        "subSubtasks": [
+          {
+            "name": "Removing a degraded rubber tire",
+            "checked": false,
+            "criteria": null,
+            "score": 10
+          },
+          {
+            "name": "Installing a new fish/reef ball",
+            "checked": false,
+            "criteria": null,
+            "score": 10
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "taskNum": 3,
+    "taskDesc": "PRESERVING HISTORY",
+    "pointsEarned": 0,
+    "pointTotal": 90,
+    "subTasks": [
+      {
+        "name": "Determining the lift capability of the ROV",
+        "display": "none",
+        "checked": false,
+        "criteria": null,
+        "score": 5
+      },
+      {
+        "name": "Calculating the Volume of the cannon",
+        "display": "none",
+        "checked": false,
+        "subSubTasks": [
+          {
+            "name": "Length Measurement",
+            "checked": false,
+            "criteria": [
+              {
+                "name": "within 1 cm",
+                "score": 5
+              },
+              {
+                "name": "not within 1 cm",
+                "score": 0
+              }
+            ]
+          },
+          {
+            "name": "Radius 1 Measurement",
+            "checked": false,
+            "criteria": [
+              {
+                "name": "Within 0.5 cm",
+                "score": 5
+              },
+              {
+                "name": "Not within 0.5 cm",
+                "score": 0
+              }
+            ]
+          },
+          {
+            "name": "Radius 2 Measurement",
+            "checked": false,
+            "criteria": [
+              {
+                "name": "Within 0.5 cm",
+                "score": 5
+              },
+              {
+                "name": "Not within 0.5 cm",
+                "score": 0
+              }
+            ]
+          },
+          {
+            "name": "Radius 3 Measurement",
+            "checked": false,
+            "criteria": [
+              {
+                "name": "Within 0.5 cm",
+                "score": 5
+              },
+              {
+                "name": "Not within 0.5 cm",
+                "score": 0
+              }
+            ]
+          },
+          {
+            "name": "Calculation within 10 cm^3 of actual",
+            "checked": false,
+            "criteria": null,
+            "score": 10
+          }
+        ]
+      },
+      {
+        "name": "Determining the ROV's ability to lift the cannon",
+        "display": "none",
+        "checked": false,
+        "subSubTasks": [
+          {
+            "name": "Finding the cannon’s casting mark to determine its composition",
+            "checked": false,
+            "criteria": null,
+            "score": 5
+          },
+          {
+            "name": "Calculating the weight of the cannon in water",
+            "checked": false,
+            "criteria": null,
+            "score": 5
+          },
+          {
+            "name": "Determining if the ROV has enough thrust to lift the cannon",
+            "checked": false,
+            "criteria": null,
+            "score": 5
+          }
+        ]
+      },
+      {
+        "name": "Lifting the cannon to the surface, side of the pool",
+        "display": "none",
+        "checked": false,
+        "criteria": null,
+        "score": 20
+      },
+      {
+        "name": "Identifying and marking the location of cannon shells",
+        "display": "none",
+        "checked": false,
+        "criteria": "EACH_MAX_4",
+        "score": 5
+      }
+    ]
+  }
+]

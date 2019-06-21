@@ -6,6 +6,7 @@ import packet from '../src/packets.json';
 import Card from '../src/components/Card/Card.jsx';
 import Titlebar from '../src/components/Titlebar/Titlebar.jsx';
 import Timer from '../src/components/Timer/Timer.jsx';
+import TaskList from "../src/components/TaskList/TaskList.jsx";
 
 /* These should be done in a component, or the js file for this window
 
@@ -58,27 +59,32 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="main">
-                <div className="titlebar">
-                    <Titlebar title="Purdue ROV's Buddy Screen" />
-                </div>
-                <div className="main-container">
-                    <div className="camera-width full-height center" />
-                    <div className="data-width full-height">
-                        <div className="data-column">
-                            <Card title="Active Toggle Buttons" />
-                        </div>
-                        <div className="data-column">
-                            <Card title="I see Brown CV" />
-                        </div>
-                        <div className="data-column">
-                            <Card title="Time">
-                                <Timer />
-                            </Card>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <div className="main">
+              <div className="titlebar">
+                  <Titlebar title="Purdue ROV's Buddy Screen" />
+              </div>
+              <div className="main-container">
+                  <div className="camera-width full-height center" />
+                  <div className="data-width full-height">
+                      <div className="data-column">
+                          <Card title="Active Toggle Buttons" />
+                      </div>
+                      <div className="double-wide-data-column">
+                          <Card title="Task List">
+                              <TaskList />
+                          </Card>
+                          <div className="half-wide-data-column">
+                              <Card title="I see Brown CV" />
+                          </div>
+                          <div className="half-wide-data-column">
+                              <Card title="Time">
+                                  <Timer />
+                              </Card>
+                          </div>
+                      </div>
+                  </div>
+             </div>
+          </div>
         );
     }
 }
