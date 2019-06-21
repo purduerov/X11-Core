@@ -113,7 +113,7 @@ class App extends React.Component {
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card>
-                                <PHinfo />
+                                <PHinfo ph={this.state.dearclient.sensors.pressure.pressure} temp={this.state.dearclient.sensors.pressure.temperature} />
                             </Card>
                             <Card>
                                 <CrackInfo
