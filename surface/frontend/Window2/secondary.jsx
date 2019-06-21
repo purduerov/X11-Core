@@ -11,6 +11,7 @@ import ForceScales from '../src/components/ForceScales/ForceScales.jsx';
 import ToolView from '../src/components/ToolView/ToolView.jsx';
 import ESCinfo from '../src/components/ESCinfo/ESCinfo.jsx';
 import TaskList from '../src/components/TaskList/TaskList.jsx';
+import ShowObject from '../src/components/ShowObject/ShowObject.jsx';
 
 /* These should be done in a component, or the js file for this window
 
@@ -141,21 +142,14 @@ class App extends React.Component {
                         </div>
                         <div className="double-wide-data-column">
                             <Card title="Task List">
-                                <TaskList />
+                                    <TaskList />
                             </Card>
                             <div className="half-wide-data-column">
                                 <Card title="Cannon Calculator" />
-                                <Card>
-                                    <ToolView
-                                        manipulator={this.state.dearflask.manipulator.power}
-                                        servo={this.state.dearflask.maincam_angle}
-                                        transmitter={this.state.dearflask.transmitter}
-                                        magnet={this.state.dearflask.magnet}
-                                        conf={this.state.config.tool_scales}
-                                        rend={this.rendTools}
-                                    />
-                                </Card>
                                 <Card title="Task List View" />
+                                <Card>
+                                    <ShowObject obj={this.state.dearclient.sensors.esc.temperatures} />
+                                </Card>
                             </div>
                             <div className="half-wide-data-column">
                                 <Card title="pH and Temp readout" />
@@ -167,7 +161,7 @@ class App extends React.Component {
                                 </Card>
                                 <Card title="Other Sensor Info" />
                             </div>
-                        </div>               
+                        </div>
                     </div>
                 </div>
             </div>
