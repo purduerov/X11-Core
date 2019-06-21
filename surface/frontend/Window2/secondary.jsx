@@ -10,6 +10,7 @@ import ThrusterScales from '../src/components/ThrusterScales/ThrusterScales.jsx'
 import ForceScales from '../src/components/ForceScales/ForceScales.jsx';
 import ToolView from '../src/components/ToolView/ToolView.jsx';
 import ESCinfo from '../src/components/ESCinfo/ESCinfo.jsx';
+import TaskList from '../src/components/TaskList/TaskList.jsx';
 
 /* These should be done in a component, or the js file for this window
 
@@ -124,20 +125,6 @@ class App extends React.Component {
                     <div className="camera-width full-height center" />
                     <div className="data-width full-height">
                         <div className="data-column">
-                            <Card title="Cannon Calculator" />
-                            <Card>
-                                <ToolView
-                                    manipulator={this.state.dearflask.manipulator.power}
-                                    servo={this.state.dearflask.maincam_angle}
-                                    transmitter={this.state.dearflask.transmitter}
-                                    magnet={this.state.dearflask.magnet}
-                                    conf={this.state.config.tool_scales}
-                                    rend={this.rendTools}
-                                />
-                            </Card>
-                            <Card title="Task List View" />
-                        </div>
-                        <div className="data-column">
                             <Card title="Directional Control">
                                 <ForceScales
                                     rend={this.changeForceScales}
@@ -152,16 +139,35 @@ class App extends React.Component {
                                 />
                             </Card>
                         </div>
-                        <div className="data-column">
-                            <Card title="pH and Temp readout" />
-                            <Card title="ESC readings">
-                                <ESCinfo
-                                    currents={this.state.dearclient.sensors.esc.currents}
-                                    temp={this.state.dearclient.sensors.esc.temperatures}
-                                />
+                        <div className="double-wide-data-column">
+                            <Card title="Task List">
+                                <TaskList />
                             </Card>
-                            <Card title="Other Sensor Info" />
-                        </div>
+                            <div className="half-wide-data-column">
+                                <Card title="Cannon Calculator" />
+                                <Card>
+                                    <ToolView
+                                        manipulator={this.state.dearflask.manipulator.power}
+                                        servo={this.state.dearflask.maincam_angle}
+                                        transmitter={this.state.dearflask.transmitter}
+                                        magnet={this.state.dearflask.magnet}
+                                        conf={this.state.config.tool_scales}
+                                        rend={this.rendTools}
+                                    />
+                                </Card>
+                                <Card title="Task List View" />
+                            </div>
+                            <div className="half-wide-data-column">
+                                <Card title="pH and Temp readout" />
+                                <Card title="ESC readings">
+                                    <ESCinfo
+                                        currents={this.state.dearclient.sensors.esc.currents}
+                                        temp={this.state.dearclient.sensors.esc.temperatures}
+                                    />
+                                </Card>
+                                <Card title="Other Sensor Info" />
+                            </div>
+                        </div>               
                     </div>
                 </div>
             </div>
