@@ -30,11 +30,38 @@ export default class CameraScreen extends Component {
                 'Cam4',
                 'Cam5',
             ],
-            stream: {
-                ip: '10.42.0.204',
-                query: '/?action=stream',
-                rovip: 'raspberrypi.local',
-            },
+            // stream: {
+            //     ip: "10.42.0.204",
+            //     query: "/?action=stream",
+            //     rovip: "raspberrypi.local"
+            // },
+            streams: [
+                {
+                    ip: "10.42.0.204",
+                    query: "/?action=stream",
+                    port: 8080
+                },
+                {
+                    ip: "10.42.1.204",
+                    query: "/?action=stream",
+                    port: 8081
+                },
+                {
+                    ip: "10.42.2.204",
+                    query: "/?action=stream",
+                    port: 8082
+                },
+                {
+                    ip: "10.42.3.204",
+                    query: "/?action=stream",
+                    port: 8083
+                },
+                {
+                    ip: "10.42.4.204",
+                    query: "/?action=stream",
+                    port: 8084
+                }
+            ],
             camnext: props.next,
             camprev: props.prev,
             prevcamnext: 0,
@@ -108,64 +135,70 @@ export default class CameraScreen extends Component {
     }
 
     renderStream(strnum) {
-        var camnum = this.state.camscreens[strnum];
-        var IP;
+        // var camnum = this.state.camscreens[strnum];
+        // var IP;
 
-        if (this.checkPrevPress()) {
-            const camscreens = this.state.camscreens.slice();
-            camscreens[strnum] -= 1;
-            if (camscreens[strnum] === -1) {
-                camscreens[strnum] = this.state.numcams;
-            }
-            this.setState({
-                camscreens,
-            });
-        }
-        if (this.checkNextPress()) {
-            const camscreens = this.state.camscreens.slice();
-            camscreens[strnum] = (camscreens[strnum] + 1) % this.state.numcams;
-            this.setState({
-                camscreens,
-            });
-        }
+        // if (this.checkPrevPress()) {
+        //     const camscreens = this.state.camscreens.slice();
+        //     camscreens[strnum] -= 1;
+        //     if (camscreens[strnum] === -1) {
+        //         camscreens[strnum] = this.state.numcams;
+        //     }
+        //     this.setState({
+        //         camscreens,
+        //     });
+        // }
+        // if (this.checkNextPress()) {
+        //     const camscreens = this.state.camscreens.slice();
+        //     camscreens[strnum] = (camscreens[strnum] + 1) % this.state.numcams;
+        //     this.setState({
+        //         camscreens,
+        //     });
+        // }
 
-        if (camnum >= this.state.numcams) {
-            camnum = 0;
-        }
-        let port;
-        let query = '';
-        if (typeof this.state.pakconf.socketio !== 'undefined') {
-            switch (camnum) {
-            case 0:
-                port = this.state.pakconf.camnum0.stream;
-                break;
-            case 1:
-                port = this.state.pakconf.camnum1.stream;
-                break;
-            case 2:
-                port = this.state.pakconf.camnum2.stream;
-                break;
-            case 3:
-                port = this.state.pakconf.camnum3.stream;
-                break;
-            case 4:
-                port = this.state.pakconf.camnum4.stream;
-                break;
-            default:
-                port = this.state.pakconf.camnum0.stream;
-            }
-        } else {
-            port = 8000;
-        }
+        // if (camnum >= this.state.numcams) {
+        //     camnum = 0;
+        // }
+        // let port;
+        // let query = '';
+        // if (typeof this.state.pakconf.socketio !== 'undefined') {
+        //     switch (camnum) {
+        //     case 0:
+        //         port = this.state.pakconf.camnum0.stream;
+        //         break;
+        //     case 1:
+        //         port = this.state.pakconf.camnum1.stream;
+        //         break;
+        //     case 2:
+        //         port = this.state.pakconf.camnum2.stream;
+        //         break;
+        //     case 3:
+        //         port = this.state.pakconf.camnum3.stream;
+        //         break;
+        //     case 4:
+        //         port = this.state.pakconf.camnum4.stream;
+        //         break;
+        //     default:
+        //         port = this.state.pakconf.camnum0.stream;
+        //     }
+        // } else {
+        //     port = 8000;
+        // }
 
-        if (this.state.pxybypass) {
-            port = 8080;
-            query = this.state.stream.query + this.state.camscreens[strnum];
-            IP = this.state.stream.rovip;
-        } else {
-            IP = this.state.stream.ip;
-        }
-        const url = `http://10.42.0.204:8080/?action=stream`// `http://${IP}:${port}${query}`;
+        // if (this.state.pxybypass) {
+        //     port = 8080;
+        //     query = this.state.stream.query + this.state.camscreens[strnum];
+        //     IP = this.state.stream.rovip;
+        // } else {
+        //     IP = this.state.stream.ip;
+        // }
+        // currently strnum always zero, handleclick will update camscreens[0] to camnum
+        const camnum = this.state.camscreens[strnum];
+        const port = this.state.streams[camnum].port;
+        const query = this.state.streams[camnum].query;
+        const IP = this.state.streams[camnum].ip;
+        // const url = `http://10.42.0.204:8080/?action=stream`;
+        const url = `http://${IP}:${port}${query}`;
         return <img src={url} width="100%" alt="Camera Stream Window wannabe" />;
     }
 
