@@ -78,103 +78,163 @@ var bind = {
                 },
             },
         },
-        a: { // open manipulator
+        x: { // activate groutTrout
             pressed: {
                 func() {
-                    var stuff = react.state.config.tool_scales.manipulator;
-                    react.flaskcpy.manipulator.power = react.gp.buttons.a.curVal * stuff.master * stuff.open * stuff.invert;
+                    // console.log(-react.gp.buttons.x.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
+                    // console.log(react.flaskcpy.tools.groutTrout)
+                    react.flaskcpy.tools.groutTrout = react.gp.buttons.x.curVal;
                 },
             },
             released: {
                 func() {
-                    var stuff = react.state.config.tool_scales.manipulator;
-                    if (react.flaskcpy.manipulator.power * stuff.invert > 0) {
-                        react.flaskcpy.manipulator.power = 0;
+                    if (react.flaskcpy.tools.groutTrout > 0) {
+                        react.flaskcpy.tools.groutTrout = 0;
                     }
+                },
+            },
+        },
+        y: { // activate marker
+            pressed: {
+                func() {
+                    // console.log(-react.gp.buttons.y.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
+                    // console.log(react.flaskcpy.tools.marker)
+                    react.flaskcpy.tools.marker = react.gp.buttons.y.curVal;
+                },
+            },
+            released: {
+                func() {
+                    if (react.flaskcpy.tools.marker > 0) {
+                        react.flaskcpy.tools.marker = 0;
+                    }
+                },
+            },
+        },
+        a: { // open manipulator
+            pressed: {
+                func() {
+                    react.flaskcpy.tools.manipulator = react.gp.buttons.a.curVal;
                 },
             },
         },
         b: { // close manipulator
             pressed: {
                 func() {
-                    var stuff = react.state.config.tool_scales.manipulator;
                     // console.log(-react.gp.buttons.lb.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
-                    // console.log(react.flaskcpy.manipulator.power)
-                    react.flaskcpy.manipulator.power = -react.gp.buttons.b.curVal * stuff.master * stuff.close * stuff.invert;
+                    // console.log(react.flaskcpy.tools.manipulator)
+                    react.flaskcpy.tools.manipulator = 0;
+                },
+            },
+        },
+        start: { // open liftBag if right is pressed
+            pressed: {
+                func() {
+                    // console.log(-react.gp.buttons.lb.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
+                    // console.log(react.flaskcpy.tools.liftBag)
+                    if(react.gp.buttons.right.curVal > 0) {
+                        react.flaskcpy.tools.liftBag = react.gp.buttons.start.curVal;
+                    }
                 },
             },
             released: {
                 func() {
-                    var stuff = react.state.config.tool_scales.manipulator;
-                    if (react.flaskcpy.manipulator.power * stuff.invert < 0) {
-                        react.flaskcpy.manipulator.power = 0;
+                    if (react.flaskcpy.tools.liftBag > 0) {
+                        react.flaskcpy.tools.liftBag = 0;
                     }
                 },
             },
         },
-        right: { // obs leveler power right increment
+        right: { // close liftBag if start is pressed
             pressed: {
                 func() {
-                    var stuff = react.state.config.tool_scales.obs_tool;
-                    if (react.flaskcpy.obs_tool.power * stuff.invert < 0.0) {
-                        react.flaskcpy.obs_tool.power = 0.0;
-                    } else {
-                        react.flaskcpy.obs_tool.power += 0.02 * stuff.invert;
+                    // console.log(-react.gp.buttons.lb.curVal+" "+stuff.master+" "+stuff.close+" "+stuff.invert)
+                    // console.log(react.flaskcpy.tools.liftBag)
+                    if(react.gp.buttons.start.curVal > 0) {
+                        react.flaskcpy.tools.liftBag = react.gp.buttons.right.curVal;
+                    }
+                },
+            },
+            released: {
+                func() {
+                    if (react.flaskcpy.tools.liftBag > 0) {
+                        react.flaskcpy.tools.liftBag = 0;
                     }
                 },
             },
         },
-        left: { // obs leveler power left increment
+        left: {
             pressed: {
                 func() {
-                    var stuff = react.state.config.tool_scales.obs_tool;
-                    if (react.flaskcpy.obs_tool.power * stuff.invert > 0.0) {
-                        react.flaskcpy.obs_tool.power = 0.0;
-                    } else {
-                        react.flaskcpy.obs_tool.power -= 0.02 * stuff.invert;
+                    if(react.gp.buttons.y.curVal > 0) {
+                        react.flaskcpy.tools.marker = react.gp.buttons.left.curVal;
+                    }
+                },
+            },
+            released: {
+                func() {
+                    if(react.flaskcpy.tools.marker != 0) {
+                        react.flaskcpy.tools.marker = 0;
                     }
                 },
             },
         },
-        up: { // rotate main camera up
+        /*up: { // rotate main camera up
             pressed: {
                 func() {
                     react.flaskcpy.maincam_angle += 2.5;
                 },
             },
+        }, */
+        up: {
+            pressed: {
+                func() {
+                    if(react.gp.buttons.up.curVal > 0) {
+                        react.flaskcpy.servo = 1;
+                    }
+                },
+            },
+            released: {
+                func() {
+                    if(react.flaskcpy.servo != 0) {
+                        react.flaskcpy.servo = 0;
+                    }
+                },
+            },
         },
-        down: { // rotate main camera down
+        down: {
+            pressed: {
+                func() {
+                    if(react.gp.buttons.down.curVal > 0) {
+                        react.flaskcpy.servo = -1;
+                    }
+                },
+            },
+            released: {
+                func() {
+                    if(react.gp.servo != 0) {
+                        react.flaskcpy.servo = 0;
+                    }
+                },
+            },
+        },
+        /*down: { // rotate main camera down
             pressed: {
                 func() {
                     react.flaskcpy.maincam_angle -= 2.5;
                 },
             },
-        },
-        start: { // Toggle electromagnet
-            pressed: {
-                func() {
-                    react.flaskcpy.magnet = !react.flaskcpy.magnet;
-                },
-            },
-        },
-        select: { // Toggle transmitter (audio tools)
-            pressed: {
-                func() {
-                    react.flaskcpy.transmitter = !react.flaskcpy.transmitter;
-                },
-            },
-        },
+        },*/
         lpress: {
             pressed: {
                 func() {
-                    react.confcpy.thrust_scales.master = 60;
+                    react.confcpy.thrust_scales.master = 35;
                 },
             },
         },
         rpress: {
             pressed: {
                 func() {
-                    react.confcpy.thrust_scales.master = 35;
+                    react.confcpy.thrust_scales.master = 60;
                 },
             },
         },

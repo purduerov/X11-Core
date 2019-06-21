@@ -11,9 +11,15 @@ module.exports = (where, socketHost) => {
     setInterval(() => {
         var sending = {
             config: where.state.config,
-            invertThrust: where.state.dearflask.thrusters.inverted_thrusters,
+            invertThrust: where.state.dearflask.thrusters.inverted,
         };
 
         ipcRenderer.send('config-from-win2', sending);
     }, 50);
+
+    ipcRenderer.on('update-info-from', (event, data) => {
+        where.setState({
+            dearclient: data,
+        });
+    });
 };

@@ -5,22 +5,6 @@ export default class PHinfo extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-          ph: 7,
-          temperature: 20,
-          isUpdating: true
-        };
-
-        setInterval(() => {
-            if (this.state.isUpdating) {
-                this.setState({
-                  ph: parseFloat((10 * Math.random()).toFixed(2)),
-                  temperature: parseFloat((100 * Math.random()).toFixed(2))
-                });
-            }
-        }, 500);
-
-        //console.log(props.variable);
         this.displayInfo = this.displayInfo.bind(this);
         this.freeze = this.freeze.bind(this);
     }
@@ -28,10 +12,10 @@ export default class PHinfo extends Component {
     displayInfo() {
         return (
             <ul>
-                <li>pH: {this.state.ph}</li>
-                <li>Temperature: {this.state.temperature}</li>
+                <li>pH: {this.props.ph}</li>
+                <li>Temperature: {this.props.temp}</li>
             </ul>
-        )
+        );
     }
 
     freeze() {

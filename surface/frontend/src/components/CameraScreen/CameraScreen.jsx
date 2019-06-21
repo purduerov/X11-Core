@@ -31,8 +31,8 @@ export default class CameraScreen extends Component {
                 'Cam5',
             ],
             stream: {
-                ip: 'localhost',
-                query: '/?action=stream_',
+                ip: '10.42.0.204',
+                query: '/?action=stream',
                 rovip: 'raspberrypi.local',
             },
             camnext: props.next,
@@ -165,7 +165,7 @@ export default class CameraScreen extends Component {
         } else {
             IP = this.state.stream.ip;
         }
-        const url = `http://${IP}:${port}${query}`;
+        const url = `http://10.42.0.204:8080/?action=stream`// `http://${IP}:${port}${query}`;
         return <img src={url} width="100%" alt="Camera Stream Window wannabe" />;
     }
 

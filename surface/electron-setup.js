@@ -10,7 +10,7 @@ var cvspawns = {};
 var cvref = {};
 
 // TODO: webpack.config.js needs to be configured to work with multiple input files
-const files = ['frontend/Window1/main.html', 'frontend/Window2/secondary.html', 'frontend/Window3/buddy.html'];
+const files = ['frontend/Window1/main.html', 'frontend/Window2/secondary.html']; //, 'frontend/Window3/buddy.html'];
 
 const windows = [null, null, null];
 
@@ -103,5 +103,14 @@ ipcMain.on('buddy-controls-from-win-3', (event, message) => {
 ipcMain.on('config-from-win2', (event, configs) => {
     if (windows[0] != null) {
         windows[0].webContents.send('config-from-win2', configs);
+    }
+});
+
+ipcMain.on('update-info-to', (event, message) => {
+    if (windows[1] != null) {
+        windows[1].webContents.send('update-info-from', message);
+    }
+    if (windows[2] != null) {
+        windows[2].webContents.send('update-info-from', message);
     }
 });

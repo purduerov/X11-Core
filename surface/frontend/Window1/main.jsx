@@ -48,30 +48,18 @@ class App extends React.Component {
                 roll: 100,
                 yaw: 100,
             },
-            thrust_invert: {
-                master: 1,
-                velX: 1,
-                velY: 1,
-                velZ: 1,
-                pitch: 1,
-                roll: 1,
-                yaw: 1,
-            },
+            thrust_invert: this.state.dearflask.thrusters.inv_6dof,
             thruster_control: [ // invert is -1/1 for easy multiplication
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
-                { power: 100, invert: -1 }, { power: 100, invert: 1 },
+                { power: 100, invert: 1 }, { power: 100, invert: 1 },
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
                 { power: 100, invert: 1 }, { power: 100, invert: 1 },
             ],
-            tool_scales: {
-                manipulator: {
-                    master: 0.25,
-                    open: 1,
-                    close: 1,
-                    invert: 1,
-                },
-            },
         };
+
+        this.state.config.thruster_control.map((cur, index, arr) => {
+            arr[index].invert = this.state.dearflask.thrusters.inverted[index];
+        });
 
 
         this.flaskcpy = this.state.dearflask;
@@ -106,7 +94,7 @@ class App extends React.Component {
     }
 
     changeDisabled(dis) {
-        this.flaskcpy.thrusters.disabled_thrusters = dis;
+        this.flaskcpy.thrusters.disable_thrusters = dis;
     }
 
     render() {
@@ -125,7 +113,7 @@ class App extends React.Component {
                     <div className="data-width full-height">
                         <div className="data-column">
                             <Card>
-                                <PHinfo />
+                                <PHinfo ph={this.state.dearclient.sensors.pressure.pressure} temp={this.state.dearclient.sensors.pressure.temperature} />
                             </Card>
                             <Card>
                                 <CrackInfo
@@ -133,6 +121,7 @@ class App extends React.Component {
                                     crackSquare="D3"
                                 />
                             </Card>
+                            <Card title="Line Graph Component" />
                         </div>
                         <div className="data-column">
                             <Card>
@@ -142,16 +131,24 @@ class App extends React.Component {
                                 />
                             </Card>
                             <Card>
+                                <ShowObject
+                                    obj={this.state.dearclient.sensors.imu}
+                                />
+                            </Card>
+                            <Card>
                                 <ThrusterInfo
                                     thrusters={this.state.dearclient.thrusters}
-                                    disabled={this.state.dearflask.thrusters.disabled_thrusters}
-                                    manipulator={this.state.dearflask.manipulator.power}
+                                    disabled={this.state.dearflask.thrusters.disable_thrusters}
+                                    manipulator={this.state.dearflask.tools.manipulator}
                                     rend={this.changeDisabled}
                                 />
                             </Card>
                             <Card title="Desired Force Vector" />
                         </div>
                         <div className="data-column">
+                            <Card>
+                                <ShowObject obj={this.state.dearclient.sensors.esc.temperatures} />
+                            </Card>
                             <Card title="Computer Vision Stuff" />
                             <Card title="CV view window">
                                 <CVview desc={"Purdo good, Purdon't let Eric make messages"} tdist={[0.0, 0.1, 0.2, 0.4, 0.7, 0.8]} />
@@ -159,9 +156,6 @@ class App extends React.Component {
                             <Card title="Time">
                                 <Timer />
                             </Card>
-                        </div>
-                        <div className="data-column">
-                            <Card title="Line Graph Component" />
                         </div>
                     </div>
                 </div>

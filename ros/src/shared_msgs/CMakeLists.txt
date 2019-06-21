@@ -50,10 +50,15 @@ add_message_files(
    auto_command_msg.msg
    pressure_msg.msg
    thrust_command_msg.msg
-   thrust_control_msg.msg
+   final_thrust_msg.msg
    can_msg.msg
    i2c_msg.msg
+   imu_msg.msg
+   depth_msg.msg
+   temp_msg.msg
    thrust_status_msg.msg
+   tools_command_msg.msg
+   servo_command_msg.msg
  )
 
 ## Generate services in the 'srv' folder
